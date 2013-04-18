@@ -1,10 +1,10 @@
-import os
+import os, json, subprocess
 from flask import Flask, render_template, redirect, url_for, request
-from multiprocessing import Process
 
 app = Flask(__name__)
 
 def lookupAPI():
+	p = Process(
 	return "LOOKUP API OK"
 
 #Test entries: tests to be performed by the inspector, each have a name and a function
@@ -25,7 +25,7 @@ def get_test_names():
 		entry_names['entries'].append({
 			'name' : entry
 		})
-	return entry_names
+	return json.dumps(entry_names)
 
 @app.route('/perform_test/<test_name>')
 def perform_test(test_name=None):
@@ -38,7 +38,7 @@ def perform_test(test_name=None):
 		test_output = test_entries[test_name]()
 		json_return['output'] = test_output
 
-	return json_return
+	return json.dumps(json_return)
 
 if __name__ == "__main__":
 	port = int(os.environ.get("PORT", 5000))
