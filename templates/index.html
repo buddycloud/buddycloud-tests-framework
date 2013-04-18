@@ -41,7 +41,7 @@
 					console.log("appending table output entry for test "+data.entries[i].name);
 					$("#tests_output_table").append("<tr><td>"+data.entries[i].name+"</td><td id='"+data.entries[i].name+"'></td></tr>");
 
-					$.get("/perform_test/"+data.entries[i].name, function(data){
+					$.get("/perform_test/"+data.entries[i].name+"/"+domain_url, function(data){
 						data = JSON.parse(data);
 						console.log("test "+data.name+" finished.");
 						$("#"+data.name).text(data.output)

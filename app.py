@@ -3,9 +3,10 @@ from flask import Flask, render_template, redirect, url_for, request
 
 app = Flask(__name__)
 
-def lookupAPI():
-	p = Process(
-	return "LOOKUP API OK"
+def lookupAPI(domain_url):
+	proc = subprocess.Popen(["dig", "srv", "_buddycloud-api._tcp."+domain_url], stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
+	return "OUT: "+str(out)+", ERR: "+str(err)
 
 #Test entries: tests to be performed by the inspector, each have a name and a function
 test_entries = {}
@@ -27,15 +28,15 @@ def get_test_names():
 		})
 	return json.dumps(entry_names)
 
-@app.route('/perform_test/<test_name>')
-def perform_test(test_name=None):
+@app.route('/perform_test/<test_name>/<domain_url>')
+def perform_test(test_name=None, domain_url=None):
 
 	json_return = { 'name' : test_name }
 
 	if test_name == None or test_name.strip() == "" or test_name not in test_entries:
 		json_return['output'] = "Invalid test name"
 	else:
-		test_output = test_entries[test_name]()
+		test_output = test_entries[test_name](domain_url)
 		json_return['output'] = test_output
 
 	return json.dumps(json_return)
