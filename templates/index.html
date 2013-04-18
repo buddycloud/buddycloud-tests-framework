@@ -1,10 +1,10 @@
-<DOCTYPE html style="height:100%;">
+<!DOCTYPE html>
 
 	<head>
 		<meta name="viewport" 	content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
 	</head>
-	<body style="height:90%;">
+	<body>
 		<div class='row' style="height:20%; margin-top:30px;">
 			<div class='span5' style="padding-left:50px;">
 				Buddycloud Inspection logo =)
@@ -14,8 +14,7 @@
 				<a class="btn" onclick="startInspection()">Inspect</a>
 			</div>
 		</div>
-		<div class='row' style="text-align:center;">
-			And here the inspection results will show up as soon as they are received by the server
+		<div class='row'>
 			<table class="table" id="tests_output_table">
 			</table>
 		</div>
@@ -29,14 +28,18 @@
 			var domain_url = $("#domain_url").val();
 			console.log("buddycloud domain url to be inspected: "+domain_url);
 
-			$("#tests_output_table").append("<tr><td>Test Name</td><td>Output</td></tr>");
+			$("#tests_output_table").html("<tr><td>Test Name</td><td>Output</td></tr>");
 
 			$.get("/test_names", function(data){
 				
 				data = JSON.parse(data);
 
+				console.log(data);
+				console.log(data.entries.length);
+
 				for ( var i=0; i<data.entries.length; i++ ){
-					$("#tests_output.table").append("<tr><td>"+data.entries[i].name+"</td><td id='"+data.entries[i].name+"'></td></tr>");
+					console.log("appending table output entry for test "+data.entries[i].name);
+					$("#tests_output_table").append("<tr><td>"+data.entries[i].name+"</td><td id='"+data.entries[i].name+"'></td></tr>");
 
 					$.get("/perform_test/"+data.entries[i].name, function(data){
 						$("#"+data.name).text(data.output)
