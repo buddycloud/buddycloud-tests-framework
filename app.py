@@ -4,7 +4,8 @@ from flask import Flask, render_template, redirect, url_for, request
 app = Flask(__name__)
 
 def lookupAPI(domain_url):
-	proc = subprocess.Popen(["dig", "srv", "_buddycloud-api._tcp."+domain_url], stdout=subprocess.PIPE, shell=True)
+#	proc = subprocess.Popen(["dig", "srv", "_buddycloud-api._tcp."+domain_url], stdout=subprocess.PIPE, shell=True)
+	proc = subprocess.Popen(["cat", "requirements.txt"], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 	return "OUT: "+str(out)+", ERR: "+str(err)
 
