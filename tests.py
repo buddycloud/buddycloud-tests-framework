@@ -29,7 +29,7 @@ def lookupAPI(domain_url):
 		found = "API server(s) found: "
 		for answer in answers:
 			print "Answer found:", answer
-			found += answer['domain'] + " at " + str(answer['port'])
+			found += answer['domain'] + " at " + str(answer['port']+" | ")
 		out = found
 		status = 0
 	else:
