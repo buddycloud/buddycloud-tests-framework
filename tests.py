@@ -7,7 +7,15 @@ import random, time, dns.resolver
 def lookupAPI(domain_url):
 	# Look at SRV record of the given domain if the service _buddycloud-api can be found!
 	answers = []
-	for answer in dns.resolver.query("_buddycloud-api._tcp."+domain_url, dns.rdatatype.SRV, raise_on_no_answer=False):
+	lookup_api_query = None
+	try:
+		lookup_api_query = dns.resolver.query("_buddycloud-api._tcp."+domain_url, dns.rdatatype.SRV, raise_on_no_answer=False)
+	except dns.resolver.NXDOMAIN:
+		out = "Could not find any API servers!"
+		status = 1
+		return (status, out)
+
+	for answer in lookup_api_query:
 		answers.append({
 			'domain' : answer.target.to_text()[:-1],
 			'port' : answer.port,
@@ -15,8 +23,8 @@ def lookupAPI(domain_url):
 			'weight' : answer.weight
 		})
 
-	found = "API server(s) found: "
 	if len(answers) != 0:
+		found = "API server(s) found: "
 		for answer in answers:
 			print "Answer found:", answer
 			found += answer['domain'] + " at " + str(answer['port'])
@@ -49,11 +57,11 @@ test_entries = {}
 test_entries['lookupAPI'] = lookupAPI
 test_entries['testExample1'] = testExample 
 test_entries['testExample2'] = testExample 
-test_entries['testExample3'] = testExample 
-test_entries['testExample4'] = testExample 
-test_entries['testExample5'] = testExample 
-test_entries['testExample6'] = testExample 
-test_entries['testExample7'] = testExample 
-test_entries['testExample8'] = testExample 
-test_entries['testExample9'] = testExample 
-test_entries['testExample10'] = testExample
+#test_entries['testExample3'] = testExample 
+#test_entries['testExample4'] = testExample 
+#test_entries['testExample5'] = testExample 
+#test_entries['testExample6'] = testExample 
+#test_entries['testExample7'] = testExample 
+#test_entries['testExample8'] = testExample 
+#test_entries['testExample9'] = testExample 
+#test_entries['testExample10'] = testExample
