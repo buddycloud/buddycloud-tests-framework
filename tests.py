@@ -1,10 +1,10 @@
 import random, time, dns.resolver
 
-#List all test funcion definitions here, they all must receive a <domain_url> parameter.
-#The return value is a tuple (exit_status, output).
+#List all test funcion definitions here, they all must receive a multiprocessing.Queue <result> and a String <domain_url> parameter.
+#The return value is a tuple (exit_status, output). Also, right before returning, a result.put_nowait((<exit_status>, <output>)) operation must be performed.
 
 
-def lookupAPI(domain_url):
+def lookupAPI(result, domain_url):
 	# Look at SRV record of the given domain if the service _buddycloud-api can be found!
 	answers = []
 	lookup_api_query = None
@@ -13,6 +13,7 @@ def lookupAPI(domain_url):
 	except dns.resolver.NXDOMAIN:
 		out = "Could not find any API servers!"
 		status = 1
+		result.put_nowait((status, out))
 		return (status, out)
 
 	for answer in lookup_api_query:
@@ -33,16 +34,17 @@ def lookupAPI(domain_url):
 	else:
 		out = "Could not find any API servers!"
 		status = 1
-
+	result.put_nowait((status, out))
 	return (status, out)
 
 
-def testExample(domain_url):
+def testExample(result, domain_url):
 	# This is a temporary test example, does nothing but wait.
 	waittime = random.randint(0,10)
 	time.sleep(waittime)
 	out = "Waited "+str(waittime)
 	status = 0
+	result.put_nowait((status, out))
 	return (status, out)
 
 
@@ -57,11 +59,11 @@ test_entries = {}
 test_entries['lookupAPI'] = lookupAPI
 test_entries['testExample1'] = testExample 
 test_entries['testExample2'] = testExample 
-#test_entries['testExample3'] = testExample 
-#test_entries['testExample4'] = testExample 
-#test_entries['testExample5'] = testExample 
-#test_entries['testExample6'] = testExample 
-#test_entries['testExample7'] = testExample 
-#test_entries['testExample8'] = testExample 
-#test_entries['testExample9'] = testExample 
-#test_entries['testExample10'] = testExample
+test_entries['testExample3'] = testExample 
+test_entries['testExample4'] = testExample 
+test_entries['testExample5'] = testExample 
+test_entries['testExample6'] = testExample 
+test_entries['testExample7'] = testExample 
+test_entries['testExample8'] = testExample 
+test_entries['testExample9'] = testExample 
+test_entries['testExample10'] = testExample
