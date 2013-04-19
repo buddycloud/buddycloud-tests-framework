@@ -23,6 +23,17 @@
 	<script src="static/jquery-1.9.1.min.js" language="javascript" type="text/javascript"></script>
 	<script>
 
+		function getExitStatusClass(code){
+			switch(code){
+				case 0:
+					return "success";
+				case 1:
+					return "error";
+				default:
+					return "warning";
+			}
+		}
+
 		function startInspection(){
 
 			var domain_url = $("#domain_url").val();
@@ -39,12 +50,13 @@
 
 				for ( var i=0; i<data.entries.length; i++ ){
 					console.log("appending table output entry for test "+data.entries[i].name);
-					$("#tests_output_table").append("<tr><td>"+data.entries[i].name+"</td><td id='"+data.entries[i].name+"'></td></tr>");
+					$("#tests_output_table").append("<tr id='tr_"+data.entries[i].name+"'><td>"+data.entries[i].name+"</td><td id='td_"+data.entries[i].name+"'></td></tr>");
 
 					$.get("/perform_test/"+data.entries[i].name+"/"+domain_url, function(data){
 						data = JSON.parse(data);
-						console.log("test "+data.name+" finished.");
-						$("#"+data.name).text(data.output)
+						console.log("test "+data.name+" finished: "+data);
+						$("#tr_"+data.name).attr("class", getExitStatusClass(data.exit_status));
+						$("#td_"+data.name).text(data.output);
 					});
 				}
 
