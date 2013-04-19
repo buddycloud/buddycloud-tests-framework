@@ -1,7 +1,7 @@
 import os, json
 from flask import Flask, render_template, redirect, url_for, request
 from tests import test_entries
-from multiprocessing import Process, Queue
+#from multiprocessing import Process, Queue
 
 app = Flask(__name__)
 
@@ -31,11 +31,12 @@ def perform_test(test_name=None, domain_url=None):
 		json_return['exit_status'] = exit_status
 		json_return['output'] = test_output
 	else:
-		result = Queue()
-		process = Process(target=test_entries[test_name], args=(result, domain_url,))
-		process.start()
-		(exit_status, test_output) = result.get()
-		process.join()
+#		result = Queue()
+#		process = Process(target=test_entries[test_name], args=(result, domain_url,))
+#		process.start()
+#		(exit_status, test_output) = result.get()
+#		process.join()
+		(exit_status, test_output) = test_entries[test_name](domain_url)
 		json_return['exit_status'] = exit_status
 		json_return['output'] = test_output
 	return json.dumps(json_return)
