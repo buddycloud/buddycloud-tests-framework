@@ -228,16 +228,33 @@ def testExample(domain_url):
 	status = 0
 	return (status, out)
 
+def testFailExample(domain_url):
+	# This is a temporary test example, does nothing but wait.
+	waittime = random.randint(0,10)
+	time.sleep(waittime)
+	out = "Failed to wait "+str(waittime)
+	status = 1
+	return (status, out)
 
 #Then for each function,
 #add a new entry into the test_entries map below
 #with a unique name identifier as the key
 #and have the respective function as the value.
 
-
 #Test entries: tests to be performed by the inspector, each have a name and a function
-test_entries = {}
-test_entries['lookup_api'] = lookupAPI
-test_entries['xmpp_server_srv_lookup'] = xmppServerSRVLookup
-test_entries['xmpp_server_a_lookup'] = xmppServerAddressRecordLookup
-test_entries['xmpp_server_connection_test'] =  xmppServerConnectionTest
+test_entries = []
+test_entries.append({'name' : 'xmpp_server_srv_lookup', 'test' : xmppServerSRVLookup, 'continue_if_fail' : False })
+test_entries.append({'name' : 'xmpp_server_a_lookup', 'test' : xmppServerAddressRecordLookup, 'continue_if_fail' : False })
+test_entries.append({'name' : 'xmpp_server_connection', 'test' : xmppServerConnectionTest, 'continue_if_fail' : False })
+test_entries.append({'name' : 'test_example1', 'test' : testExample, 'continue_if_fail' : True })
+test_entries.append({'name' : 'test_example2', 'test' : testFailExample, 'continue_if_fail' : True })
+test_entries.append({'name' : 'lookup_api', 'test' : lookupAPI, 'continue_if_fail' : False })
+
+test_names = {
+'xmpp_server_srv_lookup' : 0,
+'xmpp_server_a_lookup' : 1,
+'xmpp_server_connection' : 2,
+'test_example1' : 3,
+'test_example2' : 4,
+'lookup_api' : 5
+}

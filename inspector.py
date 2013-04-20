@@ -1,6 +1,6 @@
 import os, json
 from flask import Flask, render_template, redirect, url_for, request
-from tests import test_entries
+from tests import test_entries, test_names
 
 app = Flask(__name__)
 
@@ -11,13 +11,13 @@ def index():
 
 @app.route('/test_names', methods=['GET'])
 def get_test_names():
-	entry_names = {}
-	entry_names['entries'] = []
+	entries = []
 	for entry in test_entries:
-		entry_names['entries'].append({
-			'name' : entry
+		entries.append({
+			'name' : entry['name'],
+			'continue_if_fail' : entry['continue_if_fail']
 		})
-	return json.dumps(entry_names)
+	return json.dumps(entries)
 
 @app.route('/perform_test/<test_name>/<path:domain_url>')
 def perform_test(test_name=None, domain_url=None):
@@ -26,12 +26,12 @@ def perform_test(test_name=None, domain_url=None):
 
 	json_return = { 'name' : test_name }
 
-	if test_name == None or test_name.strip() == "" or test_name not in test_entries:
+	if test_name == None or test_name.strip() == "" or test_name not in test_names:
 		(exit_status, test_output) = 2, "Invalid test name"
 		json_return['exit_status'] = exit_status
 		json_return['output'] = test_output
 	else:
-		(exit_status, test_output) = test_entries[test_name](domain_url)
+		(exit_status, test_output) = test_entries[test_names[test_name]]['test'](domain_url)
 		json_return['exit_status'] = exit_status
 		json_return['output'] = test_output
 	return json.dumps(json_return)
