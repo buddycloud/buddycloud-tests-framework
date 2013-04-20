@@ -1,15 +1,9 @@
 <!DOCTYPE html>
-
 	<head>
 		<meta name="viewport" 	content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="static/style.css">
 	</head>
-
-	<style>
-		#logo {
-			cursor:pointer;	
-		}
-	</style>
 
 	<body>
 		<div class='navbar navbar-inverse navbar-fixed-top'>
@@ -28,71 +22,5 @@
 	</body>
 
 	<script src="static/jquery-1.9.1.min.js" language="javascript" type="text/javascript"></script>
-	<script>
-
-		function getExitStatusClass(code){
-			switch(code){
-				case 0:
-					return "success";
-				case 1:
-					return "error";
-				default:
-					return "warning";
-			}
-		}
-
-		var domain_url = null;
-
-		function handleDomainURL(domain_url){
-
-			domain_url = $("#domain_url_box").val();
-			if ( domain_url.search("://") != -1 ){
-				domain_url = domain_url.substr(domain_url.search("://")+3, domain_url.length);
-				$("#domain_url_box").val(domain_url);
-			}
-			return domain_url;
-		}
-
-		function handleStartTestsLauncher(){
-
-			$("#tests_output_table").html("");
-		}
-
-		function handleTestCreation(test_name){
-
-			$("#tests_output_table").append("<tr id='tr_"+test_name+"'><td>"+test_name+"</td><td id='td_"+test_name+"'></td></tr>");
-		}
-
-		function handleTestResponse(data){
-
-			data = JSON.parse(data);
-			$("#tr_"+data.name).attr("class", getExitStatusClass(data.exit_status));
-			$("#td_"+data.name).text(data.output);
-		}
-
-		function testsLauncher(data, domain_url){
-
-			handleStartTestsLauncher();
-			data = JSON.parse(data);
-			for ( var i=0; i<data.entries.length; i++ ){
-				handleTestCreation(data.entries[i].name);
-				issueTest(data.entries[i].name, domain_url);
-			}
-		}
-
-		function issueTest(test_name, domain_url){
-
-			$.get("/perform_test/"+test_name+"/"+domain_url, function(data){
-				handleTestResponse(data);
-			});
-		}
-
-		function startInspection(){
-			domain_url = handleDomainURL(domain_url);
-			$.get("/test_names", function(data){
-				testsLauncher(data, domain_url);
-			});
-		}
-
-	</script>
+	<script src="static/inspector.js" language="javascript" type="text/javascript"></script>
 </html>
