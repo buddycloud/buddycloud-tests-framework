@@ -43,38 +43,55 @@
 
 		var domain_url = null;
 
-		function startInspection(){
+		function handleDomainURL(domain_url){
 
 			domain_url = $("#domain_url_box").val();
 			if ( domain_url.search("://") != -1 ){
 				domain_url = domain_url.substr(domain_url.search("://")+3, domain_url.length);
 				$("#domain_url_box").val(domain_url);
 			}
-			console.log("buddycloud domain url to be inspected: "+domain_url);
+			return domain_url;
+		}
+
+		function handleStartTestsLauncher(){
 
 			$("#tests_output_table").html("");
+		}
 
-			$.get("/test_names", function(data){
-				
-				data = JSON.parse(data);
+		function handleTestCreation(test_name){
 
-				console.log(data);
-				console.log(data.entries.length);
+			$("#tests_output_table").append("<tr id='tr_"+test_name+"'><td>"+test_name+"</td><td id='td_"+test_name+"'></td></tr>");
+		}
 
-				for ( var i=0; i<data.entries.length; i++ ){
-					console.log("appending table output entry for test "+data.entries[i].name);
-					$("#tests_output_table").append("<tr id='tr_"+data.entries[i].name+"'><td>"+data.entries[i].name+"</td><td id='td_"+data.entries[i].name+"'></td></tr>");
+		function handleTestResponse(data){
 
-					$.get("/perform_test/"+data.entries[i].name+"/"+domain_url, function(data){
-						data = JSON.parse(data);
-						console.log("test "+data.name+" finished: "+data);
-						$("#tr_"+data.name).attr("class", getExitStatusClass(data.exit_status));
-						$("#td_"+data.name).text(data.output);
-					});
-				}
+			data = JSON.parse(data);
+			$("#tr_"+data.name).attr("class", getExitStatusClass(data.exit_status));
+			$("#td_"+data.name).text(data.output);
+		}
 
+		function testsLauncher(data, domain_url){
+
+			handleStartTestsLauncher();
+			data = JSON.parse(data);
+			for ( var i=0; i<data.entries.length; i++ ){
+				handleTestCreation(data.entries[i].name);
+				issueTest(data.entries[i].name, domain_url);
+			}
+		}
+
+		function issueTest(test_name, domain_url){
+
+			$.get("/perform_test/"+test_name+"/"+domain_url, function(data){
+				handleTestResponse(data);
 			});
+		}
 
+		function startInspection(){
+			domain_url = handleDomainURL(domain_url);
+			$.get("/test_names", function(data){
+				testsLauncher(data, domain_url);
+			});
 		}
 
 	</script>
