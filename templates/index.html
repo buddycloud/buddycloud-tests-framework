@@ -16,7 +16,7 @@
 			<div class='navbar-inner'>
 				<div class='container'>
 					<a id="logo" href="#" class='brand'>buddycloud Inspection</a>
-					<input type="text" class="input-medium search-query pull-right" id='domain_url' value="buddycloud.org" style="margin-top:5px;">
+					<input type="text" class="input-medium search-query pull-right" id='domain_url_box' value="buddycloud.org" style="margin-top:5px;">
 					<a class="btn btn-warning pull-right" style="margin-right:5px; margin-left:5px;" onclick="startInspection();">inspect</a>
 				</div>
 			</div>
@@ -41,9 +41,15 @@
 			}
 		}
 
+		var domain_url = null;
+
 		function startInspection(){
 
-			var domain_url = $("#domain_url").val();
+			domain_url = $("#domain_url_box").val();
+			if ( domain_url.search("://") != -1 ){
+				domain_url = domain_url.substr(domain_url.search("://")+3, domain_url.length);
+				$("#domain_url_box").val(domain_url);
+			}
 			console.log("buddycloud domain url to be inspected: "+domain_url);
 
 			$("#tests_output_table").html("");
