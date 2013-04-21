@@ -6,11 +6,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+	
 	return render_template("index.html")
 
 
 @app.route('/test_names', methods=['GET'])
 def get_test_names():
+	
 	entries = []
 	for entry in test_entries:
 		entries.append({
@@ -21,8 +23,6 @@ def get_test_names():
 
 @app.route('/perform_test/<test_name>/<path:domain_url>')
 def perform_test(test_name=None, domain_url=None):
-
-	print "Will perform test "+test_name+" on domain "+domain_url+"!!!!"
 
 	json_return = { 'name' : test_name }
 
@@ -38,5 +38,6 @@ def perform_test(test_name=None, domain_url=None):
 
 
 if __name__ == "__main__":
+	
 	port = int(os.environ.get("PORT", 5000))
 	app.run(host="0.0.0.0", port=port, debug=True)
