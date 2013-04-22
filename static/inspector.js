@@ -155,12 +155,24 @@ function getExitStatusIcon(code){
 	}
 }
 
+var show_modal = true;
+
 function showMessage(title, body, situation){
 
 	$("#message_title").text(title);
 	$("#message_body_area").attr("class", "modal-body "+situation);
 	$("#message_body").text(body);
-	$("#message").modal({'keyboard' : false, 'show' : true});
+	if ( show_modal ){
+		window.setTimeout(function(){
+			$("#message").modal({'keyboard' : false, 'show' : true, 'backdrop' : true});
+		}, 750);
+	}
+	$("message").on("hidden", function(){
+		show_modal = true;
+	});
+	$("message").on("show", function(){
+		show_modal = false;
+	});
 }
 
 function composeButtons(domain_url, tests, situation){
