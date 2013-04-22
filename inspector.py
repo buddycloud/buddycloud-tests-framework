@@ -36,8 +36,12 @@ def perform_test(test_name=None, domain_url=None):
 		json_return['output'] = test_output
 	return json.dumps(json_return)
 
+@app.errorhandler(503)
+def service_unavailable():
+	
+	return "<script> window.alert('Service unavailable!!!'); </script>"
 
 if __name__ == "__main__":
 	
 	port = int(os.environ.get("PORT", 5000))
-	app.run(host="0.0.0.0", port=port, debug=True)
+	app.run(host="0.0.0.0", port=port, debug=False)
