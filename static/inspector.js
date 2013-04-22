@@ -36,7 +36,7 @@ function decideNext(domain_url, data){
 	data = JSON.parse(data);
 	// If current test has failed and continue if fail is 'false':
 	if ( data.exit_status != 0 && !test_entries[current_test].continue_if_fail ){
-		abortLauncher(data.name);
+		abortLauncher(domain_url, data);
 	}
 	else{ //Otherwise, the test has passed or failed but continue if fail is 'true'
 		current_test++;
@@ -103,6 +103,7 @@ function handleDomainURL(){
 		domain_url = domain_url.substr(domain_url.search("://")+3, domain_url.length);
 		$("#domain_url_box").val(domain_url);
 	}
+	$("#inspect_button").addClass("disabled");
 	return domain_url;
 }
 
@@ -130,18 +131,50 @@ function getExitStatusIcon(code){
 	}
 }
 
-function abortLauncher(test_name){
+function showMessage(title, body, situation){
+
+	$("#message_title").text(title);
+	$("#message_body_area").attr("class", "modal-body "+situation);
+	$("#message_body").text(body);
+	$("#message").modal({'keyboard' : false, 'show' : true});
+}
+
+function composeButtons(domain_url, tests, situation){
+	if ( tests == null ){
+		$("#message_buttons").html("<button href='#' data-dismiss='modal' class='btn btn-"+situation+"'>Close</button>");
+	}
+	else{
+		var test_names = "'"+tests[0]+"'";
+		for ( var i=1; i<tests.length; i++ ){
+			test_names += ", '"+tests[i]+"'";
+		}
+		$("#message_buttons").html("<button href='#' data-dismiss='modal' onclick='reRunTests('"+domain_url+"', "+test_names+");' class='btn btn-danger'>Retry tests</button><button href='#' data-dismiss='modal' class='btn btn-"+situation+"'>Close</button>");
+	}
+}
+
+function abortLauncher(domain_url, data){
 	
-	window.alert("Test ("+test_name+") failed. Aborting...");
+	composeButtons(domain_url, null, getExitStatusClass(data.exit_status));
+	showMessage(data.name+" failed!", data.output, getExitStatusClass(data.exit_status));
+	$("#inspect_button").removeClass("disabled");
 }
 
 function finishLauncher(){
 
-	window.alert("All Tests executed.");
+	composeButtons(domain_url, null, "success");
+	showMessage("All tests finished!", "Inspection summary", "success");
+	$("#inspect_button").removeClass("disabled");
 }
 
 function finishRunningTestAgain(domain_url, data){
 
 	data = JSON.parse(data);
-	window.alert("Finished running Test ("+data.name+") again!");
+	composeButtons(domain_url, null, getExitStatusClass(data.exit_status));
+	if ( data.exit_status == 0 ){
+		showMessage(data.name+" passed!", data.output, getExitStatusClass(data.exit_status));
+	}
+	else{
+		showMessage(data.name+" failed!", data.output, getExitStatusClass(data.exit_status));
+	}
+	$("#inspect_button").removeClass("disabled");
 }

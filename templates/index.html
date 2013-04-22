@@ -12,11 +12,22 @@
 				<div class='container'>
 					<a id="logo" href="#" class='brand'>buddycloud inspector</a>
 					<input type="text" class="input-medium search-query pull-right" id='domain_url_box' value="buddycloud.org" style="margin-top:5px;">
-					<a class="btn btn-warning pull-right" style="margin-right:5px; margin-left:5px;" onclick="startInspection();">inspect</a>
+					<a id='inspect_button' class="btn btn-warning pull-right" style="margin-right:5px; margin-left:5px;" onclick="startInspection();">inspect</a>
 				</div>
 			</div>
 		</div>
 		<div id='tests_output_table' class='container' style="margin-top:60px;">
+		</div>
+		<div id='message' class='modal hide fade'>
+			<div class='modal-header' style='background-color:black;'>
+				<button type='button' class='close' data-dismiss='modal' aria-hidden='true' style='color:white;'>&times;</button>
+				<h3 id='message_title'></h3>
+			</div>
+			<div id='message_body_area' class='modal-body'>
+				<p id='message_body'></p>
+			</div>
+			<div id='message_buttons' class='modal-footer'>
+			</div>
 		</div>
 	</body>
 

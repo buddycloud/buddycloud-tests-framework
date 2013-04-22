@@ -11,12 +11,27 @@
 	color:black;
 }
 
+#message_body_area.success{
+	background-color:#dff0d8;
+	color:black;
+}
+
 .test_output.danger{
 	background-color:#f2dede;
 	color:black;
 }
 
+#message_body_area.danger{
+	background-color:#f2dede;
+	color:black;
+}
+
 .test_output.warning{
+	background-color:#fcf8e3;
+	color:black;
+}
+
+#message_body_area.warning{
 	background-color:#fcf8e3;
 	color:black;
 }
