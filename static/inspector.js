@@ -17,16 +17,16 @@ function testsLauncher(data, domain_url){
 	data = JSON.parse(data);
 	test_entries = data;
 	current_test = 0;
+	handleTestCreation(test_entries[current_test].name);
 	issueTest(test_entries[current_test].name, domain_url, decideNext);
 }
 
 // Issues a new test to be run
 function issueTest(test_name, domain_url, decide_next){
 
-	handleTestCreation(test_name);
 	$.get("/perform_test/"+test_name+"/"+domain_url, function(data){
-		handleTestResponse(data);
-		decideNext(domain_url, data);
+		handleTestResponse(data, domain_url);
+		decide_next(domain_url, data);
 	});
 }
 
@@ -44,9 +44,16 @@ function decideNext(domain_url, data){
 			finishLauncher();
 		}
 		else{ // Otherwise, there's a new test to be issued, do it.
+			handleTestCreation(test_entries[current_test].name);
 			issueTest(test_entries[current_test].name, domain_url, decideNext);
 		}
 	}
+}
+
+function runAgain(test_name, domain_url, previous_status){
+	
+	handleTestRelaunch(test_name, previous_status);
+	issueTest(test_name, domain_url, finishRunningTestAgain);
 }
 
 // What to do in the page when a new test suite is about to run
@@ -61,14 +68,31 @@ function handleTestCreation(test_name){
 	$("#tests_output_table").append("<div class='input-prepend' style='width:100%;'><button id='td_"+test_name+"' class='btn disabled' style='width:25%; padding-left:5px; text-align:left;'><i id='ti_"+test_name+"' class='icon-random'></i> <span class='text-left'>"+test_name+"</span> </button><span id='to_"+test_name+"' class='test_output input uneditable-input' style='width:73%;'></span></div>");
 }
 
+function handleTestRelaunch(test_name, previous_status){
+
+	$("#td_"+test_name).removeClass("btn-"+previous_status);
+	$("#td_"+test_name).addClass("disabled");
+	$("#td_"+test_name).tooltip("destroy");
+	$("#td_"+test_name).attr("onclick", "");
+	$("#to_"+test_name).removeClass(previous_status);
+	$("#ti_"+test_name).attr("class", "icon-random");
+}
+
 // What to do in the page once a test finishes running
-function handleTestResponse(data){
+function handleTestResponse(data, domain_url){
 
 	data = JSON.parse(data);
 	$("#td_"+data.name).addClass("btn-"+getExitStatusClass(data.exit_status));
+	if ( data.exit_status == 1 ){
+		$("#td_"+data.name).attr("data-toggle","tooltip");
+		$("#td_"+data.name).attr("title","Click to run again");
+		$("#td_"+data.name).tooltip({'animation' : true, 'delay' : 100});
+		$("#td_"+data.name).removeClass("disabled");
+		$("#td_"+data.name).attr("onclick", "runAgain('"+data.name+"', '"+domain_url+"', '"+getExitStatusClass(data.exit_status)+"');");
+	}
 	$("#to_"+data.name).addClass(getExitStatusClass(data.exit_status));
-	$("#ti_"+data.name).attr("class", getExitStatusIcon(data.exit_status) + " icon-white");
 	$("#to_"+data.name).text(data.output);
+	$("#ti_"+data.name).attr("class", getExitStatusIcon(data.exit_status) + " icon-white");
 }
 
 function handleDomainURL(){
@@ -105,12 +129,18 @@ function getExitStatusIcon(code){
 	}
 }
 
-function abortLauncher(testName){
+function abortLauncher(test_name){
 	
-	window.alert("Test "+testName+" failed. Aborting...");
+	window.alert("Test ("+test_name+") failed. Aborting...");
 }
 
 function finishLauncher(){
 
-	window.alert("You've executed all tests...");
+	window.alert("All Tests executed.");
+}
+
+function finishRunningTestAgain(domain_url, data){
+
+	data = JSON.parse(data);
+	window.alert("Finished running Test ("+data.name+") again!");
 }
