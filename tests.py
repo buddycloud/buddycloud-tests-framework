@@ -1,5 +1,5 @@
 import random, time
-from xmpp_server_tests import xmppServerSRVLookup, xmppServerAddressRecordLookup, xmppServerConnectionTest
+from xmpp_server_tests import xmppServerServiceRecordLookup, xmppServerAddressRecordLookup, xmppServerConnection
 from buddycloud_server_tests import buddycloudServerDisco
 from api_server_tests import lookupAPI
 
@@ -21,9 +21,9 @@ def testFailExample(domain_url):
 
 #Test entries: tests to be performed in order by the inspector, each have a name and a function
 test_entries = []
-test_entries.append({'name' : 'xmpp_server_srv_lookup', 'test' : xmppServerSRVLookup, 'continue_if_fail' : False })
+test_entries.append({'name' : 'xmpp_server_srv_lookup', 'test' : xmppServerServiceRecordLookup, 'continue_if_fail' : False })
 test_entries.append({'name' : 'xmpp_server_a_lookup', 'test' : xmppServerAddressRecordLookup, 'continue_if_fail' : False })
-test_entries.append({'name' : 'xmpp_server_connection', 'test' : xmppServerConnectionTest, 'continue_if_fail' : False })
+test_entries.append({'name' : 'xmpp_server_connection', 'test' : xmppServerConnection, 'continue_if_fail' : False })
 test_entries.append({'name' : 'buddycloud_server_disco', 'test' : buddycloudServerDisco, 'continue_if_fail' : False })
 test_entries.append({'name' : 'lookup_api', 'test' : lookupAPI, 'continue_if_fail' : False })
 test_entries.append({'name' : 'test_example1', 'test' : testExample, 'continue_if_fail' : True })
