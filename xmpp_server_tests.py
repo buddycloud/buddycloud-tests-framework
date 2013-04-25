@@ -160,8 +160,8 @@ def xmppServerConnectionTest(domain_url):
 			for record in query_for_A_record:
 				address = str(record)
 
-				xmpp_client = ClientXMPP("inspect@"+address, "")
-				if ( xmpp_client.connect(reattempt=False) ):
+				xmpp_client = ClientXMPP("inspect@buddycloud", "ei3tseq")
+				if ( xmpp_client.connect((address, 5222), reattempt=False, use_ssl=False, use_tls=False) ):
 					found += answer['domain'] + " at " + address + " | "
 				else:
 					out = "Could not connect with XMPP server "+answer['domain']+" at "+address
