@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
 	
-	return render_template("index.html")
+	return render_template("index.html", domain_url=None)
 
 
 @app.route('/test_names', methods=['GET'])
@@ -35,6 +35,11 @@ def perform_test(test_name=None, domain_url=None):
 		json_return['exit_status'] = exit_status
 		json_return['output'] = test_output
 	return json.dumps(json_return)
+
+@app.route('/<path:domain_url>')
+def start_tests_launcher(domain_url=None):
+
+	return render_template("index.html", domain_url=domain_url)
 
 if __name__ == "__main__":
 	

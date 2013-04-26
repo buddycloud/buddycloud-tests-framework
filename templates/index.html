@@ -34,4 +34,12 @@
 	<script src="static/jquery-1.9.1.min.js" language="javascript" type="text/javascript"></script>
 	<script src="static/inspector.js" language="javascript" type="text/javascript"></script>
 	<script src="static/bootstrap/js/bootstrap.min.js" language="javascript" type="text/javascript"></script>
+	{% if domain_url %}
+	<script>
+		$(document).ready(function (){
+			$("#domain_url_box").val("{{ domain_url }}");
+			startInspection();
+		});
+	</script>
+	{% endif %}
 </html>
