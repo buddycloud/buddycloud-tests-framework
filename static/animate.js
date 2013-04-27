@@ -30,7 +30,7 @@ function updateDisplay(new_data, status) {
 		
 		var text = svg.selectAll("text")
 			.data(new_data, function(d){ return d; });
-		transitions(text, 750, status);
+		transitions(text, 1200, status);
 	}
 }
 
