@@ -7,6 +7,7 @@ var failed_tests = [];
 function startInspection(){
 	
 	domain_url = handleDomainURL();
+	window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/"+domain_url); 
 	$.get("/test_names", function(data){
 		testsLauncher(data, domain_url);
 	});
