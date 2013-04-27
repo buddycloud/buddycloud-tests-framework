@@ -7,9 +7,11 @@ var failed_tests = [];
 function startInspection(){
 
 	domain_url = handleDomainURL();
+	if ( domain_url == null ){
+		return;
+	}
 	var msg = ("Inspecting domain '"+domain_url+"'...").split("");
 	updateDisplay(msg, "info");
-	window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/"+domain_url); 
 	$.get("/test_names", function(data){
 		testsLauncher(data, domain_url);
 	});
@@ -131,13 +133,57 @@ function handleTestResponse(data, domain_url){
 
 function handleDomainURL(){
 
+	$("#inspect_button").tooltip("destroy");
 	domain_url = $("#domain_url_box").val();
-	if ( domain_url.search("://") != -1 ){
-		domain_url = domain_url.substr(domain_url.search("://")+3, domain_url.length);
+
+	var valid = true;
+
+	if ( domain_url == null || domain_url.trim() == "" || domain_url.charAt(0) == '/' ){
+		valid = false;
+	}
+	else if ( domain_url.charAt(0) == '-' || domain_url.charAt(domain_url.length-1) == '-' ){
+		valid = false;
+	}
+	else if ( domain_url.indexOf("!") != -1 || domain_url.indexOf("@") != -1 || domain_url.indexOf("#") != -1 ){
+		valid = false;
+	}
+	else if ( domain_url.indexOf("$") != -1 || domain_url.indexOf("%") != -1 || domain_url.indexOf("^") != -1 ){
+		valid = false;
+	}
+	else if ( domain_url.indexOf("&") != -1 || domain_url.indexOf("*") != -1 || domain_url.indexOf(" ") != -1 ){
+		valid = false;
+	}
+	else if ( domain_url.indexOf("(") != -1 || domain_url.indexOf(")") != -1 || domain_url.indexOf("?") != -1 ){
+		valid = false;
+	}
+	else if ( domain_url.indexOf("://") != -1 ){
+		domain_url = domain_url.substr(domain_url.indexOf("://")+3, domain_url.length);
 		$("#domain_url_box").val(domain_url);
 	}
-	$("#inspect_button").addClass("disabled");
-	return domain_url;
+	if ( valid ){
+		window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/"+domain_url); 
+		$("#inspect_button").addClass("disabled");
+		$("#inspect_button").attr("onclick", "");
+		return domain_url.toLowerCase();
+	}
+	else{
+		if ( domain_url.charAt(0) == '/' ){
+			domain_url = domain_url.replace("/", "");
+		}
+		window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/"+domain_url); 
+		$("#inspect_button").attr("data-toggle", "tooltip");
+		$("#inspect_button").attr("title", "Please enter a valid domain!");
+		$("#inspect_button").tooltip({
+			'animation' : true,
+			'placement' : 'bottom',
+			'trigger' : 'manual',
+			'delay' : 100
+		});
+		$("#inspect_button").tooltip('show');
+		var msg = "Please enter a valid domain.".split("");
+		updateDisplay(msg, "error");
+		return null;
+	}
 }
 
 function getExitStatusClass(code){
@@ -226,6 +272,7 @@ function finishLauncher(){
 		showMessage("All tests finished!", summary, "danger");
 	}
 	$("#inspect_button").removeClass("disabled");
+	$("#inspect_button").attr("onclick", "startInspection();");
 }
 
 function finishRunningTestAgain(domain_url, data){
@@ -243,4 +290,5 @@ function finishRunningTestAgain(domain_url, data){
 		showMessage(data.name+" failed!", data.output, getExitStatusClass(data.exit_status));
 	}
 	$("#inspect_button").removeClass("disabled");
+	$("#inspect_button").attr("onclick", "startInspection();");
 }
