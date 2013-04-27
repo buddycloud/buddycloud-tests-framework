@@ -35,3 +35,25 @@
 	background-color:#fcf8e3;
 	color:black;
 }
+
+/*D3 animation styles*/
+text {
+	font: bold 20px monospace;
+}
+
+.intro {
+	fill: green;
+	font: bold 48px monospace;
+}
+
+.enter {
+	fill: green;
+}
+
+.update {
+	fill: #6dc066;
+}
+
+.exit {
+	fill: brown;
+}

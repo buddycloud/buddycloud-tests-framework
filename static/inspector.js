@@ -5,8 +5,10 @@ var failed_tests = [];
 
 // Get tests from server and starts tests launcher
 function startInspection(){
-	
+
 	domain_url = handleDomainURL();
+	var msg = ("Inspecting domain '"+domain_url+"'...").split("");
+	updateDisplay(msg, "info");
 	window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/"+domain_url); 
 	$.get("/test_names", function(data){
 		testsLauncher(data, domain_url);
@@ -64,12 +66,18 @@ function decideNext(domain_url, data, retry){
 }
 
 function runAgain(test_name, domain_url, previous_status){
-	
+
+	var msg = ("Running test '"+test_name+"' again...").split("");
+	updateDisplay(msg, "info");
+
 	handleTestRelaunch(test_name, previous_status);
 	issueTest(test_name, domain_url, finishRunningTestAgain, true);
 }
 
 function retryTests(domain_url){
+
+	var msg = ("Retrying tests that failed for domain '"+domain_url+"'...").split("");
+	updateDisplay(msg, "info");
 
 	test_entries = [];
 	for ( var i=0; i<failed_tests.length; i++ ){
@@ -191,16 +199,29 @@ function finishLauncher(){
 
 	var summary = "Inspection summary: ";
 	if ( failed_tests.length == 0 ){
-		summary += "No tests failed! Congratulations!!";
+		var msg = "All tests were successful. Congratulations!".split("");
+		updateDisplay(msg, "info");
+		summary += "None of the tests failed! Congratulations!";
 		composeButtons(domain_url, null, "success");
-		showMessage("All tests finished!", summary, "success");
+		showMessage("All tests finished properly!", summary, "success");
 	}
 	else{
-		summary += "Some tests failed: "+failed_tests[0].name;
+		var msg =  " failed. Please fix these problems.";
+		var summary_piece = " failed: "+failed_tests[0].name;
 		for ( var i=1; i<failed_tests.length; i++ ){
-			summary += ", " + failed_tests[i].name;
+			summary_piece += ", " + failed_tests[i].name;
 		}
-		summary += ".";
+		summary_piece += ".";
+		if ( failed_tests.length == 1 ){
+			msg = ("One test"+msg).split("");
+			summary_piece = ("One test"+summary_piece);
+		}
+		else{
+			msg = (failed_tests.length+" tests"+msg).split("");
+			summary_piece = (failed_tests.length+" tests"+summary_piece);
+		}
+		summary += summary_piece;
+		updateDisplay(msg, "error");
 		composeButtons(domain_url, failed_tests, "danger");
 		showMessage("All tests finished!", summary, "danger");
 	}
@@ -212,9 +233,13 @@ function finishRunningTestAgain(domain_url, data){
 	data = JSON.parse(data);
 	composeButtons(domain_url, null, getExitStatusClass(data.exit_status));
 	if ( data.exit_status == 0 ){
+		var msg = ("Test "+data.name+" was succesful!").split("");
+		updateDisplay(msg, "info");
 		showMessage(data.name+" passed!", data.output, getExitStatusClass(data.exit_status));
 	}
 	else{
+		var msg = ("Test "+data.name+" failed!").split("");
+		updateDisplay(msg, "error");
 		showMessage(data.name+" failed!", data.output, getExitStatusClass(data.exit_status));
 	}
 	$("#inspect_button").removeClass("disabled");
