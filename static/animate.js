@@ -6,8 +6,25 @@ var svg = d3.select("#test_launcher_status").append("svg")
 	.append("g")
 	.attr("transform", "translate(10, " + (height / 2) + ")");
 
-function updateDisplay(new_data, status) {
+var lock = false;
+var next_time = 0;
+function updateDisplay(new_data, status){
 
+	if (!lock){
+		next_time = 0;
+		doUpdateDisplay(new_data, status);
+	}
+	else{
+		next_time += 1150;
+		window.setTimeout(function(){
+			doUpdateDisplay(new_data, status);
+		}, next_time);
+	}
+}
+
+function doUpdateDisplay(new_data, status) {
+
+	lock = true;
 	if ( status != "intro" ){
 
 		var old_data = svg.selectAll("text").data();
@@ -23,6 +40,7 @@ function updateDisplay(new_data, status) {
 			var text = svg.selectAll("text")
 				.data(new_data, function(d){ return d; });
 			transitions(text, 750, status);
+			lock = false;
 		}, 400);
 
 	}
@@ -31,6 +49,9 @@ function updateDisplay(new_data, status) {
 		var text = svg.selectAll("text")
 			.data(new_data, function(d){ return d; });
 		transitions(text, 1200, status);
+		window.setTimeout(function(){
+			lock = false;
+		}, 1200);
 	}
 }
 

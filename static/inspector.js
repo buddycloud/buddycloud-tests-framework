@@ -80,7 +80,7 @@ function retryTests(domain_url){
 
 	var msg = ("Retrying tests that failed for domain '"+domain_url+"'...").split("");
 	updateDisplay(msg, "info");
-
+	
 	test_entries = [];
 	for ( var i=0; i<failed_tests.length; i++ ){
 		test_entries.push(failed_tests[i]);
@@ -180,6 +180,7 @@ function handleDomainURL(){
 			'delay' : 100
 		});
 		$("#inspect_button").tooltip('show');
+
 		var msg = "Please enter a valid domain.".split("");
 		updateDisplay(msg, "error");
 		return null;
@@ -280,6 +281,7 @@ function finishRunningTestAgain(domain_url, data){
 	data = JSON.parse(data);
 	composeButtons(domain_url, null, getExitStatusClass(data.exit_status));
 	if ( data.exit_status == 0 ){
+		
 		var msg = ("Test "+data.name+" was succesful!").split("");
 		updateDisplay(msg, "info");
 		showMessage(data.name+" passed!", data.output, getExitStatusClass(data.exit_status));
