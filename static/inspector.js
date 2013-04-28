@@ -104,7 +104,7 @@ function handleStartTestsLauncher(){
 // What to do in the page when a new test was issued just now
 function handleTestCreation(test_name){
 
-	$("#tests_output_table").prepend("<div class='input-prepend' style='width:100%;'><button id='td_"+test_name+"' class='btn disabled' style='width:25%; padding-left:5px; text-align:left;'><i id='ti_"+test_name+"' class='icon-random'></i> <span class='text-left'>"+test_name+"</span> </button><span id='to_"+test_name+"' class='test_output input uneditable-input' style='width:73%;'><small>Running this test...</small></span></div>");
+	$("#tests_output_table").prepend("<div class='input-prepend' style='width:100%;'><button id='td_"+test_name+"' class='btn disabled' style='width:25%; padding-left:5px; text-align:left;'><i id='ti_"+test_name+"' class='icon-random'></i> <span class='text-left'>"+test_name+"</span> </button><span id='to_"+test_name+"' class='test_output input uneditable-input' style='width:73%;'>Running this test...</span></div>");
 }
 
 function handleTestRelaunch(test_name, previous_status){
@@ -114,7 +114,7 @@ function handleTestRelaunch(test_name, previous_status){
 	$("#td_"+test_name).tooltip("destroy");
 	$("#td_"+test_name).attr("onclick", "");
 	$("#to_"+test_name).removeClass(previous_status);
-	$("#to_"+test_name).html("");
+	$("#to_"+test_name).html("Running this test again...");
 	$("#ti_"+test_name).attr("class", "icon-random");
 }
 
@@ -131,7 +131,7 @@ function handleTestResponse(data, domain_url){
 		$("#td_"+data.name).attr("onclick", "runAgain('"+data.name+"', '"+domain_url+"', '"+getExitStatusClass(data.exit_status)+"');");
 	}
 	$("#to_"+data.name).addClass(getExitStatusClass(data.exit_status));
-	$("#to_"+data.name).html("<small>"+data.output+"</small>");
+	$("#to_"+data.name).html(data.output);
 	$("#ti_"+data.name).attr("class", getExitStatusIcon(data.exit_status) + " icon-white");
 }
 
