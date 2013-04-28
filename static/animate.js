@@ -14,9 +14,7 @@ var current_status = null;
 var cls = false;
 window.setInterval(function(){
 	
-	console.log("time to refresh.");
 	if ( !lock && started_tests && current_msg != null && current_status != null ){
-		console.log("clear? "+cls);
 		if ( !cls ){
 			updateDisplay(current_msg.split(""), current_status);
 			cls = true;
