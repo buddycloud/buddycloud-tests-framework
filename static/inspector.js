@@ -57,7 +57,7 @@ function decideNext(domain_url, data, retry){
 		}
 		else{ // Otherwise, there's a new test to be issued, do it.
 			if ( retry ){
-				handleTestRelaunch(test_entries[current_test].name, test_entries[current_test].exit_status);
+				handleTestRelaunch(test_entries[current_test].name, "danger"); //TODO: take this hardcoded thing out, sometimes can be 'warning' instead of 'danger'
 			}
 			else{
 				handleTestCreation(test_entries[current_test].name);
