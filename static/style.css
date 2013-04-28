@@ -1,5 +1,7 @@
 #logo{
 	cursor:pointer;
+	transition: color 2s;
+	-webkit-transition: color 2s;
 }
 
 /*Test output styles*/
