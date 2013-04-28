@@ -224,7 +224,7 @@ function showMessage(title, body, situation){
 	$("#message_body").text(body);
 	if ( show_modal ){
 		window.setTimeout(function(){
-			$("#message").modal({'keyboard' : false, 'show' : true, 'backdrop' : true});
+//			$("#message").modal({'keyboard' : false, 'show' : true, 'backdrop' : true});
 		}, 750);
 	}
 	$("message").on("hidden", function(){
