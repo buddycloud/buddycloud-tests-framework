@@ -2,6 +2,7 @@
 	cursor:pointer;
 }
 
+/*Test output styles*/
 .test_output{
 	cursor:default;
 }
@@ -36,14 +37,20 @@
 	color:black;
 }
 
-/*D3 animation styles*/
+
+/*Test launcher status styles*/
+@font-face {
+	font-family: MyInconsolata;
+	src: url('Inconsolata.otf');
+}
+
 text {
-	font: bold 20px monospace;
+	font: bold 20px MyInconsolata;
 }
 
 .intro {
 	fill: green;
-	font: bold 48px monospace;
+	font: bold 48px MyInconsolata;
 }
 
 .enter {
