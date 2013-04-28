@@ -15,7 +15,7 @@ function updateDisplay(new_data, status){
 		doUpdateDisplay(new_data, status);
 	}
 	else{
-		next_time += 1150;
+		next_time += 1400;
 		window.setTimeout(function(){
 			doUpdateDisplay(new_data, status);
 		}, next_time);
@@ -40,7 +40,9 @@ function doUpdateDisplay(new_data, status) {
 			var text = svg.selectAll("text")
 				.data(new_data, function(d){ return d; });
 			transitions(text, 750, status);
-			lock = false;
+			window.setTimeout(function(){
+				lock = false;
+			}, 751);
 		}, 400);
 
 	}

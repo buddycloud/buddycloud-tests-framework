@@ -3,8 +3,12 @@ var current_test = null;
 
 var failed_tests = [];
 
+var started_tests = false;
+
 // Get tests from server and starts tests launcher
 function startInspection(){
+
+	started_tests = true;
 
 	domain_url = handleDomainURL();
 	if ( domain_url == null ){

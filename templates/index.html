@@ -50,12 +50,19 @@
 	
 	{% else %}
 
-		var welcome_message = "Welcome!!!".split("");
-		updateDisplay(welcome_message, "intro");
-		window.setTimeout(function() {
-			var msg = "Enter domain to be tested and hit 'inspect'!".split("");
-			updateDisplay(msg, "info");
-		}, 3000);
+		$(document).ready(function (){
+
+			var welcome_message = "Welcome!!!".split("");
+			updateDisplay(welcome_message, "intro");
+			window.setTimeout(function() {
+				if ( !started_tests ){
+					var msg = "C'mon, what are you waiting for??".split("");
+					updateDisplay(msg, "info");
+					var msg = "Enter the domain to be tested and hit 'inspect'!".split("");
+					updateDisplay(msg, "info");
+				}
+			}, 6000);
+		});
 	{% endif %}
 	</script>
 </html>
