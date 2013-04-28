@@ -8,6 +8,27 @@ var svg = d3.select("#test_launcher_status").append("svg")
 
 var lock = false;
 var next_time = 0;
+var current_msg = null;
+var current_status = null;
+
+var cls = false;
+window.setInterval(function(){
+	
+	console.log("time to refresh.");
+	if ( !lock && started_tests && current_msg != null && current_status != null ){
+		console.log("clear? "+cls);
+		if ( !cls ){
+			updateDisplay(current_msg.split(""), current_status);
+			cls = true;
+		}
+		else{
+			updateDisplay([], current_status);
+			cls = false;
+		}
+	}
+}, 2500);
+
+
 function updateDisplay(new_data, status){
 
 	if (!lock){
@@ -41,6 +62,10 @@ function doUpdateDisplay(new_data, status) {
 				.data(new_data, function(d){ return d; });
 			transitions(text, 750, status);
 			window.setTimeout(function(){
+				if ( new_data.join("") != "" ){
+					current_msg = new_data.join("");
+				}
+				current_status = status;
 				lock = false;
 			}, 751);
 		}, 400);
