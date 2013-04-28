@@ -1,5 +1,5 @@
 import os, json
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, make_response
 from tests import test_entries, test_names
 
 app = Flask(__name__)
@@ -39,7 +39,10 @@ def perform_test(test_name=None, domain_url=None):
 @app.route('/<path:domain_url>')
 def start_tests_launcher(domain_url=None):
 
-	return render_template("index.html", domain_url=domain_url)
+	resp = make_response(render_template("index.html", domain_url=domain_url))
+	resp.headers['content-type'] = "text/html"
+	resp.mimetype = 'text/html'
+	return resp
 
 if __name__ == "__main__":
 	

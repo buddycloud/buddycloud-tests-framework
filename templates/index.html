@@ -2,8 +2,8 @@
 	<head>
 		<title>buddycloud inspector</title>
 		<meta name="viewport" 	content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="static/style.css">
+		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="bootstrap/css/bootstrap.min.css")}}>
+		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="style.css")}}>
 	</head>
 
 	<body>
@@ -33,27 +33,28 @@
 		</div>
 	</body>
 
-	<script src="static/jquery-1.9.1.min.js" language="javascript" type="text/javascript"></script>
-	<script src="static/inspector.js" language="javascript" type="text/javascript"></script>
-	<script src="static/bootstrap/js/bootstrap.min.js" language="javascript" type="text/javascript"></script>
+	<script src={{url_for('static', filename="jquery-1.9.1.min.js")}} language="javascript" type="text/javascript"></script>
+	<script src={{url_for('static', filename="inspector.js")}} language="javascript" type="text/javascript"></script>
+	<script src={{url_for('static', filename="bootstrap/js/bootstrap.min.js")}} language="javascript" type="text/javascript"></script>
 	<script src="http://d3js.org/d3.v2.min.js?2.10.1" language="javascript" type="text/javascript"></script>
-	<script src="static/animate.js" language="javascript" type="text/javascript"></script>
-	<script src="static/underscore-min.js" language="javascript" type="text/javascript"></script>
+	<script src={{url_for('static', filename="animate.js")}} language="javascript" type="text/javascript"></script>
+	<script src={{url_for('static', filename="underscore-min.js")}} language="javascript" type="text/javascript"></script>
+	<script language="javascript" type="text/javascript">
 	{% if domain_url %}
-	<script>
+
 		$(document).ready(function (){
 			$("#domain_url_box").val("{{ domain_url }}");
 			startInspection();
 		});
-	</script>
+	
 	{% else %}
-	<script>
+
 		var welcome_message = "Welcome!!!".split("");
 		updateDisplay(welcome_message, "intro");
 		window.setTimeout(function() {
 			var msg = "Enter domain to be tested and hit 'inspect'!".split("");
 			updateDisplay(msg, "info");
 		}, 3000);
-	</script>
 	{% endif %}
+	</script>
 </html>
