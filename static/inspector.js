@@ -137,7 +137,7 @@ function handleTestResponse(data, domain_url){
 
 function handleDomainURL(){
 
-	$("#inspect_button").tooltip("destroy");
+	$("#domain_url_box").tooltip("destroy");
 	domain_url = $("#domain_url_box").val();
 
 	var valid = true;
@@ -175,15 +175,15 @@ function handleDomainURL(){
 			domain_url = domain_url.replace("/", "");
 		}
 		window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/"+domain_url); 
-		$("#inspect_button").attr("data-toggle", "tooltip");
-		$("#inspect_button").attr("title", "Please enter a valid domain!");
-		$("#inspect_button").tooltip({
+		$("#domain_url_box").attr("data-toggle", "tooltip");
+		$("#domain_url_box").attr("title", "Please enter a valid domain!");
+		$("#domain_url_box").tooltip({
 			'animation' : true,
 			'placement' : 'bottom',
 			'trigger' : 'manual',
 			'delay' : 100
 		});
-		$("#inspect_button").tooltip('show');
+		$("#domain_url_box").tooltip('show');
 
 		var msg = "Please enter a valid domain.".split("");
 		updateDisplay(msg, "error");
