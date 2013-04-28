@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 	<head>
-		<title>buddycloud inspector</title>
+		<title>buddycloud inspect</title>
 		<meta name="viewport" 	content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="bootstrap/css/bootstrap.min.css")}}>
 		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="style.css")}}>
+		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 	</head>
 
 	<body>
 		<div class='navbar navbar-inverse navbar-fixed-top'>
 			<div class='navbar-inner'>
 				<div class='container'>
-					<a id="logo" href="#" class='brand'>buddycloud inspector</a>
+					<a id="logo" href="#" class='brand'>buddycloud inspect</a>
 					<input type="text" class="input-medium search-query pull-right" id='domain_url_box' style="margin-top:5px;">
-					<button id='inspect_button' class="btn btn-warning pull-right" style="margin-right:5px; margin-left:5px;" onclick="startInspection();">inspect</button>
+					<button id='inspect_button' class="btn pull-right" style="margin-right:5px; margin-left:5px;" onclick="startInspection();">inspect</button>
 				</div>
 			</div>
 		</div>
 		<div id='test_launcher_status' class='container' style="margin-top:60px;">
 		</div>
-		<div id='tests_output_table' class='container' style="margin-top:20px;">
+		<div id='tests_output_table' class='container' style="margin-top:20px; margin-bottom:60px;">
 		</div>
 		<div id='message' class='modal hide fade'>
 			<div class='modal-header' style='background-color:black;'>
@@ -29,6 +30,13 @@
 				<p id='message_body'></p>
 			</div>
 			<div id='message_buttons' class='modal-footer'>
+			</div>
+		</div>
+		<div class='navbar navbar-inverse navbar-fixed-bottom'>
+			<div class='navbar-inner'>
+				<div class='container'>
+
+				</div>
 			</div>
 		</div>
 	</body>

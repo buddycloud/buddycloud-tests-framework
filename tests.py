@@ -28,7 +28,13 @@ test_entries.append({'name' : 'buddycloud_server_disco', 'test' : buddycloudServ
 test_entries.append({'name' : 'lookup_api', 'test' : lookupAPI, 'continue_if_fail' : False })
 test_entries.append({'name' : 'test_example1', 'test' : testExample, 'continue_if_fail' : True })
 test_entries.append({'name' : 'test_example2', 'test' : testFailExample, 'continue_if_fail' : True })
-test_entries.append({'name' : 'test_example3', 'test' : testFailExample, 'continue_if_fail' : False })
+test_entries.append({'name' : 'test_example3', 'test' : testFailExample, 'continue_if_fail' : True })
+test_entries.append({'name' : 'test_example4', 'test' : testExample, 'continue_if_fail' : True })
+test_entries.append({'name' : 'test_example5', 'test' : testExample, 'continue_if_fail' : True })
+test_entries.append({'name' : 'test_example6', 'test' : testFailExample, 'continue_if_fail' : True })
+test_entries.append({'name' : 'test_example7', 'test' : testExample, 'continue_if_fail' : True })
+test_entries.append({'name' : 'test_example8', 'test' : testFailExample, 'continue_if_fail' : True })
+test_entries.append({'name' : 'test_example9', 'test' : testExample, 'continue_if_fail' : True })
 
 test_names = {
 'xmpp_server_srv_lookup' : 0,
@@ -38,5 +44,11 @@ test_names = {
 'lookup_api' : 4,
 'test_example1' : 5,
 'test_example2' : 6,
-'test_example3' : 7
+'test_example3' : 7,
+'test_example4' : 8,
+'test_example5' : 9,
+'test_example6' : 10,
+'test_example7' : 11,
+'test_example8' : 12,
+'test_example9' : 13
 }

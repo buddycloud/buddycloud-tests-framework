@@ -104,7 +104,7 @@ function handleStartTestsLauncher(){
 // What to do in the page when a new test was issued just now
 function handleTestCreation(test_name){
 
-	$("#tests_output_table").append("<div class='input-prepend' style='width:100%;'><button id='td_"+test_name+"' class='btn disabled' style='width:25%; padding-left:5px; text-align:left;'><i id='ti_"+test_name+"' class='icon-random'></i> <span class='text-left'>"+test_name+"</span> </button><span id='to_"+test_name+"' class='test_output input uneditable-input' style='width:73%;'><small></small></span></div>");
+	$("#tests_output_table").prepend("<div class='input-prepend' style='width:100%;'><button id='td_"+test_name+"' class='btn disabled' style='width:25%; padding-left:5px; text-align:left;'><i id='ti_"+test_name+"' class='icon-random'></i> <span class='text-left'>"+test_name+"</span> </button><span id='to_"+test_name+"' class='test_output input uneditable-input' style='width:73%;'><small>Running this test...</small></span></div>");
 }
 
 function handleTestRelaunch(test_name, previous_status){

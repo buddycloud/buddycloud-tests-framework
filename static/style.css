@@ -1,10 +1,4 @@
-#logo{
-	cursor:pointer;
-	transition: color 2s;
-	-webkit-transition: color 2s;
-}
-
-/*Test output styles*/
+/*Test output table and modal styles*/
 .test_output{
 	cursor:default;
 }
@@ -65,4 +59,16 @@ text {
 
 .exit {
 	fill: brown;
+}
+
+/*Overall page styles*/
+
+body{
+	font-family: MyInconsolata;
+}
+
+#logo{
+	cursor:pointer;
+	transition: color 2s;
+	-webkit-transition: color 2s;
 }
