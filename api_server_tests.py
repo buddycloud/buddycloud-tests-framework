@@ -51,7 +51,7 @@ def apiLookup(domain_url, redirectTestOutput=False):
 
 		if redirectTestOutput:
 			return []
-		
+
 		out = "Could not find any API server records!"
 		status = 1
 	return (status, out)
@@ -61,6 +61,12 @@ def apiConnection(domain_url):
 	found = "API server connection was successful at: "
 
 	answers = apiLookup(domain_url, True)
+	
+	if ( len(answers) == 0 ):
+
+		out = "API server not found."
+		status = 1
+		return (status, out)
 
 	for answer in answers:
 
