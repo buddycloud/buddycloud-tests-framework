@@ -1,6 +1,6 @@
-import dns.resolver
+import dns.resolver, socket
 
-def lookupAPI(domain_url):
+def apiLookup(domain_url, redirectTestOutput=False):
 	# Look at SRV record of the given domain if the service _buddycloud-api can be found!
 	answers = []
 	lookup_api_query = None
@@ -28,11 +28,35 @@ def lookupAPI(domain_url):
 
 	if len(answers) != 0:
 		found = "API server record(s) found: "
+
+		if ( redirectTestOutput ):
+			return answers
+
 		for answer in answers:
 			found += answer['domain'] + " at " + str(answer['port'])+" | "
+
 		out = found
 		status = 0
 	else:
 		out = "Could not find any API server records!"
 		status = 1
+	return (status, out)
+
+def apiConnection(domain_url):
+
+	found = "API server connection was successful at: "
+
+	answers = apiLookup(domain_url, True)
+	for answer in answers:
+
+		try:
+			socket.create_connection((answer['domain'],answer['port']), timeout=5)
+			found += answer['domain']+":"+answer['port']+" | "
+		except socket.timeout:
+			out = "API server connection failed at "+answer['domain']+":"+str(answer['port'])
+			status = 1
+			return (status, out)
+
+	out = found
+	status = 0
 	return (status, out)

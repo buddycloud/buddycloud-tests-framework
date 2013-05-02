@@ -1,7 +1,7 @@
 import random, time
 from xmpp_server_tests import xmppServerServiceRecordLookup, xmppServerAddressRecordLookup, xmppServerConnection
 from buddycloud_server_tests import buddycloudServerDisco
-from api_server_tests import lookupAPI
+from api_server_tests import apiLookup, apiConnection
 
 def testExample(domain_url):
 	# This is a temporary test example, does nothing but wait.
@@ -25,8 +25,8 @@ test_entries.append({'name' : 'xmpp_server_srv_lookup', 'test' : xmppServerServi
 test_entries.append({'name' : 'xmpp_server_a_lookup', 'test' : xmppServerAddressRecordLookup, 'continue_if_fail' : False })
 test_entries.append({'name' : 'xmpp_server_connection', 'test' : xmppServerConnection, 'continue_if_fail' : False })
 test_entries.append({'name' : 'buddycloud_server_disco', 'test' : buddycloudServerDisco, 'continue_if_fail' : False })
-test_entries.append({'name' : 'lookup_api', 'test' : lookupAPI, 'continue_if_fail' : False })
-test_entries.append({'name' : 'test_example1', 'test' : testExample, 'continue_if_fail' : True })
+test_entries.append({'name' : 'api_lookup', 'test' : apiLookup, 'continue_if_fail' : False })
+test_entries.append({'name' : 'api_connection', 'test' : apiConnection, 'continue_if_fail' : False })
 test_entries.append({'name' : 'test_example2', 'test' : testFailExample, 'continue_if_fail' : True })
 test_entries.append({'name' : 'test_example3', 'test' : testFailExample, 'continue_if_fail' : True })
 test_entries.append({'name' : 'test_example4', 'test' : testExample, 'continue_if_fail' : True })
@@ -41,8 +41,8 @@ test_names = {
 'xmpp_server_a_lookup' : 1,
 'xmpp_server_connection' : 2,
 'buddycloud_server_disco' : 3,
-'lookup_api' : 4,
-'test_example1' : 5,
+'api_lookup' : 4,
+'api_connection' : 5,
 'test_example2' : 6,
 'test_example3' : 7,
 'test_example4' : 8,

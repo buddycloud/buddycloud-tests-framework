@@ -1,7 +1,7 @@
 import dns.resolver
 from sleekxmpp import ClientXMPP
 
-def xmppServerServiceRecordLookup(domain_url, returnResult=False):
+def xmppServerServiceRecordLookup(domain_url, redirectTestOutput=False):
 
 	answers = []
 	query_for_SRV_record = None
@@ -27,7 +27,7 @@ def xmppServerServiceRecordLookup(domain_url, returnResult=False):
 			'weight' : answer.weight
 		})
 
-	if returnResult:
+	if redirectTestOutput:
 		return answers
 
 	if len(answers) != 0:
@@ -42,14 +42,14 @@ def xmppServerServiceRecordLookup(domain_url, returnResult=False):
 		status = 1
 	return (status, out)
 
-def xmppServerAddressRecordLookup(domain_url, returnResult=False):
+def xmppServerAddressRecordLookup(domain_url, redirectTestOutput=False):
 
 	answers = xmppServerServiceRecordLookup(domain_url, True)
 
 	if len(answers) != 0:
 		found = "XMPP server A record(s) found: "
 
-		if returnResult:
+		if redirectTestOutput:
 			addresses = []
 		
 		for answer in answers:
@@ -73,19 +73,19 @@ def xmppServerAddressRecordLookup(domain_url, returnResult=False):
 				status = 1
 				return (status, out)
 			except:
-				out = "A problem happened while searching for the XMPP server A record: "+str(e)
+				out = "A problem happened while searching for the XMPP server A record!"
 				status = 1
 				return (status, ok)
 			
 			for record in query_for_A_record:
 				address = str(record)
 			
-				if returnResult:
+				if redirectTestOutput:
 					addresses.append({'address':address, 'domain' : answer['domain']})
 				else:
 					found += answer['domain'] + " at " + address + " | "
 
-		if returnResult:
+		if redirectTestOutput:
 			return addresses
 
 		out = found
