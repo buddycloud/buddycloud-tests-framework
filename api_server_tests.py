@@ -1,4 +1,4 @@
-import dns.resolver, requests
+import dns.resolver, socket
 
 def apiLookup(domain_url, redirectTestOutput=False):
 	
@@ -58,7 +58,7 @@ def apiLookup(domain_url, redirectTestOutput=False):
 
 def apiConnection(domain_url):
 
-	found = "API server connection successful (running with HTTPS!): "
+	found = "API server connection was successful at: "
 
 	answers = apiLookup(domain_url, True)
 	
@@ -71,25 +71,10 @@ def apiConnection(domain_url):
 	for answer in answers:
 
 		try:
-			r = requests.get("https://"+answer['domain']+":"+answer['port'], verify=False)
+			socket.create_connection((answer['domain'],answer['port']), timeout=5)
+			found += answer['domain']+":"+answer['port']+" | "
 
-			if str(r.status_code).startswith("2"):
-			
-				found += answer['domain']+":"+answer['port']+" | "
-
-			else:
-		
-				out = "API server connection failed at "+answer['domain']+":"+str(answer['port'])
-				status = 1
-				return (status, out)
-
-		except requests.exceptions.ConnectionError:
-
-			out = "API server connection failed at "+answer['domain']+":"+str(answer['port'])
-			status = 1
-			return (status, out)
-
-		except requests.exceptions.Timeout:
+		except socket.timeout:
 
 			out = "API server connection failed at "+answer['domain']+":"+str(answer['port'])
 			status = 1
