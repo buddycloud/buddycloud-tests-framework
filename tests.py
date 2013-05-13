@@ -1,8 +1,8 @@
 import random, time
 from xmpp_server_tests import xmppServerServiceRecordLookup, xmppServerAddressRecordLookup, xmppServerConnection
 from buddycloud_server_tests import buddycloudServerDisco
-from api_server_tests import apiLookup, apiHTTPSConnection
-from media_server_tests import mediaServerDisco
+#from api_server_tests import apiLookup, apiHTTPSConnection
+#from media_server_tests import mediaServerDisco
 
 def testExample(domain_url):
 	# This is a temporary test example, does nothing but wait.
