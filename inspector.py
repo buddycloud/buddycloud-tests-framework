@@ -26,14 +26,30 @@ def perform_test(test_name=None, domain_url=None):
 
 	json_return = { 'name' : test_name }
 
-	if test_name == None or test_name.strip() == "" or test_name not in test_names:
-		(exit_status, test_output) = 2, "Invalid test name"
+	error_msg = None
+
+	if test_name == None or test_name.strip() == "":
+
+		error_msg = "Invalid test name. It cannot be null."
+		
+	elif test_name not in test_names:
+
+		error_msg = "Invalid test name. There is no such test called "+test_name+"."
+
+	if error_msg != None:
+
+		(exit_status, briefing, message) = 2, "Invalid test name!", error_msg
 		json_return['exit_status'] = exit_status
-		json_return['output'] = test_output
+		json_return['briefing'] = briefing
+		json_return['message'] = message
+
 	else:
-		(exit_status, test_output) = test_entries[test_names[test_name]]['test'](domain_url)
+	
+		(exit_status, briefing, message) = test_entries[test_names[test_name]]['test'](domain_url)
 		json_return['exit_status'] = exit_status
-		json_return['output'] = test_output
+		json_return['briefing'] = briefing
+		json_return['message'] = message
+
 	return json.dumps(json_return)
 
 @app.route('/<path:domain_url>')

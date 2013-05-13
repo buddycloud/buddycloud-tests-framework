@@ -14,8 +14,6 @@ function startInspection(){
 	if ( domain_url == null ){
 		return;
 	}
-//	var msg = ("Inspecting domain '"+domain_url+"'...").split("");
-//	updateDisplay(msg, "info");
 	$.get("/test_names", function(data){
 		testsLauncher(data, domain_url);
 	});
@@ -48,12 +46,12 @@ function decideNext(domain_url, data, retry){
 	data = JSON.parse(data);
 	// If current test has failed and continue if fail is 'false':
 	if ( data.exit_status != 0 && !test_entries[current_test].continue_if_fail ){
-		failed_tests.push(test_entries[current_test]);
+		failed_tests.push({ 'test' : test_entries[current_test], 'output' : data });
 		finishLauncher();
 	}
 	else{ //Otherwise, the test has passed or failed but continue if fail is 'true'
-		if ( data.exit_status == 1 ){
-			failed_tests.push(test_entries[current_test]);
+		if ( data.exit_status != 0 ){
+			failed_tests.push({ 'test' : test_entries[current_test], 'output' : data });
 		}
 		current_test++;
 		if ( current_test == test_entries.length ){ //If there's no more tests to be issued
@@ -61,7 +59,7 @@ function decideNext(domain_url, data, retry){
 		}
 		else{ // Otherwise, there's a new test to be issued, do it.
 			if ( retry ){
-				handleTestRelaunch(test_entries[current_test].name, "danger"); //TODO: take this hardcoded thing out, sometimes can be 'warning' instead of 'danger'
+				handleTestRelaunch(test_entries[current_test].name);
 			}
 			else{
 				handleTestCreation(test_entries[current_test].name);
@@ -73,8 +71,6 @@ function decideNext(domain_url, data, retry){
 
 function runAgain(test_name, domain_url, previous_status){
 
-//	var msg = ("Running test '"+test_name+"' again...").split("");
-//	updateDisplay(msg, "info");
 
 	handleTestRelaunch(test_name, previous_status);
 	issueTest(test_name, domain_url, finishRunningTestAgain, true);
@@ -82,16 +78,14 @@ function runAgain(test_name, domain_url, previous_status){
 
 function retryTests(domain_url){
 
-//	var msg = ("Retrying tests that failed for domain '"+domain_url+"'...").split("");
-//	updateDisplay(msg, "info");
 	
 	test_entries = [];
 	for ( var i=0; i<failed_tests.length; i++ ){
-		test_entries.push(failed_tests[i]);
+		test_entries.push(failed_tests[i].test);
 	}
 	failed_tests = [];
 	current_test = 0;
-	handleTestRelaunch(test_entries[current_test].name, "danger"); //TODO: take this hardcoded thing out, sometimes can be 'warning' instead of 'danger'
+	handleTestRelaunch(test_entries[current_test].name);
 	issueTest(test_entries[current_test].name, domain_url, decideNext, true);
 }
 
@@ -107,13 +101,12 @@ function handleTestCreation(test_name){
 	$("#tests_output_table").prepend("<div class='input-prepend' style='width:100%;'><button id='td_"+test_name+"' class='btn disabled' style='width:25%; padding-left:5px; text-align:left;'><i id='ti_"+test_name+"' class='icon-random'></i> <span class='text-left'>"+test_name+"</span> </button><span id='to_"+test_name+"' class='test_output input uneditable-input' style='width:73%;'>Running this test...</span></div>");
 }
 
-function handleTestRelaunch(test_name, previous_status){
+function handleTestRelaunch(test_name){
 
-	$("#td_"+test_name).removeClass("btn-"+previous_status);
-	$("#td_"+test_name).addClass("disabled");
+	$("#td_"+test_name).attr("class", "btn disabled");
 	$("#td_"+test_name).tooltip("destroy");
 	$("#td_"+test_name).attr("onclick", "");
-	$("#to_"+test_name).removeClass(previous_status);
+	$("#to_"+test_name).attr("class", "test_output uneditable-input");
 	$("#to_"+test_name).html("Running this test again...");
 	$("#ti_"+test_name).attr("class", "icon-random");
 }
@@ -131,7 +124,7 @@ function handleTestResponse(data, domain_url){
 		$("#td_"+data.name).attr("onclick", "runAgain('"+data.name+"', '"+domain_url+"', '"+getExitStatusClass(data.exit_status)+"');");
 	}
 	$("#to_"+data.name).addClass(getExitStatusClass(data.exit_status));
-	$("#to_"+data.name).html(data.output);
+	$("#to_"+data.name).html(data.briefing);
 	$("#ti_"+data.name).attr("class", getExitStatusIcon(data.exit_status) + " icon-white");
 }
 
@@ -139,6 +132,7 @@ function handleDomainURL(){
 
 	$("#domain_url_box").tooltip("destroy");
 	domain_url = $("#domain_url_box").val();
+	domain_url = domain_url.trim();
 
 	var valid = true;
 
@@ -185,8 +179,6 @@ function handleDomainURL(){
 		});
 		$("#domain_url_box").tooltip('show');
 
-//		var msg = "Please enter a valid domain.".split("");
-//		updateDisplay(msg, "error");
 		return null;
 	}
 }
@@ -221,7 +213,7 @@ function showMessage(title, body, situation){
 
 	$("#message_title").text(title);
 	$("#message_body_area").attr("class", "modal-body "+situation);
-	$("#message_body").text(body);
+	$("#message_body").html(body);
 	if ( show_modal ){
 		window.setTimeout(function(){
 			$("#message").modal({'keyboard' : false, 'show' : true, 'backdrop' : true});
@@ -235,12 +227,15 @@ function showMessage(title, body, situation){
 	});
 }
 
-function composeButtons(domain_url, tests, situation){
-	if ( tests == null ){
-		$("#message_buttons").html("<button href='#' data-dismiss='modal' class='btn btn-"+situation+"'>Close</button>");
-	}
-	else{
-		$("#message_buttons").html("<button id='retry_button' href='#' data-dismiss='modal' class='btn btn-danger'>Retry tests</button><button href='#' data-dismiss='modal' class='btn btn-"+situation+"'>Close</button>");
+function createButtons(domain_url, retry, situation){
+
+	var buttons_html = "<button href='#' data-dismiss='modal' class='btn btn-"+situation+"'>Close</button>";
+	$("#message_buttons").html(buttons_html);
+	
+	if (retry){
+	
+		buttons_html = "<button id='retry_button' href='#' data-dismiss='modal' class='btn btn-danger'>Retry tests</button>" + buttons_html;
+		$("#message_buttons").html(buttons_html);
 		$("#retry_button").attr("onclick", "retryTests('"+domain_url+"');");
 	}
 }
@@ -250,31 +245,43 @@ function finishLauncher(){
 
 	var summary = "Inspection summary: ";
 	if ( failed_tests.length == 0 ){
-//		var msg = "All tests were successful. Congratulations!".split("");
-//		updateDisplay(msg, "info");
+		
 		summary += "None of the tests failed! Congratulations!";
-		composeButtons(domain_url, null, "success");
+		createButtons(domain_url, null, "success");
 		showMessage("All tests finished properly!", summary, "success");
 	}
 	else{
-//		var msg =  " failed. Please fix these problems.";
-		var summary_piece = " failed: "+failed_tests[0].name;
+		
+		var summary_piece = " failed: "+failed_tests[0].test.name;
+		
 		for ( var i=1; i<failed_tests.length; i++ ){
-			summary_piece += ", " + failed_tests[i].name;
+		
+			summary_piece += ", " + failed_tests[i].test.name;
 		}
+		
 		summary_piece += ".";
+		
 		if ( failed_tests.length == 1 ){
-//			msg = ("One test"+msg).split("");
+			
 			summary_piece = ("One test"+summary_piece);
 		}
 		else{
-//			msg = (failed_tests.length+" tests"+msg).split("");
+
 			summary_piece = (failed_tests.length+" tests"+summary_piece);
 		}
+		
 		summary += summary_piece;
-//		updateDisplay(msg, "error");
-		composeButtons(domain_url, failed_tests, "danger");
-		showMessage("All tests finished!", summary, "danger");
+
+		var message = "<br/><br/>These tests failed because of the following reasons: ";
+
+		for ( var i=0; i<failed_tests.length; i++ ){
+
+			message += "<br/><strong>" + failed_tests[i].test.name + "</strong>: " + failed_tests[i].output.message
+		}
+
+		createButtons(domain_url, failed_tests.test, "danger");
+
+		showMessage("All tests finished!", summary + message, "danger");
 	}
 	$("#inspect_button").removeClass("disabled");
 	$("#inspect_button").attr("onclick", "startInspection();");
@@ -283,17 +290,13 @@ function finishLauncher(){
 function finishRunningTestAgain(domain_url, data){
 
 	data = JSON.parse(data);
-	composeButtons(domain_url, null, getExitStatusClass(data.exit_status));
+	createButtons(domain_url, null, getExitStatusClass(data.exit_status));
 	if ( data.exit_status == 0 ){
 		
-//		var msg = ("Test "+data.name+" was succesful!").split("");
-//		updateDisplay(msg, "info");
-		showMessage(data.name+" passed!", data.output, getExitStatusClass(data.exit_status));
+		showMessage(data.name+" passed!", data.message, getExitStatusClass(data.exit_status));
 	}
 	else{
-//		var msg = ("Test "+data.name+" failed!").split("");
-//		updateDisplay(msg, "error");
-		showMessage(data.name+" failed!", data.output, getExitStatusClass(data.exit_status));
+		showMessage(data.name+" failed!", data.message, getExitStatusClass(data.exit_status));
 	}
 	$("#inspect_button").removeClass("disabled");
 	$("#inspect_button").attr("onclick", "startInspection();");

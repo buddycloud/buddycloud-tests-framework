@@ -15,18 +15,21 @@ def xmppServerServiceRecordLookup(domain_url, redirectTestOutput=False):
 		if redirectTestOutput:
 			return []
 		
-		out = "No XMPP server SRV record found!"
+		briefing = "No XMPP server SRV record found at domain "+domain_url+"!"
 		status = 1
-		return (status, out)
+		message = "We were unable to find your XMPP server. Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+		return (status, briefing, message)
 
-	except:
+	except Exception, e:
 	
 		if redirectTestOutput:
 			return []
 		
-		out = "A problem happened while searching for a XMPP server SRV record!"
-		status = 1
-		return (status, out)
+		briefing = "A problem happened while searching for a XMPP server SRV record!"
+		status = 2
+		message = "Something odd happened while we were looking a XMPP server SRV record up at your domain at "+domain_url+": "+str(e)+". "
+		message += "<br/>It could be a bug in our Inspector. Let us know at <email> if you think so." 
+		return (status, briefing, message)
 
 	for answer in query_for_SRV_record:
 
@@ -45,29 +48,33 @@ def xmppServerServiceRecordLookup(domain_url, redirectTestOutput=False):
 
 	if len(answers) != 0:
 		
-		found = "XMPP server SRV record(s) found: "
+		found = "XMPP server SRV records found: "
 		
 		for answer in answers:
-			found += answer['domain'] + " at " + str(answer['port'])+" | "
+			found += answer['domain'] + " at port " + str(answer['port'])+" | "
 		
-		out = found
+		briefing = found
 		status = 0
-		return (status, out)
+		message = "You have said that the following addresses will handle all XMPP messages for this domain.<br/>"
+		message += briefing
+		return (status, briefing, message)
+
 	else:
 		
 		if redirectTestOutput:
 			return []
 		
-		out = "Could not find any XMPP server SRV records!"
+		briefing = "No XMPP server SRV record found at domain "+domain_url+"!"
 		status = 1
-	return (status, out)
+		message = "We were unable to find your XMPP server. Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+		return (status, briefing, message)
 
 def xmppServerAddressRecordLookup(domain_url, redirectTestOutput=False):
 
 	answers = xmppServerServiceRecordLookup(domain_url, True)
 
 	if len(answers) != 0:
-		found = "XMPP server A record(s) found: "
+		found = "XMPP server A records found: "
 
 		if redirectTestOutput:
 			addresses = []
@@ -81,9 +88,10 @@ def xmppServerAddressRecordLookup(domain_url, redirectTestOutput=False):
 				if redirectTestOutput:
 					return addresses
 			
-				out = "XMPP server SRV record is pointing to a CNAME record!"
+				briefing = "XMPP server SRV record is pointing to a CNAME record!"
 				status = 1
-				return (status, out)
+				message = "We found that your XMPP server SRV record is pointing to a CNAME record. <br/>The XMPP server SRV record (_xmpp-server._tcp."+domain_url+") must point to a valid A record instead. <br/>Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+				return (status, briefing, message)
 
 			except dns.resolver.NXDOMAIN:
 				pass
@@ -100,17 +108,21 @@ def xmppServerAddressRecordLookup(domain_url, redirectTestOutput=False):
 				if redirectTestOutput:
 					return addresses
 
-				out = "No XMPP server A record found!"
+				briefing = "No XMPP server A record found!"
 				status = 1
-				return (status, out)
-			except:
+				message = "There is no A record being pointed by your XMPP SRV record. <br/>  Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+				return (status, briefing, message)
+
+			except Exception, e:
 				
 				if redirectTestOutput:
 					return addresses
 				
-				out = "A problem happened while searching for the XMPP server A record!"
-				status = 1
-				return (status, ok)
+				briefing = "A problem happened while searching for the XMPP server A record!"
+				status = 2
+				message = "Something odd happened while we were looking a XMPP server SRV record up at your domain at "+domain_url+": "+str(e)+". "
+				message += "<br/>It could be a bug in our Inspector. Let us know at <email> if you think so." 
+				return (status, briefing)
 			
 			for record in query_for_A_record:
 
@@ -126,16 +138,20 @@ def xmppServerAddressRecordLookup(domain_url, redirectTestOutput=False):
 			return addresses
 
 
-		out = found
+		briefing = found
 		status = 0
+		message = "You are pointing your XMPP server SRV record to the following valid A records: <br/>"
+		message += briefing
+		return (status, briefing, message)
 	else:
 
 		if redirectTestOutput:
 			return []
 		
-		out = "Could not find any XMPP server SRV records!"
+		briefing = "No XMPP server SRV record found at domain "+domain_url+"!"
 		status = 1
-	return (status, out)
+		message = "We were unable to find your XMPP server. Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+		return (status, briefing, message)
 
 def xmppServerConnection(domain_url):
 
@@ -155,15 +171,21 @@ def xmppServerConnection(domain_url):
 
 			else:
 
-				out = "Could not connect with XMPP server "+answer['domain']+" at "+address
+				briefing = "Could not connect with XMPP server "+answer['domain']+" at "+address
 				status = 1
-				return (status, out)
+				message = "We could not open a connection to your XMPP server "+answer['domain']+" at "+address+" using a XMPP client."
+				message += "<br/>Please make sure it is up and running on port 5222 and try again."
+				return (status, briefing, message)
 
-		found = "Connection succesfull to XMPP server(s): "+found
-		out = found
+		found = "Connection succesfull to XMPP servers: "+found
+		briefing = found
 		status = 0
+		message = "We were able to find your XMPP server! Congratulations. We found the following XMPP servers: "
+		message += "<br/>"+found
+		return (status, briefing, message)
 	else:
 		
-		out = "Could not find any XMPP server SRV records!"
+		briefing = "No XMPP server SRV record found at domain "+domain_url+"!"
 		status = 1
-	return (status, out)
+		message = "We were unable to find your XMPP server. Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+		return (status, briefing, message)

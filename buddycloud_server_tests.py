@@ -7,6 +7,13 @@ def buddycloudServerDisco(domain_url):
 
 	answers = xmppServerAddressRecordLookup(domain_url, True)
 
+	if ( len(answers) == 0 ):
+
+		briefing = "No XMPP server SRV record found at domain "+domain_url+"!"
+		status = 1
+		message = "We were unable to find your XMPP server. Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+		return (status, briefing, message)
+
 	for answer in answers:
 	
 		address = answer['address']
@@ -50,27 +57,39 @@ def buddycloudServerDisco(domain_url):
 					except IqError:
 						continue
 					except:
-						out = "Could not query for more information on item with jid "+item_jid+" of XMPP server "+answer['domain']+" at "+address
-						status = 1
-						return (status, out)
+						continue
 
 			except:
-				out = "Could not query for items of XMPP server "+answer['domain']+" at "+address
+				briefing = "Could not disco#items on your XMPP server "+answer['domain']+" at "+address
 				status = 1
-				return (status, out)
+				message = "We could not find the identity of your buddycloud channel server while performing a discovery operation on your XMPP server. "
+				message += "<br/>Please ensure that disco#items and disco#info are properly working."
+				return (status, briefing, message)
 			finally:
 				xmpp_client.disconnect()
 
 			if server_discovered:
-				out = "We have found your buddycloud server on your XMPP server at "+server_jid
+
+				briefing = "We have found your buddycloud server on your XMPP server at "+server_jid+"!"
 				status = 0
-				return (status, out)
+				message = "We found your buddycloud server on your XMPP server at "+server_jid+"!"
+				message += "<br/>You've properly configured it to advertise its type so that it can be used by other entities."
+				message += "<br/>Congratulations!"
+				return (status, briefing, message)
 			else:
-				out = "We could not find your buddycloud server on your XMPP server"
+
+				briefing = "We were unable to discover you buddycloud server."
 				status = 1
-				return (status, out)
+				message = "We could not find the identity of your buddycloud channel server while performing a discovery operation on your XMPP server. "
+				message += "<br/>Please ensure that you have it running with the command '/etc/init.d/buddycloud-server status'."
+				message += "<br/>Also check if disco#items and disco#info are properly working on your XMPP server and make sure your buddycloud server component has a proper identity."
+				message += "<br/>Check https://buddycloud.org/wiki/XMPP_XEP#buddycloud_Server_Discovery for more information."
+				return (status, briefing, message)
 
 		else:
-			out = "Could not connect with XMPP server "+answer['domain']+" at "+address
+
+			briefing = "Could not connect with XMPP server "+answer['domain']+" at "+address
 			status = 1
-			return (status, out)
+			message = "We could not open a connection to your XMPP server "+answer['domain']+" at "+address+" using a XMPP client."
+			message += "<br/>Please make sure it is up and running on port 5222 and try again."
+			return (status, briefing, message)
