@@ -38,17 +38,18 @@ def perform_test(test_name=None, domain_url=None):
 
 	if error_msg != None:
 
-		(exit_status, briefing, message) = 2, "Invalid test name!", error_msg
+		(exit_status, briefing, message, results) = 2, "Invalid test name!", error_msg
 		json_return['exit_status'] = exit_status
 		json_return['briefing'] = briefing
 		json_return['message'] = message
 
 	else:
 	
-		(exit_status, briefing, message) = test_entries[test_names[test_name]]['test'](domain_url)
+		(exit_status, briefing, message, results) = test_entries[test_names[test_name]]['test'](domain_url)
 		json_return['exit_status'] = exit_status
 		json_return['briefing'] = briefing
 		json_return['message'] = message
+
 
 	return json.dumps(json_return)
 
