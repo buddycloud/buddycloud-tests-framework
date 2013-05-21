@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 	<head>
-		<title>buddycloud inspect</title>
+		<title>buddycloud compatibility inspector</title>
 		<meta name="viewport" 	content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="bootstrap/css/bootstrap.min.css")}}>
 		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="style.css")}}>
@@ -11,9 +11,9 @@
 		<div class='navbar navbar-inverse navbar-fixed-top'>
 			<div class='navbar-inner'>
 				<div class='container'>
-					<button id="logo" href="#" class='btn btn-link brand'>buddycloud inspect</button>
+					<button id="logo" href="#" class='btn btn-link brand'>buddycloud compatibility inspector</button>
 					<input type="text" class="input-medium search-query pull-right" id='domain_url_box' style="margin-top:5px;">
-					<button id='inspect_button' class="btn pull-right" style="margin-right:5px; margin-left:5px;" onclick="startInspection();">inspect</button>
+					<button id='inspect_button' class="btn pull-right" style="margin-right:5px; margin-left:5px;" onclick="startInspection();">check!</button>
 				</div>
 			</div>
 		</div>
@@ -45,9 +45,9 @@
 	<script src={{url_for('static', filename="inspector.js")}} language="javascript" type="text/javascript"></script>
 	<script src={{url_for('static', filename="bootstrap/js/bootstrap.min.js")}} language="javascript" type="text/javascript"></script>
 	<!--	<script src="http://d3js.org/d3.v2.min.js?2.10.1" language="javascript" type="text/javascript"></script>-->
-	<script src={{url_for('static', filename="d3.v2.min.js")}} language="javascript" type="text/javascript"></script>
-	<script src={{url_for('static', filename="animate.js")}} language="javascript" type="text/javascript"></script>
-	<script src={{url_for('static', filename="underscore-min.js")}} language="javascript" type="text/javascript"></script>
+	<!--<script src={{url_for('static', filename="d3.v2.min.js")}} language="javascript" type="text/javascript"></script>-->
+	<!--<script src={{url_for('static', filename="animate.js")}} language="javascript" type="text/javascript"></script>-->
+	<!--<script src={{url_for('static', filename="underscore-min.js")}} language="javascript" type="text/javascript"></script>-->
 	<script language="javascript" type="text/javascript">
 	{% if domain_url %}
 

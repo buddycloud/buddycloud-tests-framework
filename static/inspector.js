@@ -22,7 +22,7 @@ function startInspection(){
 // Configures environment and start to run test suite
 function testsLauncher(data, domain_url){
 
-	handleStartTestsLauncher();
+	handleStartTestsLauncher(domain_url);
 	data = JSON.parse(data);
 	test_entries = data;
 	current_test = 0;
@@ -90,8 +90,9 @@ function retryTests(domain_url){
 }
 
 // What to do in the page when a new test suite is about to run
-function handleStartTestsLauncher(){
+function handleStartTestsLauncher(domain_url){
 
+	$("#test_launcher_status").html("Let's find out about <span class='domain_title'>"+domain_url+"</span>");
 	$("#tests_output_table").html("");
 }
 

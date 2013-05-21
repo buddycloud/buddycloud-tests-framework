@@ -77,3 +77,11 @@ body{
 	transition: color 2s;
 	-webkit-transition: color 2s;
 }
+
+#test_launcher_status{
+	font-size: 28px;
+}
+
+#test_launcher_status .domain_title{
+	color: blue;
+}
