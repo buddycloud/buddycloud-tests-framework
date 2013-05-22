@@ -27,7 +27,7 @@ function testsLauncher(data, domain_url){
 	test_entries = data;
 	current_test = 0;
 	failed_tests = [];
-	handleTestCreation(test_entries[current_test].name);
+	handleTestCreation(test_entries[current_test].name, test_entries[current_test].source);
 	issueTest(test_entries[current_test].name, domain_url, decideNext, false);
 }
 
@@ -62,7 +62,7 @@ function decideNext(domain_url, data, retry){
 				handleTestRelaunch(test_entries[current_test].name);
 			}
 			else{
-				handleTestCreation(test_entries[current_test].name);
+				handleTestCreation(test_entries[current_test].name, test_entries[current_test].source);
 			}
 			issueTest(test_entries[current_test].name, domain_url, decideNext, retry);
 		}
@@ -97,9 +97,10 @@ function handleStartTestsLauncher(domain_url){
 }
 
 // What to do in the page when a new test was issued just now
-function handleTestCreation(test_name){
+function handleTestCreation(test_name, test_source){
 
 	$("#tests_output_table").prepend("<div class='input-prepend' style='width:100%;'><button id='td_"+test_name+"' class='btn disabled' style='width:25%; padding-left:5px; text-align:left;'><i id='ti_"+test_name+"' class='icon-random'></i> <span class='text-left'>"+test_name+"</span> </button><span id='to_"+test_name+"' class='test_output input uneditable-input' style='width:73%;'>Running this test...</span></div>");
+	$("#td_"+test_name).tooltip({ 'title' : "test source: <a href='https://"+test_source+"' target='_blank'>on github</a>", 'trigger' : 'click', 'html' : true, 'delay' : 1500 });
 }
 
 function handleTestRelaunch(test_name){

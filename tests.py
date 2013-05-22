@@ -25,11 +25,13 @@ def testFailExample(domain_url):
 	message = "This is a test example designed to wait "+str(waittime)+" and then fail."
 	return (status, briefing, message, None)
 
+sources_location = "github.com/buddycloud/buddycloud-inspection/blob/master/"
+
 #Test entries: tests to be performed in order by the inspector, each have a name and a function
 test_entries = []
-test_entries.append({'name' : 'xmpp_server_srv_lookup', 'test' : xmppServerServiceRecordLookup, 'continue_if_fail' : False })
-test_entries.append({'name' : 'xmpp_server_a_lookup', 'test' : xmppServerAddressRecordLookup, 'continue_if_fail' : False })
-test_entries.append({'name' : 'xmpp_server_connection', 'test' : xmppServerConnection, 'continue_if_fail' : False })
+test_entries.append({'name' : 'xmpp_server_srv_lookup', 'test' : xmppServerServiceRecordLookup, 'continue_if_fail' : False, 'source' : sources_location + "xmpp_server_srv_lookup.py" })
+test_entries.append({'name' : 'xmpp_server_a_lookup', 'test' : xmppServerAddressRecordLookup, 'continue_if_fail' : False, 'source' : sources_location + "xmpp_server_a_lookup.py" })
+test_entries.append({'name' : 'xmpp_server_connection', 'test' : xmppServerConnection, 'continue_if_fail' : False, 'source' : sources_location + "xmpp_server_connection.py" })
 #test_entries.append({'name' : 'buddycloud_server_disco', 'test' : buddycloudServerDisco, 'continue_if_fail' : False })
 #test_entries.append({'name' : 'api_lookup', 'test' : apiLookup, 'continue_if_fail' : False })
 #test_entries.append({'name' : 'api_https_connection', 'test' : apiHTTPSConnection, 'continue_if_fail' : True }) 

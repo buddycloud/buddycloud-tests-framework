@@ -17,7 +17,8 @@ def get_test_names():
 	for entry in test_entries:
 		entries.append({
 			'name' : entry['name'],
-			'continue_if_fail' : entry['continue_if_fail']
+			'continue_if_fail' : entry['continue_if_fail'],
+			'source' : entry['source']
 		})
 	return json.dumps(entries)
 
