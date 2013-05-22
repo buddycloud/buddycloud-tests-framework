@@ -1,20 +1,21 @@
-import dns.resolver
 from sleekxmpp import ClientXMPP
 from sleekxmpp.exceptions import IqError
-from xmpp_server_tests import xmppServerAddressRecordLookup
+from xmpp_server_a_lookup import xmppServerAddressRecordLookup
 
 import logging
 
 def buddycloudServerDisco(domain_url):
 
-	answers = xmppServerAddressRecordLookup(domain_url, True)
+	status, briefing, message, answers = xmppServerAddressRecordLookup(domain_url, True)
+	if ( status != 0 ):
+		return (status, briefing, message, None)
 
 	if ( len(answers) == 0 ):
 
 		briefing = "No XMPP server SRV record found at domain "+domain_url+"!"
 		status = 1
 		message = "We were unable to find your XMPP server. Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
-		return (status, briefing, message)
+		return (status, briefing, message, None)
 
 	for answer in answers:
 	
@@ -63,12 +64,15 @@ def buddycloudServerDisco(domain_url):
 						continue
 
 			except Exception, e:
+				
 				briefing = "Could not disco#items on your XMPP server "+answer['domain']+" at "+address+": "+str(e)
 				status = 1
 				message = "We could not find the identity of your buddycloud channel server while performing a discovery operation on your XMPP server. "
 				message += "<br/>Please ensure that disco#items and disco#info are properly working."
-				return (status, briefing, message)
+				return (status, briefing, message, None)
+
 			finally:
+				
 				xmpp_client.disconnect()
 
 			if server_discovered:
@@ -78,7 +82,7 @@ def buddycloudServerDisco(domain_url):
 				message = "We found your buddycloud server on your XMPP server at "+server_jid+"!"
 				message += "<br/>You've properly configured it to advertise its type so that it can be used by other entities."
 				message += "<br/>Congratulations!"
-				return (status, briefing, message)
+				return (status, briefing, message, None)
 			else:
 
 				briefing = "We were unable to discover you buddycloud server."
@@ -87,7 +91,7 @@ def buddycloudServerDisco(domain_url):
 				message += "<br/>Please ensure that you have it running with the command '/etc/init.d/buddycloud-server status'."
 				message += "<br/>Also check if disco#items and disco#info are properly working on your XMPP server and make sure your buddycloud server component has a proper identity."
 				message += "<br/>Check https://buddycloud.org/wiki/XMPP_XEP#buddycloud_Server_Discovery for more information."
-				return (status, briefing, message)
+				return (status, briefing, message, None)
 
 		else:
 
@@ -95,9 +99,4 @@ def buddycloudServerDisco(domain_url):
 			status = 1
 			message = "We could not open a connection to your XMPP server "+answer['domain']+" at "+address+" using a XMPP client."
 			message += "<br/>Please make sure it is up and running on port 5222 and try again."
-			return (status, briefing, message)
-
-#if __name__ == "__main__":
-
-#	logging.basicConfig(level="DEBUG", format='%(levelname)-8s %(message)s')
-#	print buddycloudServerDisco("buddycloud.org")
+			return (status, briefing, message, None)
