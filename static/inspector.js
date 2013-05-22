@@ -99,14 +99,13 @@ function handleStartTestsLauncher(domain_url){
 // What to do in the page when a new test was issued just now
 function handleTestCreation(test_name, test_source){
 
-	$("#tests_output_table").prepend("<div class='input-prepend' style='width:100%;'><button id='td_"+test_name+"' class='btn disabled' style='width:25%; padding-left:5px; text-align:left;'><i id='ti_"+test_name+"' class='icon-random'></i> <span class='text-left'>"+test_name+"</span> </button><span id='to_"+test_name+"' class='test_output input uneditable-input' style='width:73%;'>Running this test...</span></div>");
-	$("#td_"+test_name).tooltip({ 'title' : "test source: <a href='https://"+test_source+"' target='_blank'>on github</a>", 'trigger' : 'click', 'html' : true, 'delay' : 1500 });
+	$("#tests_output_table").append("<div class='input-prepend' style='width:100%;'><button id='td_"+test_name+"' class='btn disabled' style='width:25%; padding-left:5px; text-align:left;'><i id='ti_"+test_name+"' class='icon-random'></i> <span class='text-left'>"+test_name+"</span> </button><span id='to_"+test_name+"' class='test_output input uneditable-input' style='width:73%;'>Running this test...</span></div>");
+	$("#td_"+test_name).popover({ 'title' : "Test ("+test_name+") Info", 'content' : "<br/>Test source: <a href='https://"+test_source+"' target='_blank'>on github</a>", 'trigger' : 'hover', 'html' : true, 'delay' : { 'show' : 100, 'hide' : 1500 } });
 }
 
 function handleTestRelaunch(test_name){
 
 	$("#td_"+test_name).attr("class", "btn disabled");
-	$("#td_"+test_name).tooltip("destroy");
 	$("#td_"+test_name).attr("onclick", "");
 	$("#to_"+test_name).attr("class", "test_output uneditable-input");
 	$("#to_"+test_name).html("Running this test again...");
@@ -119,11 +118,8 @@ function handleTestResponse(data, domain_url){
 	data = JSON.parse(data);
 	$("#td_"+data.name).addClass("btn-"+getExitStatusClass(data.exit_status));
 	if ( data.exit_status == 1 ){
-		$("#td_"+data.name).attr("data-toggle","tooltip");
-		$("#td_"+data.name).attr("title","Click to run again");
-		$("#td_"+data.name).tooltip({'animation' : true, 'delay' : 100});
 		$("#td_"+data.name).removeClass("disabled");
-		$("#td_"+data.name).attr("onclick", "runAgain('"+data.name+"', '"+domain_url+"', '"+getExitStatusClass(data.exit_status)+"');");
+		//$("#td_"+data.name).attr("onclick", "runAgain('"+data.name+"', '"+domain_url+"', '"+getExitStatusClass(data.exit_status)+"');");
 	}
 	$("#to_"+data.name).addClass(getExitStatusClass(data.exit_status));
 	$("#to_"+data.name).html(data.briefing);
