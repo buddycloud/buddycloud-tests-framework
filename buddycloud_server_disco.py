@@ -6,7 +6,7 @@ import logging
 
 def buddycloudServerDisco(domain_url):
 
-	status, briefing, message, answers = xmppServerAddressRecordLookup(domain_url, True)
+	status, briefing, message, answers = xmppServerAddressRecordLookup(domain_url)
 	if ( status != 0 ):
 		return (status, briefing, message, None)
 
