@@ -16,7 +16,11 @@ All you have to do to add this function to the test suite is import a reference 
 Then, add a new JSON entry to the ```test_entries``` array in the following format:
 
 ```javascript
-{'name' : '<test_name>', 'test' : testExample/testFunctionReference, 'continue_if_fail' : True/False, 'source' : sources_location+"example.py"/test_source_url })
+{'name' : '<test_name>',
+ 'test' : testExample/testFunctionReference,
+ 'continue_if_fail' : True/False,
+ 'source' : sources_location+"example.py"/test_source_url 
+ })
 ```
 And finally, add another entry into the ```test_names``` map, which has to be the name you just gave to your new test as a key and the next index available:
 
