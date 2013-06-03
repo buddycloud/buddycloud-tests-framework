@@ -5,6 +5,8 @@ Inspects your XMPP setup and lets you know if you have any problems!
 
 A test version is currently being deployed in Heroku at buddycloud-inspection.herokuapp.com
 
+Want to help?
+
 To add a new test called ```example```:
 
 Write a python file containing your test function(s). Say we wrote a new file called ```example.py``` which contains a function named ```testExample```.
@@ -17,9 +19,9 @@ Then, add a new JSON entry to the ```test_entries``` array in the following form
 
 ```javascript
 {'name' : '<test_name>',
- 'test' : testExample/testFunctionReference,
- 'continue_if_fail' : True/False,
- 'source' : sources_location+"example.py"/test_source_url 
+ 'test' : testExample (your testFunctionReference),
+ 'continue_if_fail' : True (or False if the test suite should stop issuing tests if this test fails),
+ 'source' : sources_location+"example.py" (your test source url) 
  })
 ```
 And finally, add another entry into the ```test_names``` map, which has to be the name you just gave to your new test as a key and the next index available:
