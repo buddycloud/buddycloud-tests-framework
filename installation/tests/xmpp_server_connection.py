@@ -1,11 +1,10 @@
 from sleekxmpp import ClientXMPP
-from test import InstallationTest
 
 #dependencies
-from xmpp_server_a_lookup import xmppServerAddressRecordLookup
+from xmpp_server_a_lookup import testFunction as xmppServerAddressRecordLookup
 
 
-def xmppServerConnection(domain_url):
+def testFunction(domain_url):
 
 	status, briefing, message, answers = xmppServerAddressRecordLookup(domain_url)
 	if ( status != 0 ):
@@ -34,7 +33,3 @@ def xmppServerConnection(domain_url):
 	message = "We were able to find your XMPP server! Congratulations. We found the following XMPP servers: "
 	message += "<br/>"+found
 	return (status, briefing, message, None)
-
-
-def getTestReference():
-	return InstallationTest("xmpp_server_connection", xmppServerConnection)

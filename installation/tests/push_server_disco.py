@@ -1,12 +1,11 @@
 from sleekxmpp import ClientXMPP
 from sleekxmpp.exceptions import IqError
-from test import InstallationTest
 
 #dependencies
-from xmpp_server_a_lookup import xmppServerAddressRecordLookup
+from xmpp_server_a_lookup import testFunction as xmppServerAddressRecordLookup
 
 
-def pushServerDisco(domain_url):
+def testFunction(domain_url):
 
 	status, briefing, message, answers = xmppServerAddressRecordLookup(domain_url)
 	if ( status != 0 ):
@@ -91,7 +90,3 @@ def pushServerDisco(domain_url):
 			message = "We could not open a connection to your XMPP server "+answer['domain']+" at "+address+" using a XMPP client."
 			message += "<br/>Please make sure it is up and running on port 5222 and try again."
 			return (status, briefing, message, None)
-
-
-def getTestReference():
-	return InstallationTest("push_server_disco", pushServerDisco)

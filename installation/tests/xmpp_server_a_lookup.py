@@ -1,12 +1,11 @@
 import dns.resolver
 from sleekxmpp import ClientXMPP
-from test import InstallationTest
 
 #depedencies
-from xmpp_server_srv_lookup import xmppServerServiceRecordLookup
+from xmpp_server_srv_lookup import testFunction as xmppServerServiceRecordLookup
 
 
-def xmppServerAddressRecordLookup(domain_url):
+def testFunction(domain_url):
 
 	status, briefing, message, answers = xmppServerServiceRecordLookup(domain_url)
 	if ( status != 0 ):

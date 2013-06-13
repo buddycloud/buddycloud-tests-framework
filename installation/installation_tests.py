@@ -4,6 +4,24 @@ os.chdir("installation")
 sys.path.insert(0, "tests")
 
 
+class InstallationTest:
+
+	def __init__(self, name, function):
+
+		self.name = name
+		self.function = function
+		self.source = "github.com/buddycloud/buddycloud-tests-framework/blob/master/installation/" + name + ".py"
+
+	def jsonfy(self):
+
+		json = { 'name' : self.name,
+			 'test' : self.function,
+			 'continue_if_fail' : True,
+			 'source' : self.source
+		}
+		return json
+
+
 test_entries = []
 config = open("installation_tests.cfg")
 
@@ -16,7 +34,8 @@ for test_name in config.xreadlines():
 	problem_loading = False
 	test_reference = None
 	try:
-		test_reference = import_module(test_name).getTestReference()
+		test_reference = getattr(import_module(test_name), "testFunction")
+		test_reference = InstallationTest(test_name, test_reference)
 	except ImportError:
 		print "Could not import test "+test_name+"!"
 		print "Test "+test_name+" does not exist. Ignoring this test..."

@@ -1,11 +1,10 @@
 import socket
-from test import InstallationTest
 
 #dependencies
-from api_server_lookup import apiLookup
+from api_server_lookup import testFunction as apiLookup
 
 
-def apiHTTPSConnection(domain_url):
+def testFunction(domain_url):
 
 	found = "Connection was successful to API server at: "
 
@@ -49,6 +48,3 @@ def apiHTTPSConnection(domain_url):
 	message = "We could locate and connect to your API server! Congratulations!"
 	message += briefing
 	return (status, briefing, message, None)
-
-def getTestReference():
-	return InstallationTest("api_server_connection", apiHTTPSConnection)
