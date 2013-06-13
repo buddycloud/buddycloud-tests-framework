@@ -1,7 +1,7 @@
 from importlib import import_module
 import os, sys
 os.chdir("integration")
-sys.path.append("tests")
+sys.path.insert(0, "tests")
 
 
 test_entries = []
@@ -36,3 +36,5 @@ for test_name in config.xreadlines():
 
 config.close()
 os.chdir("../")
+
+del config

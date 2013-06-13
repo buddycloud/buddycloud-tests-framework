@@ -2,17 +2,15 @@ import os, sys, json
 from flask import Flask, render_template, redirect, url_for, request, make_response
 
 sys.path.append("installation")
-sys.path.append("integration")
-
 from installation_tests import test_entries as installation_test_entries
-from integration_tests import test_entries as integration_test_entries
 
+sys.path.append("integration")
+from integration_tests import test_entries as integration_test_entries
 
 test_entries = installation_test_entries + integration_test_entries
 
 test_names = {}
 for i in range(len(test_entries)):
-	print str(test_entries[i])
 	test_names[test_entries[i]['name']] = i
 
 

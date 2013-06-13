@@ -1,5 +1,6 @@
-import sys, dns.resolver
+import dns.resolver
 from sleekxmpp import ClientXMPP
+
 from test import InstallationTest
 
 
