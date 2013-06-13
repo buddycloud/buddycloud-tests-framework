@@ -15,8 +15,6 @@ for test_name in config.xreadlines():
 
 	problem_loading = False
 	test_reference = None
-	test_reference = import_module(test_name)
-	test_reference = test_reference.getTestReference()
 	try:
 		test_reference = import_module(test_name).getTestReference()
 	except ImportError:
