@@ -4,11 +4,8 @@ os.chdir("installation")
 sys.path.append("tests")
 
 
-config = open("installation_tests.cfg")
 test_entries = []
-test_names = {}
-
-test_counter = 0
+config = open("installation_tests.cfg")
 
 for test_name in config.xreadlines():
 
@@ -35,8 +32,7 @@ for test_name in config.xreadlines():
 		continue
 
 	test_entries.append(test_reference.jsonfy())
-	test_names[test_name] = test_counter
-	test_counter += 1
+
 
 config.close()
 os.chdir("../")
