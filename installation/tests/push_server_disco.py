@@ -1,20 +1,16 @@
-import dns.resolver
 from sleekxmpp import ClientXMPP
 from sleekxmpp.exceptions import IqError
-from xmpp_server_tests import xmppServerAddressRecordLookup
+from test import InstallationTest
 
-import logging
+#dependencies
+from xmpp_server_a_lookup import xmppServerAddressRecordLookup
+
 
 def pushServerDisco(domain_url):
 
-	answers = xmppServerAddressRecordLookup(domain_url, True)
-
-	if ( len(answers) == 0 ):
-
-		briefing = "No XMPP server SRV record found at domain "+domain_url+"!"
-		status = 1
-		message = "We were unable to find your XMPP server. Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
-		return (status, briefing, message)
+	status, briefing, message, answers = xmppServerAddressRecordLookup(domain_url)
+	if ( status != 0 ):
+		return (status, briefing, message, None)
 
 	for answer in answers:
 	
@@ -67,7 +63,7 @@ def pushServerDisco(domain_url):
 				status = 1
 				message = "We could not find the identity of your push notification server while performing a discovery operation on your XMPP server. "
 				message += "<br/>Please ensure that disco#items and disco#info are properly working."
-				return (status, briefing, message)
+				return (status, briefing, message, None)
 			finally:
 				xmpp_client.disconnect()
 
@@ -78,7 +74,7 @@ def pushServerDisco(domain_url):
 				message = "We found your push notification server on your XMPP server at "+server_jid+"!"
 				message += "<br/>You've properly configured it to advertise its type so that it can be used by other entities."
 				message += "<br/>Congratulations!"
-				return (status, briefing, message)
+				return (status, briefing, message, None)
 			else:
 
 				briefing = "We were unable to discover you push notification server."
@@ -86,7 +82,7 @@ def pushServerDisco(domain_url):
 				message = "We could not find the identity of your push notification server while performing a discovery operation on your XMPP server. "
 				message += "<br/>Check if disco#items and disco#info are properly working on your XMPP server and make sure your buddycloud server component has a proper identity."
 				message += "<br/>Check https://buddycloud.org/wiki/XMPP_XEP#buddycloud_Server_Discovery for more information."
-				return (status, briefing, message)
+				return (status, briefing, message, None)
 
 		else:
 
@@ -94,5 +90,8 @@ def pushServerDisco(domain_url):
 			status = 1
 			message = "We could not open a connection to your XMPP server "+answer['domain']+" at "+address+" using a XMPP client."
 			message += "<br/>Please make sure it is up and running on port 5222 and try again."
-			return (status, briefing, message)
+			return (status, briefing, message, None)
 
+
+def getTestReference():
+	return InstallationTest("push_server_disco", pushServerDisco)

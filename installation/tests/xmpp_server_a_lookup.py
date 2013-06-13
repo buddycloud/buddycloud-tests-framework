@@ -1,6 +1,8 @@
 import dns.resolver
 from sleekxmpp import ClientXMPP
+from test import InstallationTest
 
+#depedencies
 from xmpp_server_srv_lookup import xmppServerServiceRecordLookup
 
 
@@ -66,3 +68,6 @@ def xmppServerAddressRecordLookup(domain_url):
 	message = "You are pointing your XMPP server SRV record to the following valid A records: <br/>"
 	message += briefing
 	return (status, briefing, message, addresses)
+
+def getTestReference():
+	return InstallationTest("xmpp_server_a_lookup", xmppServerAddressRecordLookup)

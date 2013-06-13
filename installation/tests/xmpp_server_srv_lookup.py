@@ -1,5 +1,6 @@
-import dns.resolver
+import sys, dns.resolver
 from sleekxmpp import ClientXMPP
+from test import InstallationTest
 
 
 def xmppServerServiceRecordLookup(domain_url):
@@ -58,3 +59,7 @@ def xmppServerServiceRecordLookup(domain_url):
 		message = "We were unable to find your XMPP server, even though we could find your XMPP SRV record."
 		message += "<br/>Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
 		return (status, briefing, message, None)
+
+
+def getTestReference():
+	return InstallationTest("xmpp_server_srv_lookup", xmppServerServiceRecordLookup)

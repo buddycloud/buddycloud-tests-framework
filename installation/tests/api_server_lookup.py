@@ -1,4 +1,6 @@
 import dns.resolver
+from test import InstallationTest
+
 
 def apiLookup(domain_url):
 	
@@ -70,3 +72,7 @@ def apiLookup(domain_url):
 	message = "We could succesfully find your API server TXT record on your domain!"
 	message += briefing
 	return (status, briefing, message, answers)
+
+
+def getTestReference():
+	return InstallationTest("api_server_lookup", apiLookup)

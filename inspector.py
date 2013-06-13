@@ -1,5 +1,10 @@
-import os, json
+import os, sys, json
 from flask import Flask, render_template, redirect, url_for, request, make_response
+
+sys.path.append("installation")
+sys.path.append("integration")
+
+
 from tests import test_entries, test_names
 
 app = Flask(__name__)
