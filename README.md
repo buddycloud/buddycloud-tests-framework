@@ -1,42 +1,55 @@
-buddycloud-inspection
-=====================
+buddycloud-tests-framework
+===========================
 
-Inspects your XMPP setup and lets you know if you have any problems!
+This project is all about testing buddycloud technology,
+as well as helping one check if a given buddycloud installation
+is correctly setup and able to federate with the world.
 
-A test version is currently being deployed in Heroku at buddycloud-inspection.herokuapp.com
+A test version is currently being deployed in Heroku at http://buddycloud-inspection.herokuapp.com !
 
-Want to help?
+Want to help? It's pretty easy:
 
-To add a new test called ```example```:
+Adding a new test to a suite
+============================
 
-Write a python file containing your test function(s). Say we wrote a new file called ```example.py``` which contains a function named ```testExample```.
+There are two test suites, each having completely different roles.
 
-All you have to do to add this function to the test suite is import a reference to this function into the ```tests.py``` file by doing:
+The ```installation``` test suite is composed of a series of tests to make sure a given buddycloud installation
+is correctly setup and able to federate and socialize with others. DNS lookups, XMPP communication checks and other
+things like that are done to ensure everything is right.
 
-```from example import testExample```
+To add  a new test to this suite:
 
-Then, add a new JSON entry to the ```test_entries``` array in the following format:
+1:
+==
 
-```javascript
-{'name' : '<test_name>',
- 'test' : testExample (your testFunctionReference),
- 'continue_if_fail' : True (or False if the test suite should stop issuing tests if this test fails),
- 'source' : sources_location+"example.py" (your test source url) 
- })
-```
-And finally, add another entry into the ```test_names``` map, which has to be the name you just gave to your new test as a key and the next index available:
+Write a python test file containing a function called ```testFunction```.
 
-```python
-test_names = {
-'xmpp_server_srv_lookup' : 0,
-'xmpp_server_a_lookup' : 1,
-'xmpp_server_connection' : 2,
-'buddycloud_server_disco' : 3,
-'api_lookup' : 4,
-'api_https_connection' : 5,
-'push_server_disco' : 6,
-'testExample' : 7   <= "new entry added here"
-}
-```
+
+2:
+==
+
+Write your test inside that function. Once you're finished, save that test file into the ```installation/tests``` folder.
+
+
+3:
+==
+
+Then append a new line to the ```installation/installation_tests.cfg``` configuration file containing only the name
+of your new test file.
+
+
+4:
+==
+Note: you can always prepend a hashtag to a line of the configuration file to make the suite skip executing that particular test.
+
+
+And, congratulations! You're done! You've just added a new test to our test fiute!
+
+
+The process of adding new tests to the ```integration``` test suite is the same as for adding new tests to the ```installation``` test suite.
+
+
+So, That's it!
 
 Please send pull requests with new tests.
