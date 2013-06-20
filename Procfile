@@ -1,1 +1,1 @@
-web: python inspector.py
+web: python launcher.py

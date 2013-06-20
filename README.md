@@ -35,11 +35,26 @@ Write your test inside that function. Once you're finished, save that test file 
 3:
 ==
 
+Make sure your function always returns a tuple with four elements in the following format:
+
+```(exit_status, briefing, message, output)``` where
+```exit_status``` (int)
+	should be equal to ```0``` if test was successful or any other integer otherwise,
+```briefing``` (str)
+	should be a brief explanation of what happened during the test,
+```message``` (str)
+	should be a longer message with more information and
+```output``` (anything)
+	is anything your test could output if you are intend that your test is reused by other tests - otherwise just return None
+
+4:
+==
+
 Then append a new line to the ```installation/installation_tests.cfg``` configuration file containing only the name
 of your new test file.
 
 
-4:
+5:
 ==
 Note: you can always prepend a hashtag to a line of the configuration file to make the suite skip executing that particular test.
 

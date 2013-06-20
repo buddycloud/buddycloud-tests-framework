@@ -14,15 +14,15 @@ for i in range(len(test_entries)):
 	test_names[test_entries[i]['name']] = i
 
 
-app = Flask(__name__)
+server = Flask(__name__)
 
-@app.route('/')
+@server.route('/')
 def index():
 	
 	return render_template("index.html", domain_url=None)
 
 
-@app.route('/test_names', methods=['GET'])
+@server.route('/test_names', methods=['GET'])
 def get_test_names():
 	
 	entries = []
@@ -34,7 +34,7 @@ def get_test_names():
 		})
 	return json.dumps(entries)
 
-@app.route('/perform_test/<test_name>/<path:domain_url>')
+@server.route('/perform_test/<test_name>/<path:domain_url>')
 def perform_test(test_name=None, domain_url=None):
 
 	json_return = { 'name' : test_name }
@@ -51,23 +51,46 @@ def perform_test(test_name=None, domain_url=None):
 
 	if error_msg != None:
 
-		(exit_status, briefing, message, results) = 2, "Invalid test name!", error_msg
+		(exit_status, briefing, message, results) = 2, "Invalid test name!", error_msg, None
 		json_return['exit_status'] = exit_status
 		json_return['briefing'] = briefing
 		json_return['message'] = message
 
 	else:
 	
-		(exit_status, briefing, message, results) = test_entries[test_names[test_name]]['test'](domain_url)
+		exit_status = None
+		briefing = None
+		message = None
+		results = None
+
+		error_msg = None
+
+		try:
+			(exit_status, briefing, message, results) = test_entries[test_names[test_name]]['test'](domain_url)
+		except ValueError, e:
+			(exit_status, briefing, message, results) = 2, "Malformed test!", "This test failed because either it is malformed or because a test that this test reuses is malformed.", None
+			error_msg = "Wrong return type; must be a tuple with exactly 4 elements."
+
+		if ( not isinstance(exit_status, int) ):
+			error_msg = "Exit status must be an integer!"
+		elif ( not isinstance(briefing, str) ):
+			error_msg = "Briefing must be a string!"
+		elif ( not isinstance(message, str) ):
+			error_msg = "Message must be a string!"
+
+		if error_msg != None:
+
+			briefing = briefing + " Reason: " + error_msg
+			message = message + "<br/>Reason: " + error_msg
+
 		json_return['exit_status'] = exit_status
 		json_return['briefing'] = briefing
 		json_return['message'] = message
 
-
 	return json.dumps(json_return)
 
-@app.route('/<path:domain_url>')
-def start_tests_launcher(domain_url=None):
+@server.route('/<path:domain_url>')
+def start_tests_server(domain_url=None):
 
 	resp = make_response(render_template("index.html", domain_url=domain_url))
 	resp.headers['content-type'] = "text/html"
@@ -77,4 +100,4 @@ def start_tests_launcher(domain_url=None):
 if __name__ == "__main__":
 	
 	port = int(os.environ.get("PORT", 5000))
-	app.run(host="0.0.0.0", port=port, debug=True)
+	server.run(host="0.0.0.0", port=port, debug=True)
