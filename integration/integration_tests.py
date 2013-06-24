@@ -10,7 +10,7 @@ class IntegrationTest:
 
 		self.name = name
 		self.function = function
-		self.source = "github.com/buddycloud/buddycloud-tests-framework/blob/master/integration/setup/" + name + ".py"
+		self.source = "github.com/buddycloud/buddycloud-tests-framework/blob/master/integration/tests/" + name + ".py"
 
 	def jsonfy(self):
 
