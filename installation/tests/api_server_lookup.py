@@ -56,7 +56,7 @@ def testFunction(domain_url):
 		protocol = answer[answer.find("protocol=")+9 : answer.find("\"", answer.find("protocol="))]
 
 		answers.append({
-			'domain' : domain + path,
+			'domain' : domain,
 			'port' : port,
 			'protocol' : protocol
 		})

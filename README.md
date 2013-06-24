@@ -23,7 +23,7 @@ To add  a new test to this suite:
 1:
 ==
 
-Write a python test file containing a function called ```testFunction```.
+Write a python test file (e.g named ```example.py```) containing a function called ```testFunction```.
 
 
 2:
@@ -51,7 +51,7 @@ Make sure your function always returns a tuple with four elements in the followi
 ==
 
 Then append a new line to the ```installation/installation_tests.cfg``` configuration file containing only the name
-of your new test file.
+of your new test file. Make sure NOT to add the extension ```.py``` (e.g. just add ```example``` if your test file name is ```example.py```)
 
 
 5:

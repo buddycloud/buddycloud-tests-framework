@@ -10,7 +10,7 @@ class IntegrationTest:
 
 		self.name = name
 		self.function = function
-		self.source = "github.com/buddycloud/buddycloud-tests-framework/blob/master/integration/" + name + ".py"
+		self.source = "github.com/buddycloud/buddycloud-tests-framework/blob/master/integration/setup/" + name + ".py"
 
 	def jsonfy(self):
 
@@ -34,7 +34,7 @@ for test_name in config.xreadlines():
 	problem_loading = False
 	test_reference = None
 	try:
-		test_reference = getattr(import_module(test_name).getTestReference(), "testFunction")
+		test_reference = getattr(import_module(test_name), "testFunction")
 		test_reference = IntegrationTest(test_name, test_reference)
 	except ImportError:
 		print "Could not import test "+test_name+"!"

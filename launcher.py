@@ -27,6 +27,9 @@ def get_test_names():
 	
 	entries = []
 	for entry in test_entries:
+
+		print entry
+		
 		entries.append({
 			'name' : entry['name'],
 			'continue_if_fail' : entry['continue_if_fail'],
@@ -36,6 +39,8 @@ def get_test_names():
 
 @server.route('/perform_test/<test_name>/<path:domain_url>')
 def perform_test(test_name=None, domain_url=None):
+
+	os.chdir("execution_context")
 
 	json_return = { 'name' : test_name }
 
@@ -86,6 +91,8 @@ def perform_test(test_name=None, domain_url=None):
 		json_return['exit_status'] = exit_status
 		json_return['briefing'] = briefing
 		json_return['message'] = message
+
+	os.chdir("../")
 
 	return json.dumps(json_return)
 
