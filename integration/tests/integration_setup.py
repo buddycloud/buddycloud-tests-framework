@@ -2,21 +2,19 @@ from requests import Request, Session
 from random import random
 import json
 
+API_LOCATION = 'http://api.buddycloud.org/'
 TEST_USER_EMAIL = 'email'
 TEST_USER_PASSWORD = 'passwd' #Those are not actually used for authentication
 
 def user_exists(username):
 
-	print "Checking if user channel " + username + " exists..."
-	req = Request('GET', 'http://api.buddycloud.org/' + username +'@buddycloud.org/metadata/posts')
+	req = Request('GET', API_LOCATION + username +'@buddycloud.org/metadata/posts')
 
 	r = req.prepare()
 	s = Session()
 
-	if (s.send(r)).ok :
-		print "It does exist!"
+	if (s.send(r, verify=False)).ok :
 		return True
-	print "It doesn't exist!"
 	return False
 
 def create_user_channel(username):
@@ -24,19 +22,16 @@ def create_user_channel(username):
 	if user_exists(username):
 		return True
 
-	print "Creating user channel " + username + "..."
 	headers = {'Content-Type' : 'application/json'}
 	data = {'username' : username + '@buddycloud.org', 'password' : TEST_USER_PASSWORD, 'email' : TEST_USER_EMAIL}
 
-	req = Request('POST', 'http://api.buddycloud.org/account', data=json.dumps(data), headers=headers)
+	req = Request('POST', API_LOCATION + 'account', data=json.dumps(data), headers=headers)
 
 	r = req.prepare()
 	s = Session()
 
-	if (s.send(r)).ok :
-		print "User channel created!"
+	if (s.send(r, verify=False)).ok :
 		return True
-	print "Failed to create user channel!"
 	return False
 
 def testFunction(domain_url):
@@ -47,7 +42,7 @@ def testFunction(domain_url):
 
 		f = open("setup_test_usernames", 'r')
 		for test_username in f.xreadlines():
-			
+		
 			test_usernames.append(test_username)
 
 	except:
@@ -66,6 +61,8 @@ def testFunction(domain_url):
 	message = ""
 
 	for test_username in test_usernames:
+		
+		test_username = test_username.strip()
 
 		if create_user_channel(test_username):
 			continue

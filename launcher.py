@@ -28,8 +28,6 @@ def get_test_names():
 	entries = []
 	for entry in test_entries:
 
-		print entry
-		
 		entries.append({
 			'name' : entry['name'],
 			'continue_if_fail' : entry['continue_if_fail'],
@@ -40,61 +38,84 @@ def get_test_names():
 @server.route('/perform_test/<test_name>/<path:domain_url>')
 def perform_test(test_name=None, domain_url=None):
 
+	print "~about to execute test "+test_name+"~"
+
+	current_dir = os.getcwd()
 	os.chdir("execution_context")
 
-	json_return = { 'name' : test_name }
+	print "~changed to execution context~"
 
-	error_msg = None
+	try:
 
-	if test_name == None or test_name.strip() == "":
-
-		error_msg = "Invalid test name. It cannot be null."
-		
-	elif test_name not in test_names:
-
-		error_msg = "Invalid test name. There is no such test called "+test_name+"."
-
-	if error_msg != None:
-
-		(exit_status, briefing, message, results) = 2, "Invalid test name!", error_msg, None
-		json_return['exit_status'] = exit_status
-		json_return['briefing'] = briefing
-		json_return['message'] = message
-
-	else:
-	
-		exit_status = None
-		briefing = None
-		message = None
-		results = None
+		json_return = { 'name' : test_name }
 
 		error_msg = None
 
-		try:
-			(exit_status, briefing, message, results) = test_entries[test_names[test_name]]['test'](domain_url)
-		except ValueError, e:
-			(exit_status, briefing, message, results) = 2, "Malformed test!", "This test failed because either it is malformed or because a test that this test reuses is malformed.", None
-			error_msg = "Wrong return type; must be a tuple with exactly 4 elements."
+		if test_name == None or test_name.strip() == "":
+			
+			error_msg = "Invalid test name. It cannot be null."
+		
+		elif test_name not in test_names:
 
-		if ( not isinstance(exit_status, int) ):
-			error_msg = "Exit status must be an integer!"
-		elif ( not isinstance(briefing, str) ):
-			error_msg = "Briefing must be a string!"
-		elif ( not isinstance(message, str) ):
-			error_msg = "Message must be a string!"
+			error_msg = "Invalid test name. There is no such test called "+test_name+"."
 
 		if error_msg != None:
 
-			briefing = briefing + " Reason: " + error_msg
-			message = message + "<br/>Reason: " + error_msg
+			(exit_status, briefing, message, results) = 2, "Invalid test name!", error_msg, None
+			json_return['exit_status'] = exit_status
+			json_return['briefing'] = briefing
+			json_return['message'] = message
 
-		json_return['exit_status'] = exit_status
-		json_return['briefing'] = briefing
-		json_return['message'] = message
+		else:
+	
+			exit_status = None
+			briefing = None
+			message = None
+			results = None
 
-	os.chdir("../")
+			error_msg = None
 
-	return json.dumps(json_return)
+			try:
+				(exit_status, briefing, message, results) = test_entries[test_names[test_name]]['test'](domain_url)
+			except ValueError, e:
+				(exit_status, briefing, message, results) = 2, "Malformed test!", "This test failed because either it is malformed or because a test that this test reuses is malformed.", None
+				error_msg = "Wrong return type; must be a tuple with exactly 4 elements."
+
+			if ( not isinstance(exit_status, int) ):
+				error_msg = "Exit status must be an integer!"
+			elif ( not isinstance(briefing, str) ):
+				error_msg = "Briefing must be a string!"
+			elif ( not isinstance(message, str) ):
+				error_msg = "Message must be a string!"
+
+			if error_msg != None:
+
+				briefing = briefing + " Reason: " + error_msg
+				message = message + "<br/>Reason: " + error_msg
+
+			json_return['exit_status'] = exit_status
+			json_return['briefing'] = briefing
+			json_return['message'] = message
+
+		print "~test performed successfully~"
+		return json.dumps(json_return)
+
+	except Exception, e:
+
+		print "~test failed unexpectedly: "+str(e)+"~"
+		
+		json_return = { 'name' : test_name,
+				'exit_status' : 1,
+				'briefing' : "Unexpected exception raised!!",
+				'message' : "This test failed pretty badly.<br/>It raised an unexcepted exception: "+str(e)+"!</br>Please fix this problem before issuing this test again.",
+				'output' : None
+		}
+		return json.dumps(json_return)
+
+	finally:
+		
+		print "~leaving execution context~"
+		os.chdir(current_dir)
 
 @server.route('/<path:domain_url>')
 def start_tests_server(domain_url=None):
