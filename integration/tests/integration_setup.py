@@ -2,7 +2,7 @@ from requests import Request, Session
 from random import random
 import json
 
-API_LOCATION = 'http://api.buddycloud.org/'
+API_LOCATION = 'https://demo.buddycloud.org/api/'
 TEST_USER_EMAIL = 'email'
 TEST_USER_PASSWORD = 'passwd' #Those are not actually used for authentication
 
