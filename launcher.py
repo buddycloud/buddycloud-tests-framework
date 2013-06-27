@@ -43,7 +43,7 @@ def perform_test(test_name=None, domain_url=None):
 	current_dir = os.getcwd()
 	os.chdir("execution_context")
 
-	print "~changed to execution context~"
+	print "\t~changed to execution context~"
 
 	try:
 
@@ -83,9 +83,9 @@ def perform_test(test_name=None, domain_url=None):
 
 			if ( not isinstance(exit_status, int) ):
 				error_msg = "Exit status must be an integer!"
-			elif ( not isinstance(briefing, str) ):
+			elif ( not isinstance(briefing, str) and not isinstance(briefing, unicode) ):
 				error_msg = "Briefing must be a string!"
-			elif ( not isinstance(message, str) ):
+			elif ( not isinstance(message, str) and not isinstance(message, unicode) ):
 				error_msg = "Message must be a string!"
 
 			if error_msg != None:
@@ -97,24 +97,24 @@ def perform_test(test_name=None, domain_url=None):
 			json_return['briefing'] = briefing
 			json_return['message'] = message
 
-		print "~test performed successfully~"
+		print "\t~test performed successfully~"
 		return json.dumps(json_return)
 
 	except Exception, e:
 
-		print "~test failed unexpectedly: "+str(e)+"~"
+		print "\t~test failed unexpectedly: "+str(e)+"~"
 		
 		json_return = { 'name' : test_name,
 				'exit_status' : 1,
 				'briefing' : "Unexpected exception raised!!",
-				'message' : "This test failed pretty badly.<br/>It raised an unexcepted exception: "+str(e)+"!</br>Please fix this problem before issuing this test again.",
+				'message' : "This test failed pretty badly.<br/>It raised an unexpected exception: "+str(e)+"!</br>Please fix this problem before issuing this test again.",
 				'output' : None
 		}
 		return json.dumps(json_return)
 
 	finally:
 		
-		print "~leaving execution context~"
+		print "\t~leaving execution context~"
 		os.chdir(current_dir)
 
 @server.route('/<path:domain_url>')
