@@ -12,7 +12,7 @@
 			<div class='navbar-inner'>
 				<div class='container'>
 					<button id="logo" href="#" class='btn btn-link brand'>buddycloud protocol</button>
-					<input type="text" class="input-medium search-query pull-right" id='domain_url_box' style="margin-top:5px;">
+					<input type="text" class="input-medium search-query pull-right" id='domain_url_box' placeholder='enter your domain here' style="margin-top:5px;">
 					<button id='inspect_button' class="btn pull-right" style="margin-right:5px; margin-left:5px;" onclick="startInspection();">check!</button>
 				</div>
 			</div>
@@ -50,28 +50,14 @@
 	<!--<script src={{url_for('static', filename="underscore-min.js")}} language="javascript" type="text/javascript"></script>-->
 	<script language="javascript" type="text/javascript">
 	{% if domain_url %}
-
-		$(document).ready(function (){
-			$("#domain_url_box").val("{{ domain_url }}");
-			startInspection();
-		});
-	
+	$(document).ready(function(){
+		$("#domain_url_box").val("{{ domain_url }}");
+		startInspection();
+	});
 	{% else %}
-
-		$(document).ready(function (){
-
-/*			var welcome_message = "Welcome to buddycloud inspect!".split("");
-
-			updateDisplay(welcome_message, "intro");
-			window.setTimeout(function() {
-				if ( !started_tests ){
-					var msg = "C'mon, what are you waiting for??".split("");
-					updateDisplay(msg, "info");
-					var msg = "Enter the domain to be tested and hit 'inspect'!".split("");
-					updateDisplay(msg, "info");
-				}
-			}, 6000);*/
-		});
+	$(document).ready(function(){
+		$("#domain_url_box").val("buddycloud.org");
+	});
 	{% endif %}
 	</script>
 </html>
