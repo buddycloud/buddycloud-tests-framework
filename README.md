@@ -5,7 +5,7 @@ This project is all about testing buddycloud technology,
 as well as helping one check if a given buddycloud installation
 is correctly setup and able to federate with the world.
 
-A test version is currently being deployed at protocol.buddycloud.com !
+A test version is currently being deployed at http://protocol.buddycloud.com !
 
 Want to help? It's pretty easy:
 
