@@ -8,7 +8,16 @@ TEST_USER_PASSWORD = 'passwd' #Those are not actually used for authentication
 
 def user_exists(username):
 
-	req = Request('GET', API_LOCATION + username +'@buddycloud.org/metadata/posts')
+	headers = {
+		'Accept' : '*/*',
+		'Accept-Encoding' : 'gzip,deflate,sdch',
+		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
+		'Cache-Control' : 'no-cache',
+		'Connection' : 'keep-alive',
+		'Host' : 'demo.buddycloud.org'
+	}
+
+	req = Request('GET', API_LOCATION + username +'@buddycloud.org/metadata/posts', headers=headers)
 
 	r = req.prepare()
 	s = Session()
@@ -22,7 +31,15 @@ def create_user_channel(username):
 	if user_exists(username):
 		return True
 
-	headers = {'Content-Type' : 'application/json'}
+	headers = {
+		'Content-Type' : 'application/json',
+		'Accept' : '*/*',
+		'Accept-Encoding' : 'gzip,deflate,sdch',
+		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
+		'Cache-Control' : 'no-cache',
+		'Connection' : 'keep-alive',
+		'Host' : 'demo.buddycloud.org'
+	}
 	data = {'username' : username + '@buddycloud.org', 'password' : TEST_USER_PASSWORD, 'email' : TEST_USER_EMAIL}
 
 	req = Request('POST', API_LOCATION + 'account', data=json.dumps(data), headers=headers)
