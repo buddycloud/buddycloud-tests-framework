@@ -1,4 +1,5 @@
 from requests import Request, Session
+from ssl_adapter import SSLAdapter
 from random import random
 import json, base64
 
@@ -21,6 +22,7 @@ def user_exists(username):
 
 	r = req.prepare()
 	s = Session()
+	s.mount('https://', SSLAdapter('TLSv1'))
 
 	if (s.send(r, verify=False)).ok :
 		return True
@@ -46,6 +48,7 @@ def create_user_channel(username):
 
 	r = req.prepare()
 	s = Session()
+	s.mount('https://', SSLAdapter('TLSv1'))
 
 	if (s.send(r, verify=False)).ok :
 		return True
