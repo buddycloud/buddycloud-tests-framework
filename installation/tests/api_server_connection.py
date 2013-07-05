@@ -1,4 +1,5 @@
-import socket
+from requests import Request, Session
+from ssl_adapter import SSLAdapter
 
 #dependencies
 from api_server_lookup import testFunction as apiLookup
@@ -23,23 +24,38 @@ def testFunction(domain_url):
 
 	for answer in answers:
 
+		connection_failed = False
+
 		try:
-			socket.create_connection((answer['domain'],answer['port']), timeout=8)
-			found += answer['domain']+":"+answer['port']+" | "
 
-		except socket.timeout:
+			req = Request('HEAD', answer['protocol'] + "://" + answer['domain'] + ":" + str(answer['port']))
+			r = req.prepare()
 
-			briefing = "Timeout exceeded! Connection failed to API server at "+answer['domain']+":"+str(answer['port'])
+			s = Session()
+
+			if ( answer['protocol'] == 'https' ):
+				
+				s.mount('https://', SSLAdapter('TLSv1'))
+			else:
+
+				briefing = "Protocol specified in TXT record for API server at "+answer['domain']+":"+str(answer['port'])+" is not HTTPS!"
+				status = 1
+				message = briefing + "We have detected that your TXT record specifies a protocol other than HTTPS."
+				message += "<br/> Please ensure your API server will run with HTTPS enabled."
+				return (status, briefing, message, None)
+
+			if ( (s.send(r, verify=False)).ok ):
+			
+				found += answer['domain']+":"+answer['port']+" | "
+			else:
+				raise Exception("Could not reach server at "+answer['domain']+":"+str(answer['port'])+".")
+
+		except Exception, e:
+
+			briefing = "Connection failed to API server at "+answer['domain']+":"+str(answer['port']+"!")
 			status = 1
-			message = "<br/>Ensure your API server is running (with HTTPS)"
-			message = briefing + message
-			return (status, briefing, message, None)
-
-		except socket.gaierror:
-
-			briefing = "Can't locate address. Connection failed to API server at "+answer['domain']+":"+str(answer['port'])
-			status = 1
-			message = "<br/>Ensure your API server is running (with HTTPS)"
+			message = "The problem we found was: "+str(e)
+			message = "<br/>Please ensure your API server is running (with HTTPS)!"
 			message = briefing + message
 			return (status, briefing, message, None)
 
