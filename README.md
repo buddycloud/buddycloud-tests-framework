@@ -66,9 +66,9 @@ Here's how you can add a new test to one of these suites. First, determine to wh
 > 3. Your test can import other ```testFuncion```s defined in other existing tests belonging to the same test suite as well.
 > Here's an example of a test that reuses the test defined at ```api_lookup.py```:
 >
->	from api_server_lookup import testFunction as apiLookup
+>	```from api_server_lookup import testFunction as apiLookup```
 
-<dl><dt>Declare your test should be run as part of the test suite</dl></dt>
+<dl><dt>Declare that your test should be run as part of the test suite</dl></dt>
 
 > Append a new line to the ```installation/installation_tests.cfg``` configuration file containing only the name
 > of your new test file.  
@@ -76,7 +76,7 @@ Here's how you can add a new test to one of these suites. First, determine to wh
 >
 > *Important:*
 >
-> 1. You can always prepend a hashtag to a line of the configuration file to make the test suite won't include that particular test.
+> 1. You can always prepend a hashtag to a line of the configuration file to make sure the test suite won't include that particular test.
 
 
 So, that's all, folks!
