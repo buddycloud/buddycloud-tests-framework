@@ -84,11 +84,11 @@ def perform_test(test_name=None, domain_url=None):
 			
 				error_msg = "Exit status must be an integer!"
 			
-			elif ( not isinstance(test_output[1], str) and not isinstance(briefing, unicode) ):
+			elif ( not isinstance(test_output[1], str) and not isinstance(test_output[1], unicode) ):
 				
 				error_msg = "Briefing must be a string!"
 	
-			elif ( not isinstance(test_output[2], str) and not isinstance(message, unicode) ):
+			elif ( not isinstance(test_output[2], str) and not isinstance(test_output[2], unicode) ):
 				
 				error_msg = "Message must be a string!"
 
