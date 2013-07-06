@@ -61,6 +61,8 @@ def perform_test(test_name=None, domain_url=None):
 
 		if error_msg != None:
 
+			print "\t~test doesn't exist~"
+
 			(exit_status, briefing, message, results) = 2, "Invalid test name!", error_msg, None
 			json_return['exit_status'] = exit_status
 			json_return['briefing'] = briefing
@@ -68,36 +70,50 @@ def perform_test(test_name=None, domain_url=None):
 
 		else:
 	
-			exit_status = None
-			briefing = None
-			message = None
-			results = None
-
 			error_msg = None
 
-			try:
-				(exit_status, briefing, message, results) = test_entries[test_names[test_name]]['test'](domain_url)
-			except ValueError, e:
-				(exit_status, briefing, message, results) = 2, "Malformed test!", "This test failed because either it is malformed or because a test that this test reuses is malformed.", None
-				error_msg = "Wrong return type; must be a tuple with exactly 4 elements."
+			test_output = test_entries[test_names[test_name]]['test'](domain_url)
 
-			if ( not isinstance(exit_status, int) ):
+			if ( not (isinstance(test_output, tuple) and len(test_output) == 4) ):
+			
+				error_msg = "Wrong return type; must be a tuple with exactly 4 elements!"
+		
+			elif ( not isinstance(test_output[0], int) ):
+			
 				error_msg = "Exit status must be an integer!"
-			elif ( not isinstance(briefing, str) and not isinstance(briefing, unicode) ):
+			
+			elif ( not isinstance(test_output[1], str) and not isinstance(briefing, unicode) ):
+				
 				error_msg = "Briefing must be a string!"
-			elif ( not isinstance(message, str) and not isinstance(message, unicode) ):
+	
+			elif ( not isinstance(test_output[2], str) and not isinstance(message, unicode) ):
+				
 				error_msg = "Message must be a string!"
 
 			if error_msg != None:
 
-				briefing = briefing + " Reason: " + error_msg
-				message = message + "<br/>Reason: " + error_msg
+				print "\t~test is malformed~"
 
-			json_return['exit_status'] = exit_status
-			json_return['briefing'] = briefing
-			json_return['message'] = message
+				exit_status = 2
+				briefing = "Malformed test! Reason: " + error_msg
+				message = "This test failed because either it is malformed "
+				message += "or because a test that this test reuses is malformed."
+				message += " <br/>Reason: " + error_msg
 
-		print "\t~test performed successfully~"
+				json_return['exit_status'] = exit_status
+				json_return['briefing'] = briefing
+				json_return['message'] = message
+
+			else:
+
+				print "\t~test performed successfully~"
+
+				(exit_status, briefing, message, results) = test_output 
+			
+				json_return['exit_status'] = exit_status
+				json_return['briefing'] = briefing
+				json_return['message'] = message
+
 		return json.dumps(json_return)
 
 	except Exception, e:
