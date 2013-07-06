@@ -76,7 +76,7 @@ def testFunction(domain_url):
 				return (status, briefing, message, None)
 			else:
 
-				briefing = "We were unable to discover you push notification server."
+				briefing = "We were unable to discover your push notification server."
 				status = 1
 				message = "We could not find the identity of your push notification server while performing a discovery operation on your XMPP server. "
 				message += "<br/>Check if disco#items and disco#info are properly working on your XMPP server and make sure your buddycloud server component has a proper identity."

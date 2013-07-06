@@ -1,7 +1,9 @@
 from requests import Request, Session
+
+#util_dependencies
 from ssl_adapter import SSLAdapter
 
-#dependencies
+#installation_suite_dependencies
 from api_server_lookup import testFunction as apiLookup
 
 

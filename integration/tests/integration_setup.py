@@ -3,11 +3,13 @@ from ssl_adapter import SSLAdapter
 from random import random
 import json, base64
 
-API_LOCATION = 'https://demo.buddycloud.org/api/'
+#dependencies
+from api_server_lookup import testFunction as apiLookup
+
 TEST_USER_EMAIL = 'email'
 TEST_USER_PASSWORD = 'passwd' #Those are not actually used for authentication
 
-def user_exists(username):
+def user_exists(api_location, username):
 
 	headers = {
 		'Accept' : '*/*',
@@ -18,7 +20,7 @@ def user_exists(username):
 		'Host' : 'demo.buddycloud.org'
 	}
 
-	req = Request('GET', API_LOCATION + username +'@buddycloud.org/metadata/posts', headers=headers)
+	req = Request('GET', api_location + username +'@buddycloud.org/metadata/posts', headers=headers)
 
 	r = req.prepare()
 	s = Session()
@@ -28,9 +30,9 @@ def user_exists(username):
 		return True
 	return False
 
-def create_user_channel(username):
+def create_user_channel(api_location, username):
 
-	if user_exists(username):
+	if user_exists(api_location, username):
 		return True
 
 	headers = {
@@ -44,7 +46,7 @@ def create_user_channel(username):
 	}
 	data = {'username' : username + '@buddycloud.org', 'password' : TEST_USER_PASSWORD, 'email' : TEST_USER_EMAIL}
 
-	req = Request('POST', API_LOCATION + 'account', data=json.dumps(data), headers=headers)
+	req = Request('POST', api_location + 'account', data=json.dumps(data), headers=headers)
 
 	r = req.prepare()
 	s = Session()
@@ -56,7 +58,24 @@ def create_user_channel(username):
 
 def testFunction(domain_url):
 
-	# First of all, read or create a file with 5 different test usernames in the format test_user_<integer>.
+	#First of all, let's find the API server
+
+	status, briefing, message, answers = apiLookup(domain_url)
+	if ( status != 0 ):
+		return (status, briefing, message, None)
+
+	if ( len(answers) == 0 ):
+
+		briefing = "No API server TXT record found!"
+		status = 1
+		message = "We could not find your API server TXT record!"
+		message += "You must setup your DNS to point to the API server endpoint using a TXT record similat to the one below: "
+		message += "<br/><br/>_buddycloud-api._tcp.EXAMPLE.COM.          IN TXT \"v=1.0\" \"host=buddycloud.EXAMPLE.COM\" \"protocol=https\" \"path=/api\" \"port=443\""
+		return (status, briefing, message, None)
+
+	api_location = answers[0]['protocol'] + "://" + answers[0]['domain'] + ":" + answers[0]['port']
+
+	# Then, read or create a file with 5 different test usernames in the format test_user_<integer>.
 
 	test_usernames = []
 	test_channel_name = ""
@@ -99,7 +118,7 @@ def testFunction(domain_url):
 		
 		test_username = test_username.strip()
 
-		if create_user_channel(test_username):
+		if create_user_channel(api_location, test_username):
 			continue
 		else:
 			status = 1
@@ -111,7 +130,7 @@ def testFunction(domain_url):
 	# Then, have user[1] create a topics channel. Assert he is a producer of that channel.
 
 #	headers = {'Authorization' : 'Basic ' + base64.b64encode(test_usernames[0]+":"+TEST_USER_PASSWORD)}
-#	req = Request('POST', API_LOCATION + test_channel_name, headers=headers)
+#	req = Request('POST', api_location + test_channel_name, headers=headers)
 
 	# Then, have user[2] join the topic channel. Have user[1] make user[2] moderator of that channel. Assert user[2] is a moderator of that channel.	
 
@@ -119,7 +138,7 @@ def testFunction(domain_url):
 #	data = {
 #		test_channel_name : "publisher"
 #	}
-#	req = Request('POST', API_LOCATION + "/subscribed", data=json.dumps(data), headers=headers)
+#	req = Request('POST', api_location + "/subscribed", data=json.dumps(data), headers=headers)
 
 	# Then, have user[3] join the topic channel. Have user[1] give posting permission to user[3]. Assert user[3] is a follower+post of that channel.
 
@@ -127,6 +146,6 @@ def testFunction(domain_url):
 
 	# Then, have user[5] join the topic channel. Have user[1] ban user[5] in that channel. Assert user[5] is banned in that channel.
 
-	briefing = "Could successfully create all test user channels needed for integration tests"
+	briefing = "Could successfully create all test user channels needed for integration tests."
 	message = briefing
 	return (status, briefing, message, None)

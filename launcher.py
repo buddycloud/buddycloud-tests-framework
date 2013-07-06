@@ -1,10 +1,12 @@
 import os, sys, json
 from flask import Flask, render_template, redirect, url_for, request, make_response
 
-sys.path.append("installation")
+sys.path.append(os.path.join(os.getcwd(), "suite_utils"))
+
+sys.path.append(os.path.join(os.getcwd(), "installation"))
 from installation_tests import test_entries as installation_test_entries
 
-sys.path.append("integration")
+sys.path.append(os.path.join(os.getcwd(), "integration"))
 from integration_tests import test_entries as integration_test_entries
 
 test_entries = installation_test_entries + integration_test_entries

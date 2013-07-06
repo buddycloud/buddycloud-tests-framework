@@ -59,24 +59,30 @@ Here's how you can add a new test to one of these suites. First, determine to wh
 >
 > *Important:*
 >
-> 1. Your test runs within an execution_context folder with read/write permissions. Anything your test writes will be placed there (e.g. logs).
+> *1.* Your test runs within an execution_context folder with read/write permissions. Anything your test writes will be placed there (e.g. logs).
 >
-> 2. Your test can import any library that is installed in the server. If you need some other library to be installed, let us know.
+> *2.* Your test can import any library that is installed in the server. If you need some other library to be installed, let us know.
 >
-> 3. Your test can import other ```testFuncion```s defined in other existing tests belonging to the same test suite as well.
+> *3.* Your test can import other ```testFuncion```s defined in other existing tests belonging to **BOTH** test suites as well!
+> That means that even while tests are split into different test suites, they can be imported just as if they all belonged to the same suite.
+>
 > Here's an example of a test that reuses the test defined at ```api_lookup.py```:
 >
->	```from api_server_lookup import testFunction as apiLookup```
+    from api_server_lookup import testFunction as apiLookup 
+    def testFunction(domain_url):
+	    (exit_status, briefing, message, output) = apiLookup(domain_url)
+>
+> *4.* There is a ```suite_utils``` folder including utilitary files both test suites can reuse.
 
 <dl><dt>Declare that your test should be run as part of the test suite</dl></dt>
 
 > Append a new line to the ```installation/installation_tests.cfg``` configuration file containing only the name
 > of your new test file.  
-> Make sure *NOT* to add the extension ```.py``` (e.g. just add ```example``` if your test file name is ```example.py```)
+> Make sure **NOT** to add the extension ```.py``` (e.g. just add ```example``` if your test file name is ```example.py```)
 >
 > *Important:*
 >
-> 1. You can always prepend a hashtag to a line of the configuration file to make sure the test suite won't include that particular test.
+> *1.* You can always prepend a hashtag to a line of the configuration file to make sure the test suite won't include that particular test.
 
 
 So, that's all, folks!
