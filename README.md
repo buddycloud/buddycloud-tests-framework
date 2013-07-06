@@ -1,8 +1,8 @@
 buddycloud-tests-framework
 ===========================
 
-A framework for issuing tests to a given buddycloud
----------------------------------------------------
+*A framework for issuing tests to a given buddycloud*
+
 
 This project is all about testing buddycloud technology,
 as well as helping one check if a given buddycloud installation
