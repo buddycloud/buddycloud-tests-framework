@@ -57,10 +57,34 @@ def testFunction(domain_url):
 			
 		for record in query_for_A_record:
 
-			address = str(record)
-			addresses.append({'address':address, 'domain' : answer['domain']})
-			found += answer['domain'] + " at " + address + " | "
+			try:
 
+				address = str(record)
+				addresses.append({'address':address, 'domain' : answer['domain']})
+
+			except Exception, e:
+				continue
+
+		if len(addresses) == 0:
+	
+			briefing = "XMPP server A record found at domain "+domain_url+" but it doesn't contain all the relevant information!"
+			status = 1
+			message = "We were unable to find your XMPP server, even though we could find your XMPP A record."
+			message += "<br/>Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+			return (status, briefing, message, None)
+
+		else:
+
+			found = addresses[0]['domain'] + ", ip: " + addresses[0]['address']
+
+			for i in range(1, len(addresses)):
+
+				found += " | " + addresses[i]['domain'] + ", ip: " + addresses[i]['address']
+
+			if len(addresses) == 1:
+				found = "XMPP server A record found: " + found
+			else:
+				found = "XMPP server A records found: " + found
 
 	briefing = found
 	status = 0

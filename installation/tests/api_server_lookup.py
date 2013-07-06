@@ -61,10 +61,16 @@ def testFunction(domain_url):
 			'protocol' : protocol
 		})
 
-	found = "API server records found: "
 
-	for answer in answers:
-		found += answer['domain'] + " running on port " + str(answer['port'])+" | "
+	found = answers[0]['domain'] + ", port: " + str(answers[0]['port'])
+
+	for i in range(1, len(answers)):
+		found = answers[i]['domain'] + ", port: " + str(answers[i]['port'])
+
+	if len(answers) == 1:
+		found = "API server record found: " + found
+	else:
+		found = "API server records found: " + found
 
 	briefing = found
 	status = 0

@@ -18,7 +18,9 @@ def testFunction(domain_url):
 		xmpp_client = ClientXMPP("inspect@buddycloud", "ei3tseq")
 		if ( xmpp_client.connect((address, 5222), reattempt=False, use_ssl=False, use_tls=False) ):
 
-			found += answer['domain'] + " at " + address + " | "
+			if found != "":
+				found += " | "
+			found += answer['domain'] + ", ip: " + address
 		else:
 
 			briefing = "Could not connect with XMPP server "+answer['domain']+" at "+address
@@ -27,7 +29,11 @@ def testFunction(domain_url):
 			message += "<br/>Please make sure it is up and running on port 5222 and try again."
 			return (status, briefing, message, None)
 
-	found = "Connection succesfull to XMPP servers: "+found
+	if len(answers) == 1:
+		found = "Connection successful to XMPP server: " + found
+	else:
+		found = "Connection successful to XMPP servers: " + found
+
 	briefing = found
 	status = 0
 	message = "We were able to find your XMPP server! Congratulations. We found the following XMPP servers: "
