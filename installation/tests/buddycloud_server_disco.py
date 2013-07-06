@@ -1,7 +1,7 @@
 from sleekxmpp import ClientXMPP
 from sleekxmpp.exceptions import IqError
 
-#dependencies
+#installation_suite_dependencies
 from xmpp_server_a_lookup import testFunction as xmppServerAddressRecordLookup
 
 

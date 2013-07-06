@@ -1,10 +1,13 @@
 from requests import Request, Session
-from ssl_adapter import SSLAdapter
 from random import random
 import json, base64
 
-#dependencies
+#util_dependencies
+from ssl_adapter import SSLAdapter
+
+#installation_suite_dependencies
 from api_server_lookup import testFunction as apiLookup
+
 
 TEST_USER_EMAIL = 'email'
 TEST_USER_PASSWORD = 'passwd' #Those are not actually used for authentication

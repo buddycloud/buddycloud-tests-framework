@@ -1,7 +1,7 @@
 import dns.resolver
 from sleekxmpp import ClientXMPP
 
-#depedencies
+#installation_suite_depedencies
 from xmpp_server_srv_lookup import testFunction as xmppServerServiceRecordLookup
 
 

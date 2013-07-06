@@ -1,6 +1,6 @@
 from sleekxmpp import ClientXMPP
 
-#dependencies
+#installation_suite_dependencies
 from xmpp_server_a_lookup import testFunction as xmppServerAddressRecordLookup
 
 
