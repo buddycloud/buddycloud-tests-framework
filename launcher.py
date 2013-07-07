@@ -130,6 +130,10 @@ def perform_test(test_name=None, domain_url=None):
 		}
 		return json.dumps(json_return)
 
+	except Exception, e:
+
+		return json.dumps({'name' : 'whahaha', 'exit_status' : 2, 'briefing' : 'hahahaa', 'message' : 'hashdhasu', 'output' : None })
+
 	finally:
 		
 		print "\t~leaving execution context~"
