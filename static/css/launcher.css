@@ -37,7 +37,7 @@
 /*Test launcher status styles*/
 @font-face {
 	font-family: MyInconsolata;
-	src: url('Inconsolata.otf');
+	src: url('../img/Inconsolata.otf');
 }
 
 text {
@@ -65,7 +65,7 @@ text {
 
 body{
 	font-family: MyInconsolata;
-	background: url('buddycloud-logo-background.png') no-repeat center center fixed;
+	background: url('../img/buddycloud-logo-background.png') no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
