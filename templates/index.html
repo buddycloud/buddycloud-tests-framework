@@ -40,15 +40,13 @@
 	<script src={{url_for('static', filename="bootstrap/js/bootstrap.min.js")}} language="javascript" type="text/javascript"></script>
 	<script async="" src="//www.google-analytics.com/ga.js"></script>
 	<script language="javascript" type="text/javascript">
-	{% if domain_url %}
 	$(document).ready(function(){
+	{% if domain_url %}
 		$("#domain_url_box").val("{{ domain_url }}");
 		startInspection();
-	});
 	{% else %}
-	$(document).ready(function(){
 		$("#domain_url_box").val("buddycloud.org");
-	});
 	{% endif %}
+	});
 	</script>
 </html>

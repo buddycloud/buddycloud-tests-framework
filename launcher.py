@@ -118,7 +118,7 @@ def perform_test(test_name=None, domain_url=None):
 
 		return json.dumps(json_return)
 
-	except Exception, e:
+	except NameError, e:
 
 		print "\t~test failed unexpectedly: "+str(e)+"~"
 		
