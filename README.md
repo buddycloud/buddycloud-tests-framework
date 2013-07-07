@@ -77,8 +77,7 @@ Here's how you can add a new test to one of these suites. First, determine to wh
 <dl><dt>Declare that your test should be run as part of the test suite</dl></dt>
 
 > Append a new line to the ```installation/installation_tests.cfg``` configuration file containing only the name
-> of your new test file.  
-> Make sure **NOT** to add the extension ```.py``` (e.g. just add ```example``` if your test file name is ```example.py```)
+> of your new test file.
 >
 > *Important:*
 >

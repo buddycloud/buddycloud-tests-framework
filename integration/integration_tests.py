@@ -27,7 +27,7 @@ config = open("integration_tests.cfg")
 
 for test_name in config.xreadlines():
 
-	test_name = test_name.strip()
+	test_name = test_name.strip().replace(".py", "")
 	if test_name.startswith("#"):
 		continue
 
