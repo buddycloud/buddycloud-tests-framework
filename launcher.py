@@ -118,7 +118,7 @@ def perform_test(test_name=None, domain_url=None):
 
 		return json.dumps(json_return)
 
-	except NameError, e:
+	except Exception, e:
 
 		print "\t~test failed unexpectedly: "+str(e)+"~"
 		
@@ -129,10 +129,6 @@ def perform_test(test_name=None, domain_url=None):
 				'output' : None
 		}
 		return json.dumps(json_return)
-
-	except Exception, e:
-
-		return json.dumps({'name' : 'whahaha', 'exit_status' : 2, 'briefing' : 'hahahaa', 'message' : 'hashdhasu', 'output' : None })
 
 	finally:
 		
