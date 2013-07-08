@@ -131,32 +131,26 @@ function handleDomainURL(){
 	$("#domain_url_box").tooltip("destroy");
 	domain_url = $("#domain_url_box").val();
 	domain_url = domain_url.trim();
-
-	var valid = true;
-
-	if ( domain_url == null || domain_url.trim() == "" || domain_url.charAt(0) == '/' ){
-		valid = false;
-	}
-	else if ( domain_url.charAt(0) == '-' || domain_url.charAt(domain_url.length-1) == '-' ){
-		valid = false;
-	}
-	else if ( domain_url.indexOf("!") != -1 || domain_url.indexOf("@") != -1 || domain_url.indexOf("#") != -1 ){
-		valid = false;
-	}
-	else if ( domain_url.indexOf("$") != -1 || domain_url.indexOf("%") != -1 || domain_url.indexOf("^") != -1 ){
-		valid = false;
-	}
-	else if ( domain_url.indexOf("&") != -1 || domain_url.indexOf("*") != -1 || domain_url.indexOf(" ") != -1 ){
-		valid = false;
-	}
-	else if ( domain_url.indexOf("(") != -1 || domain_url.indexOf(")") != -1 || domain_url.indexOf("?") != -1 ){
-		valid = false;
-	}
-	else if ( domain_url.indexOf("://") != -1 ){
+	
+	if ( domain_url.indexOf("://") != -1 ){
 		domain_url = domain_url.substr(domain_url.indexOf("://")+3, domain_url.length);
 		$("#domain_url_box").val(domain_url);
 	}
-	if ( valid ){
+
+	var valid_domain_regex = /^[a-z0-9]+([-.]{1}[a-z0-9]+)*.[a-z]{2,5}$/;
+
+	var valid_domain = true;
+
+	if ( domain_url == null ){
+
+		valid_domain = false;
+	}
+	else {
+
+		valid_domain = valid_domain_regex.test(domain_url);
+	}
+
+	if ( valid_domain ){
 		window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/"+domain_url); 
 		$("#inspect_button").addClass("disabled");
 		$("#inspect_button").attr("onclick", "");
