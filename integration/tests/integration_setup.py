@@ -82,7 +82,7 @@ def topic_channel_exists(api_location, channel_name):
 
 def create_topic_channel(api_location, username, channel_name):
 
-	if topic_channel_exists(api_location, username):
+	if topic_channel_exists(api_location, channel_name):
 		return True
 
 	headers = {
