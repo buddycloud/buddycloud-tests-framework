@@ -9,7 +9,7 @@ from ssl_adapter import SSLAdapter
 from api_server_lookup import testFunction as apiLookup
 
 
-TEST_USER_EMAIL = 'email'
+TEST_USER_EMAIL = 'email@email.com'
 TEST_USER_PASSWORD = 'passwd' #Those are not actually used for authentication
 
 def user_exists(api_location, username):
@@ -47,7 +47,7 @@ def create_user_channel(api_location, username):
 		'Connection' : 'keep-alive',
 		'Host' : 'demo.buddycloud.org'
 	}
-	data = {'username' : username + '@buddycloud.org', 'password' : TEST_USER_PASSWORD, 'email' : TEST_USER_EMAIL}
+	data = {'username' : username, 'password' : TEST_USER_PASSWORD, 'email' : TEST_USER_EMAIL}
 
 	req = Request('POST', api_location + 'account', data=json.dumps(data), headers=headers)
 	r = req.prepare()
