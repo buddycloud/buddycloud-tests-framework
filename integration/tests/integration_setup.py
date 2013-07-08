@@ -69,7 +69,7 @@ def topic_channel_exists(api_location, channel_name):
 		'Connection' : 'keep-alive',
 		'Host' : 'demo.buddycloud.org'
 	}
-
+	
 	req = Request('GET', api_location + channel_name +'@topics.buddycloud.org/metadata/posts', headers=headers)
 	r = req.prepare()
 
@@ -161,7 +161,9 @@ def testFunction(domain_url):
 	# Then, create a user channel for each of these usernames, if that does not exist yet.
 
 	for test_username in test_usernames:
-		
+
+		test_username = test_username.strip()
+
 		if create_user_channel(api_location, test_username):
 			continue
 		else:
@@ -173,9 +175,11 @@ def testFunction(domain_url):
 
 	# Then, have user[1] create a topics channel. Assert he is a producer of that channel.
 
+	test_channel_name = test_channel_name.strip()
+
 	if not create_topic_channel(api_location, test_usernames[0], test_channel_name) :
 		status = 1
-		briefing = "Could not successfully create topic channel named " + test_channel_name + "@topics.buddycloud.org."
+		briefing = "Could not create topic channel named " + test_channel_name + "@topics.buddycloud.org."
 		message = briefing
 		return (status, briefing, message, None)
 
