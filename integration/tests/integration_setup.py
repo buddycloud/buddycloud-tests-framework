@@ -168,7 +168,7 @@ def testFunction(domain_url):
 			continue
 		else:
 			status = 1
-			briefing = "Could not create user channel for test user named " + test_username
+			briefing = "Could not create user channel for test user named " + test_username + "@buddycloud.org."
 			message = briefing
 			return (status, briefing, message, None)
 
@@ -197,6 +197,6 @@ def testFunction(domain_url):
 
 	# Then, have user[5] join the topic channel. Have user[1] ban user[5] in that channel. Assert user[5] is banned in that channel.
 
-	briefing = "Could successfully create all test user channels needed for integration tests."
+	briefing = "Could successfully create all test user channels and topic channels needed for incoming integration tests."
 	message = briefing
 	return (status, briefing, message, None)
