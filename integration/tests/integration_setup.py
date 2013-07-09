@@ -106,6 +106,35 @@ def create_topic_channel(api_location, username, channel_name):
 		return True
 	return False
 
+def subscribeToChannel(api_location, username, channel_name, subscription):
+
+	headers = {
+		'Accept' : '*/*',
+		'Accept-Encoding' : 'gzip,deflate,sdch',
+		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
+		'Cache-Control' : 'no-cache',
+		'Connection' : 'keep-alive',
+		'Host' : 'demo.buddycloud.org',
+		'Content-Type' : 'application/json',
+		'Authorization' : 'Basic ' + base64.b64encode(username+":"+TEST_USER_PASSWORD)
+	}
+
+	data = {
+		channel_name + "@topics.buddycloud.org/posts" : subscription
+	}
+
+	req = Request('POST', api_location + "/subscribed", data=json.dumps(data), headers=headers)
+	r = req.prepare()
+
+	s = Session()
+	s.mount("https://", SSLAdapter("TLSv1"))
+
+	if (not s.send(r, verify=False).ok):
+		status = 1
+		briefing = "User " + username + "@buddycloud.org could not subscribe to topic channel named " + channel_name + "@topics.buddycloud.org."
+		message = briefing
+		return (status, briefing, message, None)
+
 def testFunction(domain_url):
 
 	#First of all, let's find the API server
@@ -187,121 +216,21 @@ def testFunction(domain_url):
 
 	# Then, have user[2] join the topic channel. Have user[1] make user[2] moderator of that channel. Assert user[2] is a moderator of that channel.	
 
-	headers = {
-		'Accept' : '*/*',
-		'Accept-Encoding' : 'gzip,deflate,sdch',
-		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
-		'Cache-Control' : 'no-cache',
-		'Connection' : 'keep-alive',
-		'Host' : 'demo.buddycloud.org',
-		'Content-Type' : 'application/json',
-		'Authorization' : 'Basic ' + base64.b64encode(test_usernames[1]+":"+TEST_USER_PASSWORD)
-	}
-
-	data = {
-		test_channel_name + "@topics.buddycloud.org/posts" : "publisher"
-	}
-
-	req = Request('POST', api_location + "/subscribed", data=json.dumps(data), headers=headers)
-	r = req.prepare()
-
-	s = Session()
-	s.mount("https://", SSLAdapter("TLSv1"))
-
-	if (not s.send(r, verify=False).ok):
-		status = 1
-		briefing = "User " + test_usernames[1] + "@buddycloud.org could not subscribe to topic channel named " + test_channel_name + "@topics.buddycloud.org."
-		message = briefing
-		return (status, briefing, message, None)
+	subscribeToChannel(api_location, test_usernames[1], test_channel_name, "publisher")
 
 	#TODO see how to promote test_user[1] to moderator (and not only a producer!!)
 
 	# Then, have user[3] join the topic channel. Have user[1] give posting permission to user[3]. Assert user[3] is a follower+post of that channel.
 
-	headers = {
-		'Accept' : '*/*',
-		'Accept-Encoding' : 'gzip,deflate,sdch',
-		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
-		'Cache-Control' : 'no-cache',
-		'Connection' : 'keep-alive',
-		'Host' : 'demo.buddycloud.org',
-		'Content-Type' : 'application/json',
-		'Authorization' : 'Basic ' + base64.b64encode(test_usernames[2]+":"+TEST_USER_PASSWORD)
-	}
-
-	data = {
-		test_channel_name + "@topics.buddycloud.org/posts" : "publisher"
-	}
-
-	req = Request('POST', api_location + "/subscribed", data=json.dumps(data), headers=headers)
-	r = req.prepare()
-
-	s = Session()
-	s.mount("https://", SSLAdapter("TLSv1"))
-
-	if (not s.send(r, verify=False).ok):
-		status = 1
-		briefing = "User " + test_usernames[2] + "@buddycloud.org could not subscribe to topic channel named " + test_channel_name + "@topics.buddycloud.org."
-		message = briefing
-		return (status, briefing, message, None)
+	subscribeToChannel(api_location, test_usernames[2], test_channel_name, "publisher")
 
 	# Then, have user[4] join the topic channel. Assert user[4] is a follower of that channel.
 
-	headers = {
-		'Accept' : '*/*',
-		'Accept-Encoding' : 'gzip,deflate,sdch',
-		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
-		'Cache-Control' : 'no-cache',
-		'Connection' : 'keep-alive',
-		'Host' : 'demo.buddycloud.org',
-		'Content-Type' : 'application/json',
-		'Authorization' : 'Basic ' + base64.b64encode(test_usernames[3]+":"+TEST_USER_PASSWORD)
-	}
-
-	data = {
-		test_channel_name + "@topics.buddycloud.org/posts" : "member"
-	}
-
-	req = Request('POST', api_location + "/subscribed", data=json.dumps(data), headers=headers)
-	r = req.prepare()
-
-	s = Session()
-	s.mount("https://", SSLAdapter("TLSv1"))
-
-	if (not s.send(r, verify=False).ok):
-		status = 1
-		briefing = "User " + test_usernames[3] + "@buddycloud.org could not subscribe to topic channel named " + test_channel_name + "@topics.buddycloud.org."
-		message = briefing
-		return (status, briefing, message, None)
+	subscribeToChannel(api_location, test_usernames[3], test_channel_name, "member")
 
 	# Then, have user[5] join the topic channel. Have user[1] ban user[5] in that channel. Assert user[5] is banned in that channel.
 
-	headers = {
-		'Accept' : '*/*',
-		'Accept-Encoding' : 'gzip,deflate,sdch',
-		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
-		'Cache-Control' : 'no-cache',
-		'Connection' : 'keep-alive',
-		'Host' : 'demo.buddycloud.org',
-		'Content-Type' : 'application/json',
-		'Authorization' : 'Basic ' + base64.b64encode(test_usernames[4]+":"+TEST_USER_PASSWORD)
-	}
-
-	data = {
-		test_channel_name + "@topics.buddycloud.org/posts" : "member"
-	}
-
-	req = Request('POST', api_location + "/subscribed", data=json.dumps(data), headers=headers)
-	r = req.prepare()
-
-	s = Session()
-	s.mount("https://", SSLAdapter("TLSv1"))
-
-	if (not s.send(r, verify=False).ok):
-		status = 1
-		briefing = "User " + test_usernames[4] + "@buddycloud.org could not subscribe to topic channel named " + test_channel_name + "@topics.buddycloud.org."
-		message = briefing
-		return (status, briefing, message, None)
+	subscribeToChannel(api_location, test_usernames[4], test_channel_name, "member")
 
 	#TODO have this user test_usernames[4]@buddycloud.org be banned from this topic channel test_channel_name@topics.buddycloud.org
 
