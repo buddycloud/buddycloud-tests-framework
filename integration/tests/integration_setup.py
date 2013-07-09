@@ -185,11 +185,32 @@ def testFunction(domain_url):
 
 	# Then, have user[2] join the topic channel. Have user[1] make user[2] moderator of that channel. Assert user[2] is a moderator of that channel.	
 
-#	headers = {'Authorization' : 'Basic ' + base64.b64encode(test_usernames[1]+":"+TEST_USER_PASSWORD)}
-#	data = {
-#		test_channel_name : "publisher"
-#	}
-#	req = Request('POST', api_location + "/subscribed", data=json.dumps(data), headers=headers)
+	headers = {
+		'Accept' : '*/*',
+		'Accept-Encoding' : 'gzip,deflate,sdch',
+		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
+		'Cache-Control' : 'no-cache',
+		'Connection' : 'keep-alive',
+		'Host' : 'demo.buddycloud.org',
+		'Content-Type' : 'application/json',
+		'Authorization' : 'Basic ' + base64.b64encode(test_usernames[1]+":"+TEST_USER_PASSWORD)
+	}
+
+	data = {
+		test_channel_name + "@topics.buddycloud.org/posts" : "publisher"
+	}
+
+	req = Request('POST', api_location + "/subscribed", data=json.dumps(data), headers=headers)
+	r = req.prepare()
+
+	s = Session()
+	s.mount("https://", SSLAdapter("TLSv1"))
+
+	if (not s.send(r, verify=False).ok):
+		status = 1
+		briefing = "User " + test_usernames[1] + "@buddycloud.org could not subscribe to topic channel named " + test_channel_name + "@topics.buddycloud.org."
+		message = briefing
+		return (status, briefing, message, None)
 
 	# Then, have user[3] join the topic channel. Have user[1] give posting permission to user[3]. Assert user[3] is a follower+post of that channel.
 
@@ -197,6 +218,7 @@ def testFunction(domain_url):
 
 	# Then, have user[5] join the topic channel. Have user[1] ban user[5] in that channel. Assert user[5] is banned in that channel.
 
-	briefing = "Could successfully create all test user channels and topic channels needed for incoming integration tests."
+	briefing = "Integration test suite setup procedures executed properly. Ready to run integration tests."
 	message = briefing
+	message += "<br/>Could successfully create all test user channels and topic channels needed for incoming integration tests."
 	return (status, briefing, message, None)
