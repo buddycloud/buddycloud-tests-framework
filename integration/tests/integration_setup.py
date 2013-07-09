@@ -135,7 +135,7 @@ def subscribeToChannel(api_location, username, channel_name, subscription):
 		message = briefing
 		return (status, briefing, message, None)
 
-def isSubscribedToChannel(api_location, username, channel_name, "owner"):
+def isSubscribedToChannel(api_location, username, channel_name, subscription):
 
 	headers = {
 		'Accept' : '*/*',
@@ -165,7 +165,7 @@ def isSubscribedToChannel(api_location, username, channel_name, "owner"):
 
 		resp = json.loads(resp.content)
 
-		if (not (channel_name + "@topics.buddycloud.org/posts") in resp) or (resp[(channel_name + "@topics.buddycloud.org/posts")] != "owner"):
+		if (not (channel_name + "@topics.buddycloud.org/posts") in resp) or (resp[(channel_name + "@topics.buddycloud.org/posts")] != subscription):
 			status = 1
 			briefing = "Problem: " + username + "@buddycloud.org is not subscribed:'owner' of topic channel named " + channel_name + "@topics.buddycloud.org."
 			message = briefing
