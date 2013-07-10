@@ -40,16 +40,23 @@ function issueTest(test_name, domain_url, decide_next, retry){
 	},
 	statusCode: { 
 		503 : function(){
-			window.alert("Server responded with a 503 to launch of test "+test_name+"... retrying again!");
+//			window.alert("Server responded with a 503 to launch of test "+test_name+"... retrying again!");
 			issueTest(test_name, domain_url, decide_next, retry);
-		      },
-		500 : function(){
-			window.alert("Server responded with a 500 while launching test "+test_name+"!!!");
-			data = {
+/*			data = {
 				'name' : test_name,
 				'exit_status' : 2,
 				'briefing' : '',
 				'message' : ''
+			}
+			handleTestResponse(data, domain_url);
+			decide_next(domain_url, data, retry);*/
+		      },
+		500 : function(){
+			data = {
+				'name' : test_name,
+				'exit_status' : 2,
+				'briefing' : "Server internal error occurred while launching test " + test_name + ".",
+				'message' : "A server internal error occurred while launching test " + test_name + ". <br/> This is all we know as of now."
 			}
 			handleTestResponse(data, domain_url);
 			decide_next(domain_url, data, retry);
