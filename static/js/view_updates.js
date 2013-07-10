@@ -24,7 +24,6 @@ function handleTestRelaunch(test_name){
 // What to do in the page once a test finishes running
 function handleTestResponse(data, domain_url){
 
-	//data = JSON.parse(data);
 	$("#td_"+data.name).addClass("btn-"+getExitStatusClass(data.exit_status));
 	if ( data.exit_status == 1 ){
 		$("#td_"+data.name).removeClass("disabled");
@@ -190,7 +189,6 @@ function finishLauncher(){
 
 function finishRunningTestAgain(domain_url, data){
 
-//	data = JSON.parse(data);
 	createButtons(domain_url, null, getExitStatusClass(data.exit_status));
 	if ( data.exit_status == 0 ){
 		

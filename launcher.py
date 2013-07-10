@@ -35,15 +35,13 @@ def get_test_names():
 			'continue_if_fail' : entry['continue_if_fail'],
 			'source' : entry['source']
 		})
-	return json.dumps(entries)
+
+	response = make_response(json.dumps(entries), 200)
+	response.headers["Content-Type"] = "application/json"
+	return response
 
 @server.route('/perform_test/<test_name>/<path:domain_url>')
 def perform_test(test_name=None, domain_url=None):
-
-#	if test_name == "integration_setup":
-#		response = make_response(json.dumps({'name' : test_name}), 503);
-#		response.headers["Content-Type"] = "application/json"
-#		return response
 
 	print "~about to execute test "+test_name+"~"
 
