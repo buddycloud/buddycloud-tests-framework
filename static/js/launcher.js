@@ -34,18 +34,31 @@ function testsLauncher(data, domain_url){
 // Issues a new test to be run
 function issueTest(test_name, domain_url, decide_next, retry){
 
-	$.get("/perform_test/"+test_name+"/"+domain_url, function(data){
-		handleTestResponse(data, domain_url);
-		decide_next(domain_url, data, retry);
-	}).fail(function() {
-		data = {
-			'name' : test_name,
-			'exit_status' : 2,
-			'briefing' : "Server internal error occurred while launching test " + test_name + ".",
-			'message' : "A server internal error occurred while launching test " + test_name + ". <br/> This is all we know as of now."
+	$.ajax({
+		url: "/perform_test/"+test_name+"/"+domain_url,
+		type: "get",
+		success: function(data){
+			handleTestResponse(data, domain_url);
+			decide_next(domain_url, data, retry);
+		},
+		error: function(jqXHR) {
+			data = {
+				'name' : test_name,
+				'exit_status' : 2,
+				'briefing' : "A problem occurred while launching test " + test_name + ".",
+				'message' : "A problem occurred while launching test " + test_name + ". <br/> This does not mean a problem with the actual test."
+			};
+
+			if ( jqXHR.statusCode == 503 ){
+				data['briefing'] = "Our server was busy and could not launch test " + test_name + " at the time. Retrying again in 5 seconds...";
+				handleTestResponse(data, domain_url);
+				window.setTimeout(issueTest(test_name, domain_url, decide_next, retry), 5000);
+			}
+			else{
+				handleTestResponse(data, domain_url);
+				decide_next(domain_url, data, retry);
+			}
 		}
-		handleTestResponse(data, domain_url);
-		decide_next(domain_url, data, retry);
 	});
 }
 
