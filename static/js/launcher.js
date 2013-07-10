@@ -37,6 +37,23 @@ function issueTest(test_name, domain_url, decide_next, retry){
 	$.get("/perform_test/"+test_name+"/"+domain_url, function(data){
 		handleTestResponse(data, domain_url);
 		decide_next(domain_url, data, retry);
+	},
+	statusCode: { 
+		503 : function(){
+			window.alert("Server responded with a 503 to launch of test "+test_name+"... retrying again!");
+			issueTest(test_name, domain_url, decide_next, retry);
+		      },
+		500 : function(){
+			window.alert("Server responded with a 500 while launching test "+test_name+"!!!");
+			data = {
+				'name' : test_name,
+				'exit_status' : 2,
+				'briefing' : '',
+				'message' : ''
+			}
+			handleTestResponse(data, domain_url);
+			decide_next(domain_url, data, retry);
+		}
 	});
 }
 
@@ -44,20 +61,20 @@ function issueTest(test_name, domain_url, decide_next, retry){
 function decideNext(domain_url, data, retry){
 
 	data = JSON.parse(data);
-	// If current test has failed and continue if fail is 'false':
+	// If current test has failed and 'continue if fail' is 'false'; then stop launcher
 	if ( data.exit_status != 0 && !test_entries[current_test].continue_if_fail ){
 		failed_tests.push({ 'test' : test_entries[current_test], 'output' : data });
 		finishLauncher();
 	}
-	else{ //Otherwise, the test has passed or failed but continue if fail is 'true'
+	else{ //Otherwise, the test has passed or failed but 'continue if fail' is 'true'; then see if should stop launcher of issue a new test
 		if ( data.exit_status != 0 ){
 			failed_tests.push({ 'test' : test_entries[current_test], 'output' : data });
 		}
 		current_test++;
-		if ( current_test == test_entries.length ){ //If there's no more tests to be issued
+		if ( current_test == test_entries.length ){ //If there's no more tests to be issued; stop launcher
 			finishLauncher();
 		}
-		else{ // Otherwise, there's a new test to be issued, do it.
+		else{ // Otherwise, there's a new test to be issued, do it
 			if ( retry ){
 				handleTestRelaunch(test_entries[current_test].name);
 			}
