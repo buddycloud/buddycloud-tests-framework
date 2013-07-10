@@ -119,7 +119,9 @@ def perform_test(test_name=None, domain_url=None):
 				json_return['briefing'] = briefing
 				json_return['message'] = message
 
-		return json.dumps(json_return)
+		response = make_response(json.dumps(json_return), 200)
+		response.headers["Content-Type"] = "application/json"
+		return response
 
 	except Exception, e:
 
@@ -131,8 +133,10 @@ def perform_test(test_name=None, domain_url=None):
 				'message' : "This test failed pretty badly.<br/>It raised an unexpected exception: "+str(e)+"!</br>Please fix this problem before issuing this test again.",
 				'output' : None
 		}
-		
-		return json.dumps(json_return)
+
+		response = make_response(json.dumps(json_return), 200)
+		response.headers["Content-Type"] = "application/json"
+		return response
 
 	finally:
 		
