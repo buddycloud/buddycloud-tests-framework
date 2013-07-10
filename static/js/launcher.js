@@ -37,6 +37,7 @@ function issueTest(test_name, domain_url, decide_next, retry){
 	$.ajax({
 		url: "/perform_test/"+test_name+"/"+domain_url,
 		type: "get",
+		dataType: "json",
 		success: function(data){
 			handleTestResponse(data, domain_url);
 			decide_next(domain_url, data, retry);
@@ -49,23 +50,43 @@ function issueTest(test_name, domain_url, decide_next, retry){
 				'message' : "A problem occurred while launching test " + test_name + ". <br/> This does not mean a problem with the actual test."
 			};
 
-			if ( jqXHR.statusCode == 503 ){
+			console.log(jqXHR);
+
+			if ( jqXHR.status == 503 ){
 				data['briefing'] = "Our server was busy and could not launch test " + test_name + " at the time. Retrying again in 5 seconds...";
 				handleTestResponse(data, domain_url);
-				window.setTimeout(issueTest(test_name, domain_url, decide_next, retry), 5000);
+				window.setTimeout(function(){ issueTest(test_name, domain_url, decide_next, retry); }, 5000);
 			}
 			else{
+				data['message'] = "A problem occurred while launching test " + test_name + ".";
+				data['message'] += "<br/> Server returned status (" + jqXHR.status + ").";
+				data['message'] += "<br/> Be warned that this does not necessarily mean a problem with the actual test.";
 				handleTestResponse(data, domain_url);
 				decide_next(domain_url, data, retry);
 			}
 		}
 	});
+
+/*	$.get("/perform_test/"+test_name+"/"+domain_url, function(data){
+		handleTestResponse(data, domain_url);
+		decide_next(domain_url, data, retry);
+	}).fail(function(){
+		data = {
+			'name' : test_name,
+			'exit_status' : 2,
+			'briefing' : "A problem occurred while launching test " + test_name + ".",
+			'message' : "A problem occurred while launching test " + test_name + ". <br/> This does not mean a problem with the actual test."
+		};
+		handleTestResponse(data, domain_url);
+		decide_next(domain_url, data, retry);
+	});*/
+
 }
 
 // Decides what to do once a test finishes running
 function decideNext(domain_url, data, retry){
 
-	data = JSON.parse(data);
+//	data = JSON.parse(data);
 	// If current test has failed and 'continue if fail' is 'false'; then stop launcher
 	if ( data.exit_status != 0 && !test_entries[current_test].continue_if_fail ){
 		failed_tests.push({ 'test' : test_entries[current_test], 'output' : data });
