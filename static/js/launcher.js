@@ -49,8 +49,6 @@ function issueTest(test_name, domain_url, decide_next, retry){
 				'message' : "A problem occurred while launching test " + test_name + ". <br/> This does not mean a problem with the actual test."
 			};
 
-			console.log(jqXHR);
-
 			if ( jqXHR.status == 503 ){
 				data['briefing'] = "Our server was busy and could not launch test " + test_name + " at the time. Retrying again in 5 seconds...";
 				handleTestResponse(data, domain_url);
