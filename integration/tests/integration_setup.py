@@ -103,10 +103,22 @@ def create_topic_channel(api_location, username, channel_name):
 	s.mount("https://", SSLAdapter("TLSv1"))
 
 	if (s.send(r, verify=False)).ok :
-		return True
+
+		data = {
+			"default_affiliation": "member"
+		}
+
+		req = Request('POST', api_location + channel_name + "@topics.buddycloud.org/metadata/posts", data=json.dumps(data), headers=headers)
+		r = req.prepare()
+
+		s = Session()
+		s.mount("https://", SSLAdapter("TLSv1"))
+
+		if (s.send(r, verify=False)).ok :
+			return True
 	return False
 
-def subscribeToChannel(api_location, username, channel_name, subscription):
+def subscribe_to_channel(api_location, username, channel_name, subscription):
 
 	headers = {
 		'Accept' : '*/*',
@@ -135,7 +147,7 @@ def subscribeToChannel(api_location, username, channel_name, subscription):
 		message = briefing
 		return (status, briefing, message, None)
 
-def isSubscribedToChannel(api_location, username, channel_name, subscription):
+def is_subscribed_to_channel(api_location, username, channel_name, subscription):
 
 	headers = {
 		'Accept' : '*/*',
@@ -248,31 +260,29 @@ def testFunction(domain_url):
 		message = briefing
 		return (status, briefing, message, None)
 
-	isSubscribedToChannel(api_location, test_usernames[0], test_channel_name, "owner")
-
-	#TODO assert test_usernames[0]@buddycloud.org is owner of test_channel_name@topics.buddycloud.org!!!
+	is_subscribed_to_channel(api_location, test_usernames[0], test_channel_name, "owner")
 
 	# Then, have user[2] join the topic channel. Have user[1] make user[2] moderator of that channel. Assert user[2] is a moderator of that channel.	
 
-	subscribeToChannel(api_location, test_usernames[1], test_channel_name, "publisher")
-	isSubscribedToChannel(api_location, test_usernames[1], test_channel_name, "publisher")
+	subscribe_to_channel(api_location, test_usernames[1], test_channel_name, "publisher")
+	is_subscribed_to_channel(api_location, test_usernames[1], test_channel_name, "publisher")
 
 	#TODO see how to promote test_user[1] to moderator (and not only a producer!!)
 
 	# Then, have user[3] join the topic channel. Have user[1] give posting permission to user[3]. Assert user[3] is a follower+post of that channel.
 
-	subscribeToChannel(api_location, test_usernames[2], test_channel_name, "publisher")
-	isSubscribedToChannel(api_location, test_usernames[2], test_channel_name, "publisher")
+	subscribe_to_channel(api_location, test_usernames[2], test_channel_name, "publisher")
+	is_subscribed_to_channel(api_location, test_usernames[2], test_channel_name, "publisher")
 
 	# Then, have user[4] join the topic channel. Assert user[4] is a follower of that channel.
 
-	subscribeToChannel(api_location, test_usernames[3], test_channel_name, "member")
-	isSubscribedToChannel(api_location, test_usernames[3], test_channel_name, "member")
+	subscribe_to_channel(api_location, test_usernames[3], test_channel_name, "member")
+	is_subscribed_to_channel(api_location, test_usernames[3], test_channel_name, "member")
 
 	# Then, have user[5] join the topic channel. Have user[1] ban user[5] in that channel. Assert user[5] is banned in that channel.
 
-	subscribeToChannel(api_location, test_usernames[4], test_channel_name, "member")
-	isSubscribedToChannel(api_location, test_usernames[4], test_channel_name, "member")
+	subscribe_to_channel(api_location, test_usernames[4], test_channel_name, "member")
+	is_subscribed_to_channel(api_location, test_usernames[4], test_channel_name, "member")
 
 	#TODO have this user test_usernames[4]@buddycloud.org be banned from this topic channel test_channel_name@topics.buddycloud.org
 
