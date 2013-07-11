@@ -1,4 +1,5 @@
 /*Test output table and modal styles*/
+
 .test_output{
 	cursor:default;
 }
@@ -44,23 +45,6 @@ text {
 	font: bold 20px MyInconsolata;
 }
 
-.intro {
-	fill: green;
-	font: bold 48px MyInconsolata;
-}
-
-.enter {
-	fill: green;
-}
-
-.update {
-	fill: #6dc066;
-}
-
-.exit {
-	fill: brown;
-}
-
 /*Overall page styles*/
 
 body{
@@ -76,6 +60,62 @@ body{
 	cursor:pointer;
 	transition: color 2s;
 	-webkit-transition: color 2s;
+}
+
+#nav_flex{
+	display: -moz-flex;
+	display: -webkit-flex;
+	display: flex;
+
+	-moz-flex-direction: row;
+	-webkit-flex-direction: row;
+	flex-direction: row;
+
+	-moz-wrap: nowrap;
+	-webkit-wrap: nowrap;
+	flex-wrap: nowrap;
+
+	-moz-justify-content: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+
+	-moz-align-items: center;
+	-webkit-align-items: center;
+	align-items: center;
+}
+
+#input_flex{
+	margin-bottom: 0px;
+}
+
+#domain_url_box, #inspect_button{
+	font-family: MyInconsolata;
+	font-weight: bold;
+	font-size: 22pt;
+	padding: 0px;
+	margin-bottom: 0px;
+}
+
+#domain_url_box{
+	height: 48px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+#inspect_button{
+	height: 34px;
+	padding-top: 14px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+#domain_url_label{
+	font-family: MyInconsolata;
+	font-weight: bold;
+	font-size: 22pt;
+	color: rgb(134, 190, 41);
+	cursor: default;
+	margin-left: 10px;
 }
 
 #test_launcher_status{
