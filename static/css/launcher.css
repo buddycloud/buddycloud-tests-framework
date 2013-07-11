@@ -85,33 +85,14 @@ body{
 }
 
 #nav_flex{
-	display: -moz-flex;
-	display: -webkit-flex;
-	display: flex;
-
-	-moz-flex-direction: row;
-	-webkit-flex-direction: row;
-	flex-direction: row;
-
-	-moz-wrap: nowrap;
-	-webkit-wrap: nowrap;
-	flex-wrap: nowrap;
-
-	-moz-justify-content: center;
-	-webkit-justify-content: center;
-	justify-content: center;
-
-	-moz-align-items: center;
-	-webkit-align-items: center;
-	align-items: center;
-
 	margin-left: auto;
 	margin-height: auto;
-
 }
 
 #input_flex{
 	margin-bottom: 0px;
+	padding-left: auto;
+	padding-right: auto;
 }
 
 #domain_url_box, #inspect_button{
@@ -140,7 +121,7 @@ body{
 #domain_url_label{
 	font-family: MyInconsolata;
 	font-weight: bold;
-	font-size: 16pt;
+	font-size: 14pt;
 	color: rgb(134, 190, 41);
 	cursor: default;
 	margin-left: 10px;

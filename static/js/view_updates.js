@@ -142,7 +142,7 @@ function showMessage(title, body, situation){
 	});
 }
 
-function createButtons(domain_url, retry, situation){
+/*function createButtons(domain_url, retry, situation){
 
 	var buttons_html = "<button href='#' data-dismiss='modal' class='btn btn-"+situation+"'>Close</button>";
 	$("#message_buttons").html(buttons_html);
@@ -153,12 +153,12 @@ function createButtons(domain_url, retry, situation){
 		$("#message_buttons").html(buttons_html);
 		$("#retry_button").attr("onclick", "retryTests('"+domain_url+"');");
 	}
-}
+}*/
 
 
 function finishLauncher(){
 
-	var summary = "Inspection summary: ";
+/*	var summary = "Inspection summary: ";
 	if ( failed_tests.length == 0 ){
 		
 		summary += "None of the tests failed! Congratulations!";
@@ -197,21 +197,21 @@ function finishLauncher(){
 		createButtons(domain_url, failed_tests.test, "danger");
 
 		showMessage("All tests finished!", summary + message, "danger");
-	}
+	}*/
 	$("#inspect_button").removeClass("disabled");
 	$("#inspect_button").attr("onclick", "startInspection();");
 }
 
 function finishRunningTestAgain(domain_url, data){
 
-	createButtons(domain_url, null, getExitStatusClass(data.exit_status));
+/*	createButtons(domain_url, null, getExitStatusClass(data.exit_status));
 	if ( data.exit_status == 0 ){
 		
 		showMessage(data.name+" passed!", data.message, getExitStatusClass(data.exit_status));
 	}
 	else{
 		showMessage(data.name+" failed!", data.message, getExitStatusClass(data.exit_status));
-	}
+	}*/
 	$("#inspect_button").removeClass("disabled");
 	$("#inspect_button").attr("onclick", "startInspection();");
 }
