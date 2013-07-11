@@ -34,6 +34,12 @@
 	color:black;
 }
 
+#message_title_wrap{
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+}
+
 #message_body_area.success{
 	background-color:#dff0d8;
 	color:black;

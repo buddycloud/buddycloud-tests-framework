@@ -17,14 +17,14 @@ function handleTestCreation(test_name, test_source){
 	test_entry_html += "</div>";
 
 	$("#tests_output_table").append(test_entry_html);
-	$("#td_"+test_name).popover({
+/*	$("#td_"+test_name).popover({
 		'title' : "Test ("+test_name+") Info",
 		'content' : "<br/>Test source: <a href='https://"+test_source+"' target='_blank'>on github</a>",
 		'trigger' : 'hover',
 		'html' : true,
 		'placement' : 'top',
 		'delay' : { 'show' : 100, 'hide' : 3500 }
-	});
+	});*/
 }
 
 function handleTestRelaunch(test_name){
@@ -130,6 +130,7 @@ var show_modal = true;
 
 function showMessage(title, body, situation){
 
+	$("#message_title_wrap").attr("class", "modal-header btn btn-"+situation);
 	$("#message_title").text(title);
 	$("#message_body_area").attr("class", "modal-body "+situation);
 	$("#message_body").html(body);
