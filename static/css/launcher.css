@@ -95,7 +95,7 @@ body{
 #domain_url_box, #inspect_button{
 	font-family: MyInconsolata;
 	font-weight: bold;
-	font-size: 22pt;
+	font-size: 16pt;
 	padding: 0px;
 	margin-bottom: 0px;
 }
@@ -118,14 +118,14 @@ body{
 #domain_url_label{
 	font-family: MyInconsolata;
 	font-weight: bold;
-	font-size: 22pt;
+	font-size: 16pt;
 	color: rgb(134, 190, 41);
 	cursor: default;
 	margin-left: 10px;
 }
 
 #test_launcher_status, #header_msg{
-	font-size: 28px;
+	font-size: 12pt;
 }
 
 #test_launcher_status .domain_title{
