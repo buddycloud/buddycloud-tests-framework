@@ -1,7 +1,32 @@
 /*Test output table and modal styles*/
 
+.test_entry{
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.test_name{
+	width: 100%;
+	text-align: left;
+	margin: 0px;
+	padding: 0px;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
 .test_output{
 	cursor:default;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+	height: 50px;
+	white-space: pre-wrap;      /* CSS3 */   
+	white-space: -moz-pre-wrap; /* Firefox */    
+	white-space: -pre-wrap;     /* Opera <7 */   
+	white-space: -o-pre-wrap;   /* Opera 7 */    
+	word-wrap: break-word;
 }
 
 .test_output.success{
@@ -34,6 +59,9 @@
 	color:black;
 }
 
+#tests_output_table .input-prepend{
+	height: 100px;
+}
 
 /*Test launcher status styles*/
 @font-face {
@@ -54,12 +82,6 @@ body{
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
-}
-
-#logo{
-	cursor:pointer;
-	transition: color 2s;
-	-webkit-transition: color 2s;
 }
 
 #nav_flex{

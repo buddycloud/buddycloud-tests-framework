@@ -8,8 +8,23 @@ function handleStartTestsLauncher(domain_url){
 // What to do in the page when a new test was issued just now
 function handleTestCreation(test_name, test_source){
 
-	$("#tests_output_table").append("<div class='input-prepend' style='width:100%;'><button id='td_"+test_name+"' class='btn disabled' style='width:25%; padding-left:5px; text-align:left;'><i id='ti_"+test_name+"' class='icon-random'></i> <span class='text-left'>"+test_name+"</span> </button><span id='to_"+test_name+"' class='test_output input uneditable-input' style='width:73%;'>Running this test...</span></div>");
-	$("#td_"+test_name).popover({ 'title' : "Test ("+test_name+") Info", 'content' : "<br/>Test source: <a href='https://"+test_source+"' target='_blank'>on github</a>", 'trigger' : 'hover', 'html' : true, 'delay' : { 'show' : 100, 'hide' : 3500 } });
+	test_entry_html = "<div class='test_entry'>";
+	test_entry_html += "<span id='td_" + test_name + "' class='btn disabled test_name'>";
+	test_entry_html += "<i id='ti_" + test_name + "' class='icon-random' style='padding:0px; margin:0px;'></i>";
+	test_entry_html += "<span style='padding:0px; margin:0px;'>" + test_name + "</span>";
+	test_entry_html += "</span>";
+	test_entry_html += "<span id='to_" + test_name + "' class='test_output input uneditable-input'>Running this test...</span>";
+	test_entry_html += "</div>";
+
+	$("#tests_output_table").append(test_entry_html);
+	$("#td_"+test_name).popover({
+		'title' : "Test ("+test_name+") Info",
+		'content' : "<br/>Test source: <a href='https://"+test_source+"' target='_blank'>on github</a>",
+		'trigger' : 'hover',
+		'html' : true,
+		'placement' : 'top',
+		'delay' : { 'show' : 100, 'hide' : 3500 }
+	});
 }
 
 function handleTestRelaunch(test_name){

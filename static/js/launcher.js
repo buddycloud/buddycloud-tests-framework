@@ -59,7 +59,7 @@ function issueTest(test_name, domain_url, decide_next, retry){
 			}
 			else{
 				data['message'] = "A problem occurred while launching test " + test_name + ".";
-				data['message'] += "<br/> Server returned status (" + jqXHR.status + ").";
+				data['message'] += "<br/> Server returned status (" + jqXHR.status + " " + jqXHR.statusText + ").";
 				data['message'] += "<br/> Be warned that this does not necessarily mean a problem with the actual test.";
 				handleTestResponse(data, domain_url);
 				decide_next(domain_url, data, retry);
