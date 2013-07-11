@@ -82,6 +82,10 @@ body{
 	-moz-align-items: center;
 	-webkit-align-items: center;
 	align-items: center;
+
+	margin-left: auto;
+	margin-height: auto;
+
 }
 
 #input_flex{
@@ -100,6 +104,7 @@ body{
 	height: 48px;
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
+	padding-right: 5px;
 }
 
 #inspect_button{
@@ -107,6 +112,7 @@ body{
 	padding-top: 14px;
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
+	padding-left: 5px;
 }
 
 #domain_url_label{
@@ -118,7 +124,7 @@ body{
 	margin-left: 10px;
 }
 
-#test_launcher_status{
+#test_launcher_status, #header_msg{
 	font-size: 28px;
 }
 
