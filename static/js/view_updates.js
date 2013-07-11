@@ -30,6 +30,7 @@ function handleTestCreation(test_name, test_source){
 function handleTestRelaunch(test_name){
 
 	$("#td_"+test_name).attr("class", "btn disabled test_name");
+	$("#td_"+data.name).attr("data-response", "");
 	$("#td_"+test_name).attr("onclick", "");
 	$("#to_"+test_name).attr("class", "test_output uneditable-input");
 	$("#to_"+test_name).html("Running this test again...");
@@ -40,10 +41,13 @@ function handleTestRelaunch(test_name){
 function handleTestResponse(data, domain_url){
 
 	$("#td_"+data.name).addClass("btn-"+getExitStatusClass(data.exit_status));
-	if ( data.exit_status == 1 ){
+	$("#td_"+data.name).attr("data-response", JSON.stringify(data));
+/*	if ( data.exit_status == 1 ){
 		$("#td_"+data.name).removeClass("disabled");
 		//$("#td_"+data.name).attr("onclick", "runAgain('"+data.name+"', '"+domain_url+"', '"+getExitStatusClass(data.exit_status)+"');");
-	}
+	}*/
+	$("#td_"+data.name).removeClass("disabled");
+	$("#td_"+data.name).attr("onclick", "focusOnTest('"+data.name+"');");
 	$("#to_"+data.name).addClass(getExitStatusClass(data.exit_status));
 	$("#to_"+data.name).html(data.briefing);
 	$("#ti_"+data.name).attr("class", getExitStatusIcon(data.exit_status) + " icon-white");
@@ -142,7 +146,7 @@ function showMessage(title, body, situation){
 	});
 }
 
-/*function createButtons(domain_url, retry, situation){
+function createButtons(domain_url, retry, situation){
 
 	var buttons_html = "<button href='#' data-dismiss='modal' class='btn btn-"+situation+"'>Close</button>";
 	$("#message_buttons").html(buttons_html);
@@ -153,7 +157,7 @@ function showMessage(title, body, situation){
 		$("#message_buttons").html(buttons_html);
 		$("#retry_button").attr("onclick", "retryTests('"+domain_url+"');");
 	}
-}*/
+}
 
 
 function finishLauncher(){
@@ -214,4 +218,10 @@ function finishRunningTestAgain(domain_url, data){
 	}*/
 	$("#inspect_button").removeClass("disabled");
 	$("#inspect_button").attr("onclick", "startInspection();");
+}
+
+function focusOnTest(test_name){
+	var exit_status_class = getExitStatusClass(parseInt(JSON.parse($("#td_"+test_name).attr("data-response")).exit_status));
+	createButtons(domain_url, null, exit_status_class);
+	showMessage(test_name, $("#td_"+test_name).attr("data-response"), exit_status_class);
 }
