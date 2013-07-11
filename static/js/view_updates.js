@@ -29,7 +29,7 @@ function handleTestCreation(test_name, test_source){
 
 function handleTestRelaunch(test_name){
 
-	$("#td_"+test_name).attr("class", "btn disabled");
+	$("#td_"+test_name).attr("class", "btn disabled test_name");
 	$("#td_"+test_name).attr("onclick", "");
 	$("#to_"+test_name).attr("class", "test_output uneditable-input");
 	$("#to_"+test_name).html("Running this test again...");
