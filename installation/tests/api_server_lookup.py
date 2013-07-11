@@ -11,7 +11,7 @@ def testFunction(domain_url):
 
 	except dns.resolver.NXDOMAIN:
 
-		briefing = "No API server TXT record found!"
+		briefing = "No API server TXT record found at domain " + domain_url + "!"
 		status = 1
 		message = "We could not find your API server TXT record!"
 		message += "You must setup your DNS to point to the API server endpoint using a TXT record similat to the one below: "
