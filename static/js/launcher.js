@@ -52,7 +52,10 @@ function issueTest(test_name, domain_url, decide_next, retry){
 			if ( jqXHR.status == 503 ){
 				data['briefing'] = "Our server was busy and could not launch test " + test_name + " at the time. Retrying again in 5 seconds...";
 				handleTestResponse(data, domain_url);
-				window.setTimeout(function(){ issueTest(test_name, domain_url, decide_next, retry); }, 5000);
+				window.setTimeout(function(){
+					handleTestRelaunch(test_name);
+					issueTest(test_name, domain_url, decide_next, retry);
+				}, 5000);
 			}
 			else{
 				data['message'] = "A problem occurred while launching test " + test_name + ".";
