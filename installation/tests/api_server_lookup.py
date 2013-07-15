@@ -56,16 +56,17 @@ def testFunction(domain_url):
 		protocol = answer[answer.find("protocol=")+9 : answer.find("\"", answer.find("protocol="))]
 
 		answers.append({
-			'domain' : domain + path,
+			'domain' : domain,
 			'port' : port,
-			'protocol' : protocol
+			'protocol' : protocol,
+			'path' : path
 		})
 
 
-	found = answers[0]['domain'] + ", port: " + str(answers[0]['port'])
+	found = answers[0]['domain'] + answers[0]['path'] + ", port: " + str(answers[0]['port'])
 
 	for i in range(1, len(answers)):
-		found = answers[i]['domain'] + ", port: " + str(answers[i]['port'])
+		found = answers[i]['domain'] + answers[i]['path'] + ", port: " + str(answers[i]['port'])
 
 	if len(answers) == 1:
 		found = "API server record found: " + found

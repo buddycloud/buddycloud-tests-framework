@@ -30,7 +30,7 @@ def testFunction(domain_url):
 
 		try:
 
-			req = Request('HEAD', answer['protocol'] + "://" + answer['domain'] + ":" + str(answer['port']))
+			req = Request('HEAD', answer['protocol'] + "://" + answer['domain'] + answer['path'] + ":" + str(answer['port']))
 			r = req.prepare()
 
 			s = Session()
@@ -40,7 +40,7 @@ def testFunction(domain_url):
 				s.mount('https://', SSLAdapter('TLSv1'))
 			else:
 
-				briefing = "Protocol specified in TXT record for API server at "+answer['domain']+":"+str(answer['port'])+" is not HTTPS!"
+				briefing = "Protocol specified in TXT record for API server at "+answer['domain']+answer['path']+":"+str(answer['port'])+" is not HTTPS!"
 				status = 1
 				message = briefing + "We have detected that your TXT record specifies a protocol other than HTTPS."
 				message += "<br/> Please ensure your API server will run with HTTPS enabled."
@@ -51,15 +51,15 @@ def testFunction(domain_url):
 				if ( found != "" ):
 					found += " | "
 
-				found += answer['domain']+":"+answer['port']
+				found += answer['domain']+answer['path']+":"+answer['port']
 
 			else:
 
-				raise Exception("Could not reach server at "+answer['domain']+":"+str(answer['port'])+".")
+				raise Exception("Could not reach server at "+answer['domain']+answer['path']+":"+str(answer['port'])+".")
 
 		except Exception, e:
 
-			briefing = "Connection failed to API server at "+answer['domain']+":"+str(answer['port']+"!")
+			briefing = "Connection failed to API server at "+answer['domain']+answer['path']+":"+str(answer['port']+"!")
 			status = 1
 			message = "The problem we found was: "+str(e)
 			message = "<br/>Please ensure your API server is running (with HTTPS)!"

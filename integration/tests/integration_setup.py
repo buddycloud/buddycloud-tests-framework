@@ -20,10 +20,9 @@ def user_exists(api_location, username):
 		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
 		'Cache-Control' : 'no-cache',
 		'Connection' : 'keep-alive',
-		'Host' : 'demo.buddycloud.org'
 	}
 
-	req = Request('GET', api_location + username +'@buddycloud.org/metadata/posts', headers=headers)
+	req = Request('GET', api_location + username +'@' + api_host + '/metadata/posts', headers=headers)
 	r = req.prepare()
 
 	s = Session()
@@ -45,7 +44,6 @@ def create_user_channel(api_location, username):
 		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
 		'Cache-Control' : 'no-cache',
 		'Connection' : 'keep-alive',
-		'Host' : 'demo.buddycloud.org'
 	}
 	data = {'username' : username, 'password' : TEST_USER_PASSWORD, 'email' : TEST_USER_EMAIL}
 
@@ -67,10 +65,9 @@ def topic_channel_exists(api_location, channel_name):
 		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
 		'Cache-Control' : 'no-cache',
 		'Connection' : 'keep-alive',
-		'Host' : 'demo.buddycloud.org'
 	}
 	
-	req = Request('GET', api_location + channel_name +'@topics.buddycloud.org/metadata/posts', headers=headers)
+	req = Request('GET', api_location + channel_name +'@topics.' + api_host + '/metadata/posts', headers=headers)
 	r = req.prepare()
 
 	s = Session()
@@ -92,11 +89,10 @@ def create_topic_channel(api_location, username, channel_name):
 		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
 		'Cache-Control' : 'no-cache',
 		'Connection' : 'keep-alive',
-		'Host' : 'demo.buddycloud.org',
 		'Authorization' : 'Basic ' + base64.b64encode(username+":"+TEST_USER_PASSWORD)
 	}
 
-	req = Request('POST', api_location + channel_name + "@topics.buddycloud.org", headers=headers)
+	req = Request('POST', api_location + channel_name + "@topics." + api_host + "", headers=headers)
 	r = req.prepare()
 
 	s = Session()
@@ -108,7 +104,7 @@ def create_topic_channel(api_location, username, channel_name):
 			"default_affiliation": "member"
 		}
 
-		req = Request('POST', api_location + channel_name + "@topics.buddycloud.org/metadata/posts", data=json.dumps(data), headers=headers)
+		req = Request('POST', api_location + channel_name + "@topics." + api_host + "/metadata/posts", data=json.dumps(data), headers=headers)
 		r = req.prepare()
 
 		s = Session()
@@ -126,13 +122,12 @@ def subscribe_to_channel(api_location, username, channel_name, subscription):
 		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
 		'Cache-Control' : 'no-cache',
 		'Connection' : 'keep-alive',
-		'Host' : 'demo.buddycloud.org',
 		'Content-Type' : 'application/json',
 		'Authorization' : 'Basic ' + base64.b64encode(username+":"+TEST_USER_PASSWORD)
 	}
 
 	data = {
-		channel_name + "@topics.buddycloud.org/posts" : subscription
+		channel_name + "@topics." + api_host + "/posts" : subscription
 	}
 
 	req = Request('POST', api_location + "/subscribed", data=json.dumps(data), headers=headers)
@@ -143,7 +138,7 @@ def subscribe_to_channel(api_location, username, channel_name, subscription):
 
 	if (not s.send(r, verify=False).ok):
 		status = 1
-		briefing = "User " + username + "@buddycloud.org could not subscribe to topic channel named " + channel_name + "@topics.buddycloud.org."
+		briefing = "User " + username + "@" + api_host + " could not subscribe to topic channel named " + channel_name + "@topics." + api_host + "."
 		message = briefing
 		return (status, briefing, message, None)
 
@@ -155,7 +150,6 @@ def is_subscribed_to_channel(api_location, username, channel_name, subscription)
 		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
 		'Cache-Control' : 'no-cache',
 		'Connection' : 'keep-alive',
-		'Host' : 'demo.buddycloud.org',
 		'Authorization' : 'Basic ' + base64.b64encode(username+":"+TEST_USER_PASSWORD)
 	}
 
@@ -170,16 +164,16 @@ def is_subscribed_to_channel(api_location, username, channel_name, subscription)
 	if (not resp.ok):
 
 		status = 1
-		briefing = "Could not assert that user " + username + "@buddycloud.org is subscribed:'owner' of topic channel named " + channel_name + "@topics.buddycloud.org."
+		briefing = "Could not assert that user " + username + "@" + api_host + " is subscribed:'owner' of topic channel named " + channel_name + "@topics." + api_host + "."
 		message = briefing
 		return (status, briefing, message, None)
 	else:
 
 		resp = json.loads(resp.content)
 
-		if (not (channel_name + "@topics.buddycloud.org/posts") in resp) or (resp[(channel_name + "@topics.buddycloud.org/posts")] != subscription):
+		if (not (channel_name + "@topics." + api_host + "/posts") in resp) or (resp[(channel_name + "@topics." + api_host + "/posts")] != subscription):
 			status = 1
-			briefing = "Problem: " + username + "@buddycloud.org is not subscribed:'owner' of topic channel named " + channel_name + "@topics.buddycloud.org."
+			briefing = "Problem: " + username + "@" + api_host + " is not subscribed:'owner' of topic channel named " + channel_name + "@topics." + api_host + "."
 			message = briefing
 			return (status, briefing, message, None)
 
@@ -200,7 +194,8 @@ def testFunction(domain_url):
 		message += "<br/><br/>_buddycloud-api._tcp.EXAMPLE.COM.          IN TXT \"v=1.0\" \"host=buddycloud.EXAMPLE.COM\" \"protocol=https\" \"path=/api\" \"port=443\""
 		return (status, briefing, message, None)
 
-	api_location = answers[0]['protocol'] + "://" + answers[0]['domain'] + "/"
+	api_host = answers[0]['domain']
+	api_location = answers[0]['protocol'] + "://" + answers[0]['domain'] + answers[0]['path'] + "/"
 
 	# Then, read or create a file with 5 different test usernames in the format test_user_<integer>.
 
@@ -245,7 +240,7 @@ def testFunction(domain_url):
 			continue
 		else:
 			status = 1
-			briefing = "Could not create user channel for test user named " + test_username + "@buddycloud.org."
+			briefing = "Could not create user channel for test user named " + test_username + "@" + api_host + "."
 			message = briefing
 			return (status, briefing, message, None)
 
@@ -256,7 +251,7 @@ def testFunction(domain_url):
 
 	if not create_topic_channel(api_location, test_usernames[0], test_channel_name) :
 		status = 1
-		briefing = "Could not create topic channel named " + test_channel_name + "@topics.buddycloud.org."
+		briefing = "Could not create topic channel named " + test_channel_name + "@topics." + api_host + "."
 		message = briefing
 		return (status, briefing, message, None)
 
