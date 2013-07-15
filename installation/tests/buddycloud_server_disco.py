@@ -25,7 +25,7 @@ def testFunction(domain_url):
 		xmpp_client = ClientXMPP("inspect@buddycloud.org", "ei3tseq")
 		xmpp_client.register_plugin('xep_0030')
 		
-		if ( xmpp_client.connect((address, 5222), reattempt=True, use_ssl=False, use_tls=False) ):
+		if ( xmpp_client.connect((address, 5222), reattempt=False, use_ssl=False, use_tls=False) ):
 			xmpp_client.process(block=False)
 
 			server_discovered = False
