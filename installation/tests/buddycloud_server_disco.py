@@ -32,7 +32,7 @@ def testFunction(domain_url):
 			server_jid = None
 			
 			try:
-				items = xmpp_client['xep_0030'].get_items(jid=answer['domain'], ifrom='inspect@buddycloud.org', local=False, block=True, timeout=40)
+				items = xmpp_client['xep_0030'].get_items(jid=domain_url, ifrom='inspect@buddycloud.org', local=False, block=True, timeout=40)
 			
 				query_namespace = "{http://jabber.org/protocol/disco#items}"	
 
