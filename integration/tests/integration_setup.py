@@ -164,7 +164,7 @@ def is_subscribed_to_channel(domain_url, api_location, username, channel_name, s
 	if (not resp.ok):
 
 		status = 1
-		briefing = "Could not assert that user " + username + "@" + domain_url + " is subscribed:'owner' of topic channel named " + channel_name + "@topics." + domain_url + "."
+		briefing = "Could not assert that user " + username + "@" + domain_url + " is subscribed:'" + subscription + "' of topic channel named " + channel_name + "@topics." + domain_url + "."
 		message = briefing
 		return (status, briefing, message, None)
 	else:
@@ -173,9 +173,14 @@ def is_subscribed_to_channel(domain_url, api_location, username, channel_name, s
 
 		if (not (channel_name + "@topics." + domain_url + "/posts") in resp) or (resp[(channel_name + "@topics." + domain_url + "/posts")] != subscription):
 			status = 1
-			briefing = "Problem: " + username + "@" + domain_url + " is not subscribed:'owner' of topic channel named " + channel_name + "@topics." + domain_url + "."
+			briefing = "Problem: " + username + "@" + domain_url + " is not subscribed:'" + subscription + "' of topic channel named " + channel_name + "@topics." + domain_url + "."
 			message = briefing
 			return (status, briefing, message, None)
+		else:
+			status = 0
+			briefing = username + "@" + domain_url + " is subscribed:'" + subscription + "' of topic channel named " + channel_name + "@topics." + domain_url + "!"
+			message = briefing
+			return (0, briefing, message, None)
 
 def testFunction(domain_url):
 
@@ -254,29 +259,39 @@ def testFunction(domain_url):
 		message = briefing
 		return (status, briefing, message, None)
 
-	is_subscribed_to_channel(domain_url, api_location, test_usernames[0], test_channel_name, "owner")
+	output = is_subscribed_to_channel(domain_url, api_location, test_usernames[0], test_channel_name, "owner")
+	if ( output[0] != 0 ):
+		return output
 
 	# Then, have user[2] join the topic channel. Have user[1] make user[2] moderator of that channel. Assert user[2] is a moderator of that channel.	
 
 	subscribe_to_channel(domain_url, api_location, test_usernames[1], test_channel_name, "publisher")
-	is_subscribed_to_channel(domain_url, api_location, test_usernames[1], test_channel_name, "publisher")
+	output = is_subscribed_to_channel(domain_url, api_location, test_usernames[1], test_channel_name, "publisher")
+	if ( output[0] != 0 ):
+		return output
 
 	#TODO see how to promote test_user[1] to moderator (and not only a producer!!)
 
 	# Then, have user[3] join the topic channel. Have user[1] give posting permission to user[3]. Assert user[3] is a follower+post of that channel.
 
 	subscribe_to_channel(domain_url, api_location, test_usernames[2], test_channel_name, "publisher")
-	is_subscribed_to_channel(domain_url, api_location, test_usernames[2], test_channel_name, "publisher")
+	output = is_subscribed_to_channel(domain_url, api_location, test_usernames[2], test_channel_name, "publisher")
+	if ( output[0] != 0 ):
+		return output
 
 	# Then, have user[4] join the topic channel. Assert user[4] is a follower of that channel.
 
 	subscribe_to_channel(domain_url, api_location, test_usernames[3], test_channel_name, "member")
-	is_subscribed_to_channel(domain_url, api_location, test_usernames[3], test_channel_name, "member")
+	output = is_subscribed_to_channel(domain_url, api_location, test_usernames[3], test_channel_name, "member")
+	if ( output[0] != 0 ):
+		return output
 
 	# Then, have user[5] join the topic channel. Have user[1] ban user[5] in that channel. Assert user[5] is banned in that channel.
 
 	subscribe_to_channel(domain_url, api_location, test_usernames[4], test_channel_name, "member")
-	is_subscribed_to_channel(domain_url, api_location, test_usernames[4], test_channel_name, "member")
+	output = is_subscribed_to_channel(domain_url, api_location, test_usernames[4], test_channel_name, "member")
+	if ( output[0] != 0 ):
+		return output
 
 	#TODO have this user test_usernames[4]@buddycloud.org be banned from this topic channel test_channel_name@topics.buddycloud.org
 
