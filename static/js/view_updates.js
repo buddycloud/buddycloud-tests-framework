@@ -31,7 +31,7 @@ function handleTestCreation(test_name, test_source){
 function handleTestRelaunch(test_name){
 
 	$("#td_"+test_name).attr("class", "btn disabled test_name");
-	$("#td_"+data.name).attr("data-response", "");
+	$("#td_"+test_name).attr("data-response", "");
 	$("#td_"+test_name).attr("onclick", "");
 	$("#to_"+test_name).attr("class", "test_output uneditable-input");
 	$("#to_"+test_name).html("Running this test again...");
@@ -151,9 +151,9 @@ function showMessage(title, body, situation){
 function createButtons(domain_url, test_name, situation){
 
 	var buttons_html = "<button href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Close</button>";	
-	buttons_html = "<button id='retry_this_btn' href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Retry this test</button>" + buttons_html;
-	buttons_html = "<button id='retry_all_failed_btn' href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Retry all failed tests</button>" + buttons_html;
-	buttons_html = "<button id='retry_all_btn' href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Retry all tests</button>" + buttons_html;
+	buttons_html = "<button id='retry_this_btn' href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Retry this</button>" + buttons_html;
+	buttons_html = "<button id='retry_all_failed_btn' href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Retry all that failed</button>" + buttons_html;
+	buttons_html = "<button id='retry_all_btn' href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Retry all</button>" + buttons_html;
 	$("#message_buttons").html(buttons_html);
 
 	$("#retry_this_btn").attr("onclick", "runAgain('" + test_name + "', '" + domain_url + "');");
@@ -210,14 +210,6 @@ function finishLauncher(){
 
 function finishRunningTestAgain(domain_url, data){
 
-/*	createButtons(domain_url, null, getExitStatusClass(data.exit_status));
-	if ( data.exit_status == 0 ){
-		
-		showMessage(data.name+" passed!", data.message, getExitStatusClass(data.exit_status));
-	}
-	else{
-		showMessage(data.name+" failed!", data.message, getExitStatusClass(data.exit_status));
-	}*/
 	$("#inspect_button").removeClass("disabled");
 	$("#inspect_button").attr("onclick", "startInspection();");
 }
@@ -227,6 +219,6 @@ function focusOnTest(test_name){
 	var exit_status_class = getExitStatusClass(parseInt(JSON.parse($("#td_"+test_name).attr("data-response")).exit_status));
 	createButtons(domain_url, test_name, exit_status_class);
 
-	var msg = JSON.parse($("#td_api_server_lookup").attr("data-response"))['message'];
+	var msg = JSON.parse($("#td_" + test_name).attr("data-response"))['message'];
 	showMessage(test_name, msg, exit_status_class);
 }
