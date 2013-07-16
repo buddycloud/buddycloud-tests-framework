@@ -29,9 +29,8 @@
 	word-wrap: break-word;
 }
 
-.test_output.success{
-	background-color:#dff0d8;
-	color:black;
+.test_output:hover btn-link{
+	background-color: #333;
 }
 
 #message_title_wrap{

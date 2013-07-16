@@ -15,7 +15,7 @@ function handleTestCreation(test_name, test_source){
 	test_entry_html += "<span id='td_" + test_name + "' class='btn disabled test_name'>";
 	test_entry_html += "<i id='ti_" + test_name + "' class='icon-random' style='padding:0px; margin:0px;'></i>";
 	test_entry_html += "<span style='padding:0px; margin:0px; margin-left: 10px;'>" + test_name + "</span>";
-	test_entry_html += "<a href='https://" + test_source + "' target='_blank' style='padding:0px; margin:0px; margin-left: 10px;'>source</a>";
+	test_entry_html += "<btn href='https://" + test_source + "' target='_blank' class='btn btn-link' style='padding:0px; margin:0px; margin-left: 10px;'>source</btn>";
 	test_entry_html += "</span>";
 	test_entry_html += "<span id='to_" + test_name + "' class='test_output input uneditable-input'>Running this test...</span>";
 	test_entry_html += "</div>";
