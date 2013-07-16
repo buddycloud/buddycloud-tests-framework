@@ -30,6 +30,8 @@ function testsLauncher(data, domain_url){
 	issueTest(test_entries[current_test].name, domain_url, decideNext, false);
 }
 
+var retry_number = 0;
+
 // Issues a new test to be run
 function issueTest(test_name, domain_url, decide_next, retry){
 
@@ -49,12 +51,13 @@ function issueTest(test_name, domain_url, decide_next, retry){
 				'message' : "A problem occurred while launching test " + test_name + ". <br/> This does not mean a problem with the actual test."
 			};
 
-			if ( jqXHR.status == 503 ){
+			if ( jqXHR.status == 503 && retry_number < 3 ){
 				data['briefing'] = "Server busy. Could not launch test " + test_name + ". Retrying again in 5 seconds...";
 				handleTestResponse(data, domain_url);
 				window.setTimeout(function(){
 					handleTestRelaunch(test_name);
 					issueTest(test_name, domain_url, decide_next, retry);
+					retry_number += 1;
 				}, 5000);
 			}
 			else{
@@ -63,6 +66,7 @@ function issueTest(test_name, domain_url, decide_next, retry){
 				data['message'] += "<br/> Be warned that this does not necessarily mean a problem with the actual test.";
 				handleTestResponse(data, domain_url);
 				decide_next(domain_url, data, retry);
+				retry_number = 0;
 			}
 		}
 	});
