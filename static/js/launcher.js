@@ -14,8 +14,20 @@ function startInspection(){
 	if ( domain_url == null ){
 		return;
 	}
-	$.get("/test_names", function(data){
-		testsLauncher(data, domain_url);
+	$.ajax({
+		url: "/test_names",
+		type: "get",
+		dataType: "json",
+		success: function(data){
+			testsLauncher(data, domain_url);
+		},
+		error: function(jqXHR){
+			if ( jqXHR.status == 503 ){
+				window.setTimeout(function(){
+					startInspection();
+				}, 5000);
+			}
+		}
 	});
 }
 
