@@ -112,10 +112,9 @@ function decideNext(domain_url, data, retry){
 	}
 }
 
-function runAgain(test_name, domain_url, previous_status){
+function runAgain(test_name, domain_url){
 
-
-	handleTestRelaunch(test_name, previous_status);
+	handleTestRelaunch(test_name);
 	issueTest(test_name, domain_url, finishRunningTestAgain, true);
 }
 

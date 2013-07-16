@@ -148,17 +148,17 @@ function showMessage(title, body, situation){
 	});
 }
 
-function createButtons(domain_url, retry, situation){
+function createButtons(domain_url, test_name, situation){
 
-	var buttons_html = "<button href='#' data-dismiss='modal' class='btn btn-"+situation+"'>Close</button>";
+	var buttons_html = "<button href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Close</button>";	
+	buttons_html = "<button id='retry_this_btn' href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Retry this test</button>" + buttons_html;
+	buttons_html = "<button id='retry_all_failed_btn' href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Retry all failed tests</button>" + buttons_html;
+	buttons_html = "<button id='retry_all_btn' href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Retry all tests</button>" + buttons_html;
 	$("#message_buttons").html(buttons_html);
-	
-	if (retry){
-	
-		buttons_html = "<button id='retry_button' href='#' data-dismiss='modal' class='btn btn-danger'>Retry tests</button>" + buttons_html;
-		$("#message_buttons").html(buttons_html);
-		$("#retry_button").attr("onclick", "retryTests('"+domain_url+"');");
-	}
+
+	$("#retry_this_btn").attr("onclick", "runAgain('" + test_name + "', '" + domain_url + "');");
+	$("#retry_all_failed_btn").attr("onclick", "retryTests('" + domain_url + "');");
+	$("#retry_all_btn").attr("onclick", "startInspection();");
 }
 
 
@@ -223,7 +223,10 @@ function finishRunningTestAgain(domain_url, data){
 }
 
 function focusOnTest(test_name){
+
 	var exit_status_class = getExitStatusClass(parseInt(JSON.parse($("#td_"+test_name).attr("data-response")).exit_status));
-	createButtons(domain_url, null, exit_status_class);
-	showMessage(test_name, $("#td_"+test_name).attr("data-response"), exit_status_class);
+	createButtons(domain_url, test_name, exit_status_class);
+
+	var msg = JSON.parse($("#td_api_server_lookup").attr("data-response"))['message'];
+	showMessage(test_name, msg, exit_status_class);
 }
