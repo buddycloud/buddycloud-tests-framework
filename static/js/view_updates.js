@@ -8,6 +8,9 @@ function handleStartTestsLauncher(domain_url){
 // What to do in the page when a new test was issued just now
 function handleTestCreation(test_name, test_source){
 
+	$("#inspect_button").addClass("disabled");
+	$("#inspect_button").attr("onclick", "");
+
 	test_entry_html = "<div class='test_entry'>";
 	test_entry_html += "<span id='td_" + test_name + "' class='btn disabled test_name'>";
 	test_entry_html += "<i id='ti_" + test_name + "' class='icon-random' style='padding:0px; margin:0px;'></i>";
@@ -18,17 +21,12 @@ function handleTestCreation(test_name, test_source){
 	test_entry_html += "</div>";
 
 	$("#tests_output_table").append(test_entry_html);
-/*	$("#td_"+test_name).popover({
-		'title' : "Test ("+test_name+") Info",
-		'content' : "<br/>Test source: <a href='https://"+test_source+"' target='_blank'>on github</a>",
-		'trigger' : 'hover',
-		'html' : true,
-		'placement' : 'top',
-		'delay' : { 'show' : 100, 'hide' : 3500 }
-	});*/
 }
 
 function handleTestRelaunch(test_name){
+
+	$("#inspect_button").addClass("disabled");
+	$("#inspect_button").attr("onclick", "");
 
 	$("#td_"+test_name).attr("class", "btn disabled test_name");
 	$("#td_"+test_name).attr("data-response", "");
@@ -43,10 +41,6 @@ function handleTestResponse(data, domain_url){
 
 	$("#td_"+data.name).addClass("btn-"+getExitStatusClass(data.exit_status));
 	$("#td_"+data.name).attr("data-response", JSON.stringify(data));
-/*	if ( data.exit_status == 1 ){
-		$("#td_"+data.name).removeClass("disabled");
-		//$("#td_"+data.name).attr("onclick", "runAgain('"+data.name+"', '"+domain_url+"', '"+getExitStatusClass(data.exit_status)+"');");
-	}*/
 	$("#td_"+data.name).removeClass("disabled");
 	$("#td_"+data.name).attr("onclick", "focusOnTest('"+data.name+"');");
 	$("#to_"+data.name).addClass(getExitStatusClass(data.exit_status));
@@ -79,9 +73,7 @@ function handleDomainURL(){
 	}
 
 	if ( valid_domain ){
-		window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/"+domain_url); 
-		$("#inspect_button").addClass("disabled");
-		$("#inspect_button").attr("onclick", "");
+		window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/"+domain_url);
 		return domain_url.toLowerCase();
 	}
 	else{
@@ -164,46 +156,6 @@ function createButtons(domain_url, test_name, situation){
 
 function finishLauncher(){
 
-/*	var summary = "Inspection summary: ";
-	if ( failed_tests.length == 0 ){
-		
-		summary += "None of the tests failed! Congratulations!";
-		createButtons(domain_url, null, "success");
-		showMessage("All tests finished properly!", summary, "success");
-	}
-	else{
-		
-		var summary_piece = " failed: "+failed_tests[0].test.name;
-		
-		for ( var i=1; i<failed_tests.length; i++ ){
-		
-			summary_piece += ", " + failed_tests[i].test.name;
-		}
-		
-		summary_piece += ".";
-		
-		if ( failed_tests.length == 1 ){
-			
-			summary_piece = ("One test"+summary_piece);
-		}
-		else{
-
-			summary_piece = (failed_tests.length+" tests"+summary_piece);
-		}
-		
-		summary += summary_piece;
-
-		var message = "<br/><br/>These tests failed because of the following reasons: ";
-
-		for ( var i=0; i<failed_tests.length; i++ ){
-
-			message += "<br/><strong>" + failed_tests[i].test.name + "</strong>: " + failed_tests[i].output.message
-		}
-
-		createButtons(domain_url, failed_tests.test, "danger");
-
-		showMessage("All tests finished!", summary + message, "danger");
-	}*/
 	$("#inspect_button").removeClass("disabled");
 	$("#inspect_button").attr("onclick", "startInspection();");
 }
