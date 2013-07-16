@@ -12,7 +12,7 @@ from api_server_lookup import testFunction as apiLookup
 TEST_USER_EMAIL = 'email@email.com'
 TEST_USER_PASSWORD = 'passwd' #Those are not actually used for authentication
 
-def user_exists(api_location, username):
+def user_exists(api_host, api_location, username):
 
 	headers = {
 		'Accept' : '*/*',
@@ -32,9 +32,9 @@ def user_exists(api_location, username):
 		return True
 	return False
 
-def create_user_channel(api_location, username):
+def create_user_channel(api_host, api_location, username):
 
-	if user_exists(api_location, username):
+	if user_exists(api_host, api_location, username):
 		return True
 
 	headers = {
@@ -57,7 +57,7 @@ def create_user_channel(api_location, username):
 		return True
 	return False
 
-def topic_channel_exists(api_location, channel_name):
+def topic_channel_exists(api_host, api_location, channel_name):
 
 	headers = {
 		'Accept' : '*/*',
@@ -77,7 +77,7 @@ def topic_channel_exists(api_location, channel_name):
 		return True
 	return False
 
-def create_topic_channel(api_location, username, channel_name):
+def create_topic_channel(api_host, api_location, username, channel_name):
 
 	if topic_channel_exists(api_location, channel_name):
 		return True
@@ -114,7 +114,7 @@ def create_topic_channel(api_location, username, channel_name):
 			return True
 	return False
 
-def subscribe_to_channel(api_location, username, channel_name, subscription):
+def subscribe_to_channel(api_host, api_location, username, channel_name, subscription):
 
 	headers = {
 		'Accept' : '*/*',
@@ -142,7 +142,7 @@ def subscribe_to_channel(api_location, username, channel_name, subscription):
 		message = briefing
 		return (status, briefing, message, None)
 
-def is_subscribed_to_channel(api_location, username, channel_name, subscription):
+def is_subscribed_to_channel(api_host, api_location, username, channel_name, subscription):
 
 	headers = {
 		'Accept' : '*/*',
@@ -236,7 +236,7 @@ def testFunction(domain_url):
 
 		test_username = test_username.strip()
 
-		if create_user_channel(api_location, test_username):
+		if create_user_channel(api_host, api_location, test_username):
 			continue
 		else:
 			status = 1
@@ -249,35 +249,35 @@ def testFunction(domain_url):
 
 	test_channel_name = test_channel_name.strip()
 
-	if not create_topic_channel(api_location, test_usernames[0], test_channel_name) :
+	if not create_topic_channel(api_host, api_location, test_usernames[0], test_channel_name) :
 		status = 1
 		briefing = "Could not create topic channel named " + test_channel_name + "@topics." + api_host + "."
 		message = briefing
 		return (status, briefing, message, None)
 
-	is_subscribed_to_channel(api_location, test_usernames[0], test_channel_name, "owner")
+	is_subscribed_to_channel(api_host, api_location, test_usernames[0], test_channel_name, "owner")
 
 	# Then, have user[2] join the topic channel. Have user[1] make user[2] moderator of that channel. Assert user[2] is a moderator of that channel.	
 
-	subscribe_to_channel(api_location, test_usernames[1], test_channel_name, "publisher")
-	is_subscribed_to_channel(api_location, test_usernames[1], test_channel_name, "publisher")
+	subscribe_to_channel(api_host, api_location, test_usernames[1], test_channel_name, "publisher")
+	is_subscribed_to_channel(api_host, api_location, test_usernames[1], test_channel_name, "publisher")
 
 	#TODO see how to promote test_user[1] to moderator (and not only a producer!!)
 
 	# Then, have user[3] join the topic channel. Have user[1] give posting permission to user[3]. Assert user[3] is a follower+post of that channel.
 
-	subscribe_to_channel(api_location, test_usernames[2], test_channel_name, "publisher")
-	is_subscribed_to_channel(api_location, test_usernames[2], test_channel_name, "publisher")
+	subscribe_to_channel(api_host, api_location, test_usernames[2], test_channel_name, "publisher")
+	is_subscribed_to_channel(api_host, api_location, test_usernames[2], test_channel_name, "publisher")
 
 	# Then, have user[4] join the topic channel. Assert user[4] is a follower of that channel.
 
-	subscribe_to_channel(api_location, test_usernames[3], test_channel_name, "member")
-	is_subscribed_to_channel(api_location, test_usernames[3], test_channel_name, "member")
+	subscribe_to_channel(api_host, api_location, test_usernames[3], test_channel_name, "member")
+	is_subscribed_to_channel(api_host, api_location, test_usernames[3], test_channel_name, "member")
 
 	# Then, have user[5] join the topic channel. Have user[1] ban user[5] in that channel. Assert user[5] is banned in that channel.
 
-	subscribe_to_channel(api_location, test_usernames[4], test_channel_name, "member")
-	is_subscribed_to_channel(api_location, test_usernames[4], test_channel_name, "member")
+	subscribe_to_channel(api_host, api_location, test_usernames[4], test_channel_name, "member")
+	is_subscribed_to_channel(api_host, api_location, test_usernames[4], test_channel_name, "member")
 
 	#TODO have this user test_usernames[4]@buddycloud.org be banned from this topic channel test_channel_name@topics.buddycloud.org
 
