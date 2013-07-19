@@ -1,4 +1,4 @@
-import dns.resolver
+import dns.resolver, string
 from sleekxmpp import ClientXMPP
 
 #installation_suite_depedencies
@@ -44,7 +44,26 @@ def testFunction(domain_url):
 			briefing = "No XMPP server A record found!"
 			status = 1
 			message = "There is no A record being pointed by your XMPP SRV record."
-			message += "<br/>  Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+			message += "<br/>It seems like your buddycloud server is called: " + answer['domain'] + "."
+
+			buddycloud_server_address = None
+			try:
+				buddycloud_server_address = str(dns.resolver.query(answer['domain'])[0])
+			except:
+				pass
+
+			if buddycloud_server_address == None:
+
+				try:
+					domain_url_address = str(dns.resolver.query(domain_url)).split(".")
+					buddycloud_server_address = string.join(domain_url_address[0:2] + ["??","??"], ".")
+					buddycloud_server_address += " {or a completely different address}"
+				except:
+					buddycloud_server_address = "{the address of your buddycloud server}"
+
+			message += "<br/>Your A record should be something like this: </br>"
+			message += "</br>" + answer['domain'] + "                            IN      A       " + buddycloud_server_address + "<br/>"
+			message += "<br/>Check at http://buddycloud.org/wiki/Install#DNS for more information on how to setup the DNS for your domain."
 			return (status, briefing, message, None)
 
 		except Exception, e:

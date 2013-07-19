@@ -1,8 +1,15 @@
 import dns.resolver
 
+#util_dependencies
+from domain_name_lookup import testFunction as domainNameLookup
+
 
 def testFunction(domain_url):
-	
+
+	(status, briefing, message, output) = domainNameLookup(domain_url)
+	if ( status != 0 ):
+		return (status, briefing, message, None)
+
 	answers = []
 	lookup_api_query = None
 

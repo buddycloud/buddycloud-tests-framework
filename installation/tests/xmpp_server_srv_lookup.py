@@ -1,8 +1,15 @@
 import dns.resolver
 from sleekxmpp import ClientXMPP
 
+#util_dependencies
+from domain_name_lookup import testFunction as domainNameLookup
+
 
 def testFunction(domain_url):
+
+	(status, briefing, message, output) = domainNameLookup(domain_url)
+	if ( status != 0 ):
+		return (status, briefing, message, None)
 
 	answers = []
 	query_for_SRV_record = None
@@ -15,7 +22,11 @@ def testFunction(domain_url):
 	
 		briefing = "No XMPP server SRV record found at domain "+domain_url+"!"
 		status = 1
-		message = "We were unable to find your XMPP server. Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+		message = "We were unable to find your XMPP server."
+		message += "<br/>Assuming the server running buddycloud will be named: buddycloud." + domain_url + "," 
+		message += "<br/>here you are an SRV record that should work:<br/>"
+		message += "_xmpp-server._tcp." + domain_url + "               SRV     5       0       5269    buddycloud." + domain_url + ".<br/>"
+		message += "<br/>Check at http://buddycloud.org/wiki/Install#DNS for more information on how to setup the DNS for your domain."
 		return (status, briefing, message, None)
 
 	except Exception, e:

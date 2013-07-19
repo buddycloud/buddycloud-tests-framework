@@ -3,6 +3,7 @@ from random import random
 import json, base64
 
 #util_dependencies
+from domain_name_lookup import testFunction as domainNameLookup
 from ssl_adapter import SSLAdapter
 
 #installation_suite_dependencies
@@ -183,6 +184,10 @@ def is_subscribed_to_channel(domain_url, api_location, username, channel_name, s
 			return (0, briefing, message, None)
 
 def testFunction(domain_url):
+
+	(status, briefing, message, output) = domainNameLookup(domain_url)
+	if ( status != 0 ):
+		return (status, briefing, message, None)
 
 	#First of all, let's find the API server
 
