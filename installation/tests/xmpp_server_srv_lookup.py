@@ -60,24 +60,27 @@ def testFunction(domain_url):
 		briefing = "XMPP server SRV record found at domain "+domain_url+" but it doesn't contain all the relevant information!"
 		status = 1
 		message = "We were unable to find your XMPP server, even though we could find your XMPP SRV record."
-		message += "<br/>Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+		message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#DNS' target='_blank'>http://buddycloud.org/wiki/Install#DNS</a>"
+		message += " on how to setup the DNS for your domain."
 		return (status, briefing, message, None)
 
 	else:
 
-		found = answers[0]['domain'] + ", port: " + str(answers[0]['port'])
+		records = "<strong>" + answers[0]['domain'] + ", port: " + str(answers[0]['port'])
 
 		for i in range(1, len(answers)):
-			found += " | " + answers[i]['domain'] + ", port: " + str(answers[i]['port'])
+			records += " | " + answers[i]['domain'] + ", port: " + str(answers[i]['port'])
+
+		records += "</strong>"
 
 		if len(answers) == 1:
-			found = "XMPP server SRV record found: " + found
+			found = "XMPP server SRV record found: " + records
 		else:
-			found = "XMPP server SRV records found: " + found
+			found = "XMPP server SRV records found: " + records
 
 		briefing = found
 		status = 0
 		message = "You have said that the following addresses will handle all XMPP messages for this domain.<br/>"
-		message += briefing
+		message += records
 		return (status, briefing, message, answers)
 

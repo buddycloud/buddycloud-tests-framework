@@ -12,7 +12,7 @@ def testFunction(domain_url):
 		return (status, briefing, message, None)
 
 
-	found = "XMPP server A records found: "
+	records = "XMPP server A records found: "
 
 	addresses = []
 
@@ -96,21 +96,23 @@ def testFunction(domain_url):
 
 		else:
 
-			found = addresses[0]['domain'] + ", ip: " + addresses[0]['address']
+			records = "<strong>" + addresses[0]['domain'] + ", ip: " + addresses[0]['address']
 
 			for i in range(1, len(addresses)):
 
-				found += " | " + addresses[i]['domain'] + ", ip: " + addresses[i]['address']
+				records += " | " + addresses[i]['domain'] + ", ip: " + addresses[i]['address']
 
-			if len(addresses) == 1:
-				found = "XMPP server A record found: " + found
-			else:
-				found = "XMPP server A records found: " + found
+			records += "</strong>"
 
-	briefing = found
+	briefing = ""
+	if len(addresses) == 1:
+		briefing = "XMPP server A record found: " + records
+	else:
+		briefing = "XMPP server A records found: " + records
+
 	status = 0
 	message = "You are pointing your XMPP server SRV record to the following valid A records: <br/>"
-	message += briefing
+	message += records
 	return (status, briefing, message, addresses)
 
 def getTestReference():
