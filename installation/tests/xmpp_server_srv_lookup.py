@@ -25,8 +25,9 @@ def testFunction(domain_url):
 		message = "We were unable to find your XMPP server."
 		message += "<br/>Assuming the server running buddycloud will be named: buddycloud." + domain_url + "," 
 		message += "<br/>here you are an SRV record that should work:<br/>"
-		message += "_xmpp-server._tcp." + domain_url + "               SRV     5       0       5269    buddycloud." + domain_url + ".<br/>"
-		message += "<br/>Check at http://buddycloud.org/wiki/Install#DNS for more information on how to setup the DNS for your domain."
+		message += "<strong>_xmpp-server._tcp." + domain_url + "\tSRV\t5\t0\t5269\tbuddycloud." + domain_url + ".</strong><br/>"
+		message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#DNS' target='_blank'>http://buddycloud.org/wiki/Install#DNS</a>"
+		message += "for more information on how to setup the DNS for your domain."
 		return (status, briefing, message, None)
 
 	except Exception, e:

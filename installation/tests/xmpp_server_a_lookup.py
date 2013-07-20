@@ -55,15 +55,16 @@ def testFunction(domain_url):
 			if buddycloud_server_address == None:
 
 				try:
-					domain_url_address = str(dns.resolver.query(domain_url)).split(".")
+					domain_url_address = str(dns.resolver.query(domain_url)[0]).split(".")
 					buddycloud_server_address = string.join(domain_url_address[0:2] + ["??","??"], ".")
-					buddycloud_server_address += " {or a completely different address}"
+					buddycloud_server_address += " {maybe " + string.join(domain_url_address, ".") + " or even a completely different address}"
 				except:
 					buddycloud_server_address = "{the address of your buddycloud server}"
 
 			message += "<br/>Your A record should be something like this: </br>"
-			message += "</br>" + answer['domain'] + "                            IN      A       " + buddycloud_server_address + "<br/>"
-			message += "<br/>Check at http://buddycloud.org/wiki/Install#DNS for more information on how to setup the DNS for your domain."
+			message += "</br><strong>" + answer['domain'] + "\tIN\tA\t" + buddycloud_server_address + "</strong><br/>"
+			message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#DNS' target='_blank'>http://buddycloud.org/wiki/Install#DNS</a>"
+			message += " for more information on how to setup the DNS for your domain."
 			return (status, briefing, message, None)
 
 		except Exception, e:
@@ -89,7 +90,8 @@ def testFunction(domain_url):
 			briefing = "XMPP server A record found at domain "+domain_url+" but it doesn't contain all the relevant information!"
 			status = 1
 			message = "We were unable to find your XMPP server, even though we could find your XMPP A record."
-			message += "<br/>Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+			message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#DNS' target='_blank'>http://buddycloud.org/wiki/Install#DNS</a>"
+			message += " on how to setup the DNS for your domain."
 			return (status, briefing, message, None)
 
 		else:
