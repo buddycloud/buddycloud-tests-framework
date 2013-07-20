@@ -26,7 +26,7 @@ def testFunction(domain_url):
 		message += "<br/>Assuming the server running buddycloud will be named: buddycloud." + domain_url + "," 
 		message += "<br/>here you are a SRV record that should work:<br/>"
 		message += "<strong>_xmpp-server._tcp." + domain_url + "\tSRV\t5\t0\t5269\tbuddycloud." + domain_url + ".</strong><br/>"
-		message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#DNS' target='_blank'>http://buddycloud.org/wiki/Install#DNS</a>"
+		message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#buddycloud_DNS' target='_blank'>http://buddycloud.org/wiki/Install#buddycloud_DNS</a>"
 		message += " for more information on how to setup the DNS for your domain."
 		return (status, briefing, message, None)
 

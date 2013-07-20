@@ -20,7 +20,7 @@ def testFunction(domain_url):
 
 		briefing = "No XMPP server SRV record found at domain "+domain_url+"!"
 		status = 1
-		message = "We were unable to find your XMPP server. Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
+		message = "We were unable to find your XMPP server. Check at http://buddycloud.org/wiki/Install#buddycloud_DNS on how to setup the DNS for your domain."
 		return (status, briefing, message, None)
 
 	for answer in answers:

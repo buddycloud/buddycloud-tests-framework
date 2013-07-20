@@ -51,7 +51,7 @@ def testFunction(domain_url):
 
 			message += "<br/>Your A record should be something like this: </br>"
 			message += "<br/><strong>" + answer['domain'] + "\tIN\tA\t" + buddycloud_server_address + "</strong><br/>"
-			message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#DNS' target='_blank'>http://buddycloud.org/wiki/Install#DNS</a>"
+			message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#buddycloud_DNS' target='_blank'>http://buddycloud.org/wiki/Install#buddycloud_DNS</a>"
 			message += " for more information on how to setup the DNS for your domain."
 			return (status, briefing, message, None)
 
@@ -89,7 +89,7 @@ def testFunction(domain_url):
 
 			message += "<br/>Your A record should be something like this: </br>"
 			message += "<br/><strong>" + answer['domain'] + "\tIN\tA\t" + buddycloud_server_address + "</strong><br/>"
-			message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#DNS' target='_blank'>http://buddycloud.org/wiki/Install#DNS</a>"
+			message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#buddycloud_DNS' target='_blank'>http://buddycloud.org/wiki/Install#buddycloud_DNS</a>"
 			message += " for more information on how to setup the DNS for your domain."
 			return (status, briefing, message, None)
 
