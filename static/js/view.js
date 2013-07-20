@@ -22,7 +22,6 @@ function handleTestCreation(test_name, test_source){
 	test_entry_html += "</div>";
 	test_entry_html += "<div style='display:table-cell;'>";
 	test_entry_html += "<span id='ts_" + test_name + "' class='btn disabled test_source'><a href='https://" + test_source + "' target='_blank'>source</a></span>";
-	test_entry_html += "</a>";
 	test_entry_html += "</div>";
 	test_entry_html += "</div>";
 	test_entry_html += "</div>";	
