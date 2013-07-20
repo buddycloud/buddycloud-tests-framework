@@ -5,6 +5,10 @@
 	margin-bottom: 10px;
 }
 
+.test_entry_btn_group{
+	width: 100%;
+}
+
 .test_name{
 	width: 100%;
 	text-align: left;
@@ -12,6 +16,32 @@
 	padding: 0px;
 	border-bottom-left-radius: 0px;
 	border-bottom-right-radius: 0px;
+	border-top-right-radius: 0px;
+}
+
+.test_name i, .test_name span{
+	padding: 0px;
+	margin: 0px;
+}
+
+.test_name span{
+	padding-left: 10px;
+}
+
+.test_source{
+	width: 100%;
+	text-align: right;
+	margin: 0px;
+	padding: 0px;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-top-left-radius: 0px;
+}
+
+.test_source a{
+	margin: 0px;
+	padding: 0px;
+	padding-right: 10px;
 }
 
 .test_output{
@@ -29,17 +59,13 @@
 	word-wrap: break-word;
 }
 
-.test_output:hover btn-link{
-	background-color: #333;
-}
-
 #message_title_wrap{
 	padding: 0px;
 	margin: 0px;
 	width: 100%;
 }
 
-#message_body_area.success{
+#message_body_area.success, .test_output.success{
 	background-color:#dff0d8;
 	color:black;
 }
@@ -67,6 +93,7 @@
 #tests_output_table .input-prepend{
 	height: 100px;
 }
+
 
 /*Test launcher status styles*/
 @font-face {

@@ -12,11 +12,20 @@ function handleTestCreation(test_name, test_source){
 	$("#inspect_button").attr("onclick", "");
 
 	test_entry_html = "<div class='test_entry'>";
+	test_entry_html += "<div style='display:table; width:100%;'>"
+	test_entry_html += "<div style='display:table-row;'>";
+	test_entry_html += "<div style='display:table-cell;'>";
 	test_entry_html += "<span id='td_" + test_name + "' class='btn disabled test_name'>";
-	test_entry_html += "<i id='ti_" + test_name + "' class='icon-random' style='padding:0px; margin:0px;'></i>";
-	test_entry_html += "<span style='padding:0px; margin:0px; margin-left: 10px;'>" + test_name + "</span>";
-	test_entry_html += "<btn href='https://" + test_source + "' target='_blank' class='btn btn-link' style='padding:0px; margin:0px; margin-left: 10px;'>source</btn>";
+	test_entry_html += "<i id='ti_" + test_name + "' class='icon-random'></i>";
+	test_entry_html += "<span>" + test_name + "</span>";
 	test_entry_html += "</span>";
+	test_entry_html += "</div>";
+	test_entry_html += "<div style='display:table-cell;'>";
+	test_entry_html += "<span id='ts_" + test_name + "' class='btn disabled test_source'><a href='https://" + test_source + "' target='_blank'>source</a></span>";
+	test_entry_html += "</a>";
+	test_entry_html += "</div>";
+	test_entry_html += "</div>";
+	test_entry_html += "</div>";	
 	test_entry_html += "<span id='to_" + test_name + "' class='test_output input uneditable-input'>Running this test...</span>";
 	test_entry_html += "</div>";
 
@@ -31,6 +40,7 @@ function handleTestRelaunch(test_name){
 	$("#td_"+test_name).attr("class", "btn disabled test_name");
 	$("#td_"+test_name).attr("data-response", "");
 	$("#td_"+test_name).attr("onclick", "");
+	$("#ts_"+test_name).attr("class", "btn disabled test_source");
 	$("#to_"+test_name).attr("class", "test_output uneditable-input");
 	$("#to_"+test_name).html("Running this test again...");
 	$("#ti_"+test_name).attr("class", "icon-random");
@@ -40,9 +50,11 @@ function handleTestRelaunch(test_name){
 function handleTestResponse(data, domain_url){
 
 	$("#td_"+data.name).addClass("btn-"+getExitStatusClass(data.exit_status));
-	$("#td_"+data.name).attr("data-response", JSON.stringify(data));
 	$("#td_"+data.name).removeClass("disabled");
+	$("#td_"+data.name).attr("data-response", JSON.stringify(data));
 	$("#td_"+data.name).attr("onclick", "focusOnTest('"+data.name+"');");
+	$("#ts_"+data.name).addClass("btn-"+getExitStatusClass(data.exit_status));
+	$("#ts_"+data.name).removeClass("disabled");
 	$("#to_"+data.name).addClass(getExitStatusClass(data.exit_status));
 	$("#to_"+data.name).html(data.briefing);
 	$("#ti_"+data.name).attr("class", getExitStatusIcon(data.exit_status) + " icon-white");
