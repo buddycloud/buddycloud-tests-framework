@@ -9,10 +9,15 @@ def testFunction(domain_url):
 
 	status, briefing, message, answers = xmppServerServiceRecordLookup(domain_url)
 	if ( status != 0 ):
-		return (status, briefing, message, None)
+		status = 2
+		briefing = "This test was skipped because previous test <strong>xmpp_server_srv_lookup</strong> has failed.<br/>"
+		new_message = briefing
+		new_message += "Reason:<br/>"
+		new_message += "<br/>" + message
+		return (status, briefing, new_message, None)
 
 
-	records = "XMPP server A records found: "
+	records = ""
 
 	addresses = []
 
@@ -20,31 +25,14 @@ def testFunction(domain_url):
 
 		# Check if SRV doesn't point to a CNAME record
 		try:
-			query_for_A_record = dns.resolver.query(answer['domain'], dns.rdatatype.CNAME)
+			address = str(dns.resolver.query(answer['domain'], dns.rdatatype.CNAME)[0])
 
-			briefing = "XMPP server SRV record is pointing to a CNAME record!"
+			briefing = "XMPP server SRV record is pointing to a CNAME record! Should be to an A record instead."
+			briefing += "<br/><strong>" + answer['domain'] + ". IN CNAME " + address + "</strong>"
 			status = 1
-			message = "We found that your XMPP server SRV record is pointing to a CNAME record."
-			message += "<br/>The XMPP server SRV record (_xmpp-server._tcp."+domain_url+") must point to a valid A record instead."
-			message += "<br/>Check at http://buddycloud.org/wiki/Install#DNS on how to setup the DNS for your domain."
-			return (status, briefing, message, None)
-
-		except dns.resolver.NXDOMAIN:
-			pass
-		except dns.resolver.NoAnswer:
-			pass
-
-		# Check if SRV points to a valid A record
-		try:
-			
-			query_for_A_record = dns.resolver.query(answer['domain'], dns.rdatatype.A)
-
-		except dns.resolver.NXDOMAIN:
-				
-			briefing = "No XMPP server A record found!"
-			status = 1
-			message = "There is no A record being pointed by your XMPP SRV record."
-			message += "<br/>It seems like your buddycloud server is called: " + answer['domain'] + "."
+			message = "We found a CNAME record pointing to your XMPP SRV record. You must not have these in your DNS."
+			message += "<br/>Instead, you should have an A record being pointed by your XMPP SRV record."
+			message += "<br/>It seems like your buddycloud server is called: <strong>" + answer['domain'] + "</strong>."
 
 			buddycloud_server_address = None
 			try:
@@ -62,7 +50,45 @@ def testFunction(domain_url):
 					buddycloud_server_address = "{the address of your buddycloud server}"
 
 			message += "<br/>Your A record should be something like this: </br>"
-			message += "</br><strong>" + answer['domain'] + "\tIN\tA\t" + buddycloud_server_address + "</strong><br/>"
+			message += "<br/><strong>" + answer['domain'] + "\tIN\tA\t" + buddycloud_server_address + "</strong><br/>"
+			message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#DNS' target='_blank'>http://buddycloud.org/wiki/Install#DNS</a>"
+			message += " for more information on how to setup the DNS for your domain."
+			return (status, briefing, message, None)
+
+		except dns.resolver.NXDOMAIN:
+			pass
+		except dns.resolver.NoAnswer:
+			pass
+
+		# Check if SRV points to a valid A record
+		try:
+			
+			query_for_A_record = dns.resolver.query(answer['domain'], dns.rdatatype.A)
+
+		except dns.resolver.NXDOMAIN:
+				
+			briefing = "No XMPP server A record found!"
+			status = 1
+			message = "There is no A record being pointed by your XMPP SRV record."
+			message += "<br/>It seems like your buddycloud server is called: <strong>" + answer['domain'] + "</strong>."
+
+			buddycloud_server_address = None
+			try:
+				buddycloud_server_address = str(dns.resolver.query(answer['domain'])[0])
+			except:
+				pass
+
+			if buddycloud_server_address == None:
+
+				try:
+					domain_url_address = str(dns.resolver.query(domain_url)[0]).split(".")
+					buddycloud_server_address = string.join(domain_url_address[0:2] + ["??","??"], ".")
+					buddycloud_server_address += " {maybe " + string.join(domain_url_address, ".") + " or even a completely different address}"
+				except:
+					buddycloud_server_address = "{the address of your buddycloud server}"
+
+			message += "<br/>Your A record should be something like this: </br>"
+			message += "<br/><strong>" + answer['domain'] + "\tIN\tA\t" + buddycloud_server_address + "</strong><br/>"
 			message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#DNS' target='_blank'>http://buddycloud.org/wiki/Install#DNS</a>"
 			message += " for more information on how to setup the DNS for your domain."
 			return (status, briefing, message, None)
@@ -85,25 +111,18 @@ def testFunction(domain_url):
 			except Exception, e:
 				continue
 
-		if len(addresses) == 0:
-	
-			briefing = "XMPP server A record found at domain "+domain_url+" but it doesn't contain all the relevant information!"
-			status = 1
-			message = "We were unable to find your XMPP server, even though we could find your XMPP A record."
-			message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#DNS' target='_blank'>http://buddycloud.org/wiki/Install#DNS</a>"
-			message += " on how to setup the DNS for your domain."
-			return (status, briefing, message, None)
+		if records == "":
+			records += "<strong>"
 
-		else:
+		for i in range(0, len(addresses)):
 
-			records = "<strong>" + addresses[0]['domain'] + ", ip: " + addresses[0]['address']
+			if records != "<strong>":
+				records += " | "
 
-			for i in range(1, len(addresses)):
+			records += addresses[i]['domain'] + " IN A " + addresses[i]['address']
 
-				records += " | " + addresses[i]['domain'] + ", ip: " + addresses[i]['address']
 
-			records += "</strong>"
-
+	records += "</strong>"
 	briefing = ""
 	if len(addresses) == 1:
 		briefing = "XMPP server A record found: " + records
@@ -111,9 +130,6 @@ def testFunction(domain_url):
 		briefing = "XMPP server A records found: " + records
 
 	status = 0
-	message = "You are pointing your XMPP server SRV record to the following valid A records: <br/>"
+	message = "You are pointing your XMPP server SRV records to the following valid A records: <br/>"
 	message += records
 	return (status, briefing, message, addresses)
-
-def getTestReference():
-	return InstallationTest("xmpp_server_a_lookup", xmppServerAddressRecordLookup)

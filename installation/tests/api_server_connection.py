@@ -11,7 +11,12 @@ def testFunction(domain_url):
 
 	status, briefing, message, answers = apiLookup(domain_url)
 	if ( status != 0 ):
-		return (status, briefing, message, None)
+		status = 2
+		briefing = "This test was skipped because previous test <strong>api_server_lookup</strong> has failed.<br/>"
+		new_message = briefing
+		new_message += "Reason:<br/>"
+		new_message += "<br/>" + message
+		return (status, briefing, new_message, None)
 
 	if ( len(answers) == 0 ):
 

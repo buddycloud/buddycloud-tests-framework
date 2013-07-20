@@ -21,7 +21,7 @@ def testFunction(domain_url):
 		briefing = "No API server TXT record found at domain " + domain_url + "!"
 		status = 1
 		message = "We could not find your API server TXT record!"
-		message += "You must setup your DNS to point to the API server endpoint using a TXT record similat to the one below: "
+		message += "<br/>You must setup your DNS to point to the API server endpoint using a TXT record similat to the one below: "
 		message += "<br/><br/>_buddycloud-api._tcp.EXAMPLE.COM.          IN TXT \"v=1.0\" \"host=buddycloud.EXAMPLE.COM\" \"protocol=https\" \"path=/api\" \"port=443\""
 		return (status, briefing, message, None)
 
