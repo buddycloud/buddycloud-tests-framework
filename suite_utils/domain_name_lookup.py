@@ -12,16 +12,17 @@ def testFunction(domain_url):
 
 	except dns.resolver.NXDOMAIN:
 	
-		briefing = "Could not locate " + domain_url + "!"
 		status = 1
+		briefing = "Could not locate " + domain_url + "!"
 		message = "We were unable to find your domain " + domain_url + "."
 		return (status, briefing, message, None)
 
 	except Exception, e:
 	
-		briefing = "A problem happened while attempting to locate your domain " + domain_url + "!"
 		status = 2
-		message = "Something odd happened while we were looking for your domain "+domain_url+": "+str(e)+"."
-		message += "<br/>It could be a bug in our Inspector. Let us know at <email> if you think so." 
+		briefing = "A problem happened while attempting to locate your domain " + domain_url + "!"
+		message = "Something odd happened while we were trying to locate your domain " + domain_url + "!"
+		message += "<br/>This is the exception we got: {"+str(e)+"}"
+		message += "<br/>It is probably a temporary issue with domain " + domain_url + "."
+		message += "<br/>But it could also be a bug in our Inspector. Let us know at <email> if you think so." 
 		return (status, briefing, message, None)
-

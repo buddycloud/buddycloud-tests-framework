@@ -18,8 +18,8 @@ def testFunction(domain_url):
 
 	except dns.resolver.NXDOMAIN:
 
-		briefing = "No API server TXT record found at domain " + domain_url + "!"
 		status = 1
+		briefing = "No API server TXT record found at domain " + domain_url + "!"
 		message = "We could not find your API server TXT record!"
 		message += "<br/>You must setup your DNS to point to the API server endpoint using a TXT record similat to the one below: "
 		message += "<br/><br/>_buddycloud-api._tcp.EXAMPLE.COM.          IN TXT \"v=1.0\" \"host=buddycloud.EXAMPLE.COM\" \"protocol=https\" \"path=/api\" \"port=443\""
@@ -27,10 +27,12 @@ def testFunction(domain_url):
 
 	except Exception, e:
 
-		briefing = "A problem happened while searching for API server TXT record!"
 		status = 2
-		message = "Something odd happened while we were looking a API server TXT record up at your domain at "+domain_url+": "+str(e)+". "
-		message += "<br/>It could be a bug in our Inspector. Let us know at <email> if you think so."
+		briefing = "A problem happened while searching for the API server TXT record: _buddycloud-api._tcp." + domain_url + "!"
+		message = "Something odd happened while we were searching for the API server TXT record: _buddycloud-api._tcp." + domain_url + "!"
+		message += "<br/>This is the exception we got: {"+str(e)+"}"
+		message += "<br/>It is probably a temporary issue with domain " + domain_url + "."
+		message += "<br/>But it could also be a bug in our Inspector. Let us know at <email> if you think so." 
 		return (status, briefing, message, None)
 
 	for answer in lookup_api_query:
