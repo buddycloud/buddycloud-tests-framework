@@ -176,3 +176,7 @@ body{
 #test_launcher_status .domain_title{
 	color: blue;
 }
+
+strong {
+	font-weight: bold;
+}

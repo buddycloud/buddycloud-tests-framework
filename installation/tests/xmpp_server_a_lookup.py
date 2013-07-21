@@ -49,37 +49,35 @@ def classifyDomainByRecord(domain):
 
 def suggestPossibleARecords(domain_url, domainsPointedBySRV):
 
-	message += "<br/>It seems that your buddycloud server is called:"
-	message += "<strong>" + string.join(domainsPointedBySRV, " or ")  + "</strong>.<br/>"
-
-	possible_servers_found = 0
+	message = "<br/>It seems that your buddycloud server is called:<br/>"
+	message += "<strong>" + string.join(domainsPointedBySRV, "</strong> or <strong>")  + "</strong>.<br/>"
 
 	for possible_server in domainsPointedBySRV:
 
-		message += "<br/>Assuming it is: " + possible_server
+		message += "<br/>Assuming your buddycloud server is: <strong>" + possible_server + "</strong>"
 
 		buddycloud_server_address = None
 		try:
+			
 			buddycloud_server_address = str(dns.resolver.query(possible_server)[0])
-			possible_servers_found += 1
+			message += "<br/>Your A record should be <strong>EXACTLY</strong> this:<br/>"
+
 		except:
-			pass
 
-		message += "<br/>Your A record should be something like this: </br>"
-		message += "<br/><strong>" + possible_server + "\tIN\tA\t" + buddycloud_server_address + "</strong><br/>"
-
-	if possible_servers_found == 0:
-
-		try:
-			domain_url_address = str(dns.resolver.query(domain_url)[0]).split(".")
-			buddycloud_server_address = string.join(domain_url_address[0:2] + ["??","??"], ".")
-			buddycloud_server_address += " {maybe " + string.join(domain_url_address, ".")
-			buddycloud_server_address += " or even a completely different address}"
-		except:
-			buddycloud_server_address = "{the address of your buddycloud server}"
-
-		message += "<br/>Your A record should be something like this: </br>"
-		message += "<br/><strong>" + possible_server + "\tIN\tA\t" + buddycloud_server_address + "</strong><br/>"
+			message += "<br/>Your A record should be something like this:<br/>"
+			buddycloud_server_address = "{IP address}<br/>"
+			buddycloud_server_address += "</strong><em>where</em> <strong>{IP address}</strong>"
+			buddycloud_server_address += " <em>is the address of the buddycloud server.</em>"
+			try:
+				domain_url_address = str(dns.resolver.query(domain_url)[0]).split(".")
+				guess = string.join(domain_url_address[0:2] + ["??","??"], ".")
+				guess = "<br/><strong>{IP address}</strong><em> could be: " + guess + "</em>"
+				buddycloud_server_address += guess + "<strong>"
+			except:
+				pass
+		finally:
+			A_record = possible_server + "\tIN\tA\t" + buddycloud_server_address
+			message += "<br/><strong>" + A_record  + "</strong><br/>"
 
 	return message
 
