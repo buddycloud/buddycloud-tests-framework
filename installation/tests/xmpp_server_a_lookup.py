@@ -49,7 +49,8 @@ def classifyDomainByRecord(domain):
 
 def suggestPossibleARecords(domain_url, domainsPointedBySRV):
 
-	message += "<br/>It seems that your buddycloud server is called: <strong>" + string.join(domainsPointedBySRV, " or ")  + "</strong>.<br/>"
+	message += "<br/>It seems that your buddycloud server is called:"
+	message += "<strong>" + string.join(domainsPointedBySRV, " or ")  + "</strong>.<br/>"
 
 	possible_servers_found = 0
 
@@ -72,7 +73,8 @@ def suggestPossibleARecords(domain_url, domainsPointedBySRV):
 		try:
 			domain_url_address = str(dns.resolver.query(domain_url)[0]).split(".")
 			buddycloud_server_address = string.join(domain_url_address[0:2] + ["??","??"], ".")
-			buddycloud_server_address += " {maybe " + string.join(domain_url_address, ".") + " or even a completely different address}"
+			buddycloud_server_address += " {maybe " + string.join(domain_url_address, ".")
+			buddycloud_server_address += " or even a completely different address}"
 		except:
 			buddycloud_server_address = "{the address of your buddycloud server}"
 
@@ -86,7 +88,8 @@ def testFunction(domain_url):
 	status, briefing, message, answers = xmppServerServiceRecordLookup(domain_url)
 	if ( status != 0 ):
 		status = 2
-		briefing = "This test was skipped because previous test <strong>xmpp_server_srv_lookup</strong> has failed.<br/>"
+		briefing = "This test was skipped because previous test"
+		briefing += " <strong>xmpp_server_srv_lookup</strong> has failed.<br/>"
 		new_message = briefing
 		new_message += "Reason:<br/>"
 		new_message += "<br/>" + message
@@ -108,11 +111,14 @@ def testFunction(domain_url):
 		elif ( answer_classified['type'] == 'PROBLEM' ):
 
 			status = 2
-			briefing = "A problem happened while searching for the " + answer_classified['name'] + ": " + answer['domain'] + "!"
-			message = "Something odd happened while we were searching for the " + answer_classified['name'] + ": " + answer['domain'] + "!"
+			briefing = "A problem happened while searching for the " + answer_classified['name'] + ": "
+			briefing += answer['domain'] + "!"
+			message = "Something odd happened while we were searching for the "
+			message += answer_classified['name'] + ": " + answer['domain'] + "!"
 			message += "<br/>This is the exception we got: {"+str(e)+"}"
 			message += "<br/>It is probably a temporary issue with domain " + domain_url + "."
-			message += "<br/>But it could also be a bug in our Inspector. Let us know at <email> if you think so." 
+			message += "<br/>But it could also be a bug in our Inspector."
+			message += " Let us know at <email> if you think so." 
 			return (status, briefing, message, None)
 
 		classified[answer_classified['type']].append(answer_classified)
@@ -125,7 +131,8 @@ def testFunction(domain_url):
 		briefing = "No XMPP server A record found!"
 		message = "There is no A record being pointed by your XMPP SRV record."
 		message += suggestPossibleARecords(domain_url, domainsPointedBySRV)
-		message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#buddycloud_DNS' target='_blank'>http://buddycloud.org/wiki/Install#buddycloud_DNS</a>"
+		message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#buddycloud_DNS'"
+		message += " target='_blank'>http://buddycloud.org/wiki/Install#buddycloud_DNS</a>"
 		message += " for more information on how to setup the DNS for your domain."
 		return (status, briefing, message, None)
 
@@ -137,15 +144,19 @@ def testFunction(domain_url):
 		for categorized in classified['CNAME']:
 			answers = categorized['value']
 			for answer in answers:
-				CNAME_records.append("buddycloud." + categorized['name'] + " IN CNAME " + str(answer))
+				CNAME_record = "buddycloud." + categorized['name'] + " IN CNAME " + str(answer)
+				CNAME_records.append(CNAME_record)
 
 		status = 1
-		briefing = "There is a XMPP server SRV record pointing to a CNAME record! Should be to an A record instead."
-		message = "We found a CNAME record pointing to your XMPP SRV record. You must not have these in your DNS.<br/>"
+		briefing = "There is a XMPP server SRV record pointing to a <strong>CNAME record</strong>!"
+		briefing += "<br/>Should be to an <strong>A record</strong> instead."
+		message = "We found a CNAME record pointing to your XMPP SRV record."
+		message += "<br/>You MUST NOT have these in your DNS.<br/>"
 		message += "<strong><br/>" + string.join(CNAME_records, "<br/>") + "<br/></strong>"		
 		message += "<br/>Instead, you should have A records being pointed by your XMPP SRV record."
 		message += suggestPossibleARecords(domain_url, domainsPointedBySRV)
-		message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#buddycloud_DNS' target='_blank'>http://buddycloud.org/wiki/Install#buddycloud_DNS</a>"
+		message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#buddycloud_DNS'"
+		message += " target='_blank'>http://buddycloud.org/wiki/Install#buddycloud_DNS</a>"
 		message += " for more information on how to setup the DNS for your domain."
 		return (status, briefing, message, None)
 
