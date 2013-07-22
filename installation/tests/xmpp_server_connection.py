@@ -22,15 +22,13 @@ def testFunction(domain_url):
 
 	for answer in answers:
 		
-		address = answer['address']
-
 		xmpp_client = ClientXMPP("inspect@buddycloud", "ei3tseq")
-		if ( xmpp_client.connect((address, 5222), reattempt=False, use_ssl=False, use_tls=False) ):
+		if ( xmpp_client.connect((answer['address'], 5222), reattempt=False, use_ssl=False, use_tls=False) ):
 
-			reachable.append({'domain' : answer['domain'], 'address' : address})
+			reachable.append(answer['domain'] + " = " + answer['address'])
 		else:
 
-			unreachable.append({'domain' : answer['domain'], 'address' : address})
+			unreachable.append(answer['domain'] + " = " + answer['address'])
 
 	if len(reachable) == 0:
 
