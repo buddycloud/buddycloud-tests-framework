@@ -60,5 +60,6 @@ def testFunction(domain_url):
 			message += " on <strong>port 5222</strong> and try again."
 		else:
 			message += "<br/>Congratulations!! All XMPP servers specified are up and running properly."
+			message += "<br/>Now, we expect that at least one of them has a buddycloud component."
 
 		return (status, briefing, message, None)
