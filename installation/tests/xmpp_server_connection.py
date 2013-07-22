@@ -1,3 +1,4 @@
+import string
 from sleekxmpp import ClientXMPP
 
 #installation_suite_dependencies
@@ -15,7 +16,9 @@ def testFunction(domain_url):
 		new_message += "<br/>" + message
 		return (status, briefing, new_message, None)
 
-	found = ""
+	reachable = []
+	unreachable = []
+
 	for answer in answers:
 		
 		address = answer['address']
@@ -23,24 +26,40 @@ def testFunction(domain_url):
 		xmpp_client = ClientXMPP("inspect@buddycloud", "ei3tseq")
 		if ( xmpp_client.connect((address, 5222), reattempt=False, use_ssl=False, use_tls=False) ):
 
-			if found != "":
-				found += " | "
-			found += answer['domain'] + ", ip: " + address
+			reachable.append({'domain' : answer['domain'], 'address' : address})
 		else:
 
-			briefing = "Could not connect with XMPP server "+answer['domain']+" at "+address
-			status = 1
-			message = "We could not open a connection to your XMPP server "+answer['domain']+" at "+address+" using a XMPP client."
-			message += "<br/>Please make sure it is up and running on port 5222 and try again."
-			return (status, briefing, message, None)
+			unreachable.append({'domain' : answer['domain'], 'address' : address})
 
-	if len(answers) == 1:
-		found = "Connection successful to XMPP server: " + found
+	if len(reachable) == 0:
+
+		status = 1
+		briefing = "Could not connect to all XMPP servers specified: "
+		briefing += "<strong>" + string.join(unreachable, " | ") + "</strong>"
+		message = "We could not connect to all XMPP servers you told us to look after!<br/>"
+		message += "<strong><br/>" + string.join(unreachable, "<br/>") + "<br/></strong>"
+		message += "<br/>Please make sure your XMPP server with the buddycloud component"
+		message += " is up and running on port 5222 and try again."
+		return (status, briefing, message, None)
+
 	else:
-		found = "Connection successful to XMPP servers: " + found
 
-	briefing = found
-	status = 0
-	message = "We were able to find your XMPP server! Congratulations. We found the following XMPP servers: "
-	message += "<br/>"+found
-	return (status, briefing, message, None)
+		status = 0
+		briefing = "Could connect to your XMPP servers: "
+		briefing += "<strong>" + string.join(reachable, " | ") + "</strong>"
+		message = "We were able to connect to the following XMPP servers.<br/>"
+		message += "<strong><br/>" + string.join(reachable, "<br/>") + "<br/></strong>"
+
+		if len(unreachable) != 0:
+
+			message += "<br/>But beware - we could NOT connect to the following XMPP servers"
+			message += " you told us to look after:<br/>"
+			message += "<strong><br/>" + string.join(unreachable, "<br/>") + "<br/></strong>"
+			message += "<br/>Be warned it might result in problems, if any of those "
+			message += "are meant to host a buddycloud component."
+			message += " <br/>To be safe, be sure these are also up and running"
+			message += " on port 5222 and try again."
+		else:
+			message += "<br/>Congratulations!! All XMPP servers specified are up and running properly."
+
+		return (status, briefing, message, None)
