@@ -21,11 +21,13 @@ function handleTestCreation(test_name, test_source){
 	test_entry_html += "</span>";
 	test_entry_html += "</div>";
 	test_entry_html += "<div style='display:table-cell;'>";
-	test_entry_html += "<span id='ts_" + test_name + "' class='btn disabled test_source'><a href='https://" + test_source + "' target='_blank'>source</a></span>";
+	test_entry_html += "<span id='ts_" + test_name + "' class='btn disabled test_source'>";
+	test_entry_html += "<a href='https://" + test_source + "' target='_blank'>source</a></span>";
 	test_entry_html += "</div>";
 	test_entry_html += "</div>";
 	test_entry_html += "</div>";	
-	test_entry_html += "<span id='to_" + test_name + "' class='test_output input uneditable-input'>Running this test...</span>";
+	test_entry_html += "<span id='to_" + test_name + "' class='test_output input uneditable-input'>";
+	test_entry_html += "Running this test...</span>";
 	test_entry_html += "</div>";
 
 	$("#tests_output_table").append(test_entry_html);
@@ -153,10 +155,14 @@ function showMessage(title, body, situation){
 
 function createButtons(domain_url, test_name, situation){
 
-	var buttons_html = "<button href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Close</button>";	
-	buttons_html = "<button id='retry_this_btn' href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Retry this</button>" + buttons_html;
-	buttons_html = "<button id='retry_all_failed_btn' href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Retry all that failed</button>" + buttons_html;
-	buttons_html = "<button id='retry_all_btn' href='#' data-dismiss='modal' class='btn btn-" + situation + "'>Retry all</button>" + buttons_html;
+	var buttons_html = "<button href='#' data-dismiss='modal' class='btn btn-";
+	buttons_html += situation + "'>Close</button>";	
+	buttons_html = "<button id='retry_this_btn' href='#' data-dismiss='modal' class='btn btn-";
+	buttons_html += situation + "'>Retry this</button>" + buttons_html;
+	buttons_html = "<button id='retry_all_failed_btn' href='#' data-dismiss='modal' class='btn";
+	buttons_html +=	" btn-" + situation + "'>Retry all that failed</button>" + buttons_html;
+	buttons_html = "<button id='retry_all_btn' href='#' data-dismiss='modal' class='btn btn-";
+	buttons_html += situation + "'>Retry all</button>" + buttons_html;
 	$("#message_buttons").html(buttons_html);
 
 	$("#retry_this_btn").attr("onclick", "runAgain('" + test_name + "', '" + domain_url + "');");
@@ -179,7 +185,8 @@ function finishRunningTestAgain(domain_url, data){
 
 function focusOnTest(test_name){
 
-	var exit_status_class = getExitStatusClass(parseInt(JSON.parse($("#td_"+test_name).attr("data-response")).exit_status));
+	var exit_status = parseInt(JSON.parse($("#td_"+test_name).attr("data-response")).exit_status);
+	var exit_status_class = getExitStatusClass(exit_status);
 	createButtons(domain_url, test_name, exit_status_class);
 
 	var msg = JSON.parse($("#td_" + test_name).attr("data-response"))['message'];
