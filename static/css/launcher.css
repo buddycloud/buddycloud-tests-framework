@@ -75,6 +75,10 @@
 	width: 100%;
 }
 
+#message_body_area{
+	overflow: auto;
+}
+
 #message_body_area.success, .test_output.success{
 	background-color:#dff0d8;
 	color:black;

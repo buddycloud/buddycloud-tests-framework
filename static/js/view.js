@@ -157,11 +157,11 @@ function createButtons(domain_url, test_name, situation){
 
 	var buttons_html = "<button href='#' data-dismiss='modal' class='btn btn-";
 	buttons_html += situation + "'>Close</button>";	
-	buttons_html = "<button id='retry_this_btn' href='#' data-dismiss='modal' class='btn btn-";
+	buttons_html += "<button id='retry_this_btn' href='#' data-dismiss='modal' class='btn btn-";
 	buttons_html += situation + "'>Retry this</button>" + buttons_html;
-	buttons_html = "<button id='retry_all_failed_btn' href='#' data-dismiss='modal' class='btn";
+	buttons_html += "<button id='retry_all_failed_btn' href='#' data-dismiss='modal' class='btn";
 	buttons_html +=	" btn-" + situation + "'>Retry all that failed</button>" + buttons_html;
-	buttons_html = "<button id='retry_all_btn' href='#' data-dismiss='modal' class='btn btn-";
+	buttons_html += "<button id='retry_all_btn' href='#' data-dismiss='modal' class='btn btn-";
 	buttons_html += situation + "'>Retry all</button>" + buttons_html;
 	$("#message_buttons").html(buttons_html);
 
@@ -185,8 +185,8 @@ function finishRunningTestAgain(domain_url, data){
 
 function focusOnTest(test_name){
 
-	var exit_status = parseInt(JSON.parse($("#td_"+test_name).attr("data-response")).exit_status);
-	var exit_status_class = getExitStatusClass(exit_status);
+	var exit_val = parseInt(JSON.parse($("#td_"+test_name).attr("data-response")).exit_status);
+	var exit_status_class = getExitStatusClass(exit_val);
 	createButtons(domain_url, test_name, exit_status_class);
 
 	var msg = JSON.parse($("#td_" + test_name).attr("data-response"))['message'];
