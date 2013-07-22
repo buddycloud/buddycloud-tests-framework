@@ -38,7 +38,7 @@ def testFunction(domain_url):
 		message = "We could not connect to all XMPP servers you told us to look after!<br/>"
 		message += "<strong><br/>" + string.join(unreachable, "<br/>") + "<br/></strong>"
 		message += "<br/>Please make sure your XMPP server with the buddycloud component"
-		message += " is up and running on port 5222 and try again."
+		message += " is up and running on <strong>port 5222</strong> and try again."
 		return (status, briefing, message, None)
 
 	else:
@@ -57,7 +57,7 @@ def testFunction(domain_url):
 			message += "<br/>Be warned it might result in problems, if any of those "
 			message += "are meant to host a buddycloud component."
 			message += " <br/>To be safe, be sure these are also up and running"
-			message += " on port 5222 and try again."
+			message += " on <strong>port 5222</strong> and try again."
 		else:
 			message += "<br/>Congratulations!! All XMPP servers specified are up and running properly."
 
