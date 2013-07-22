@@ -10,7 +10,8 @@ def testFunction(domain_url):
 	status, briefing, message, answers = xmppServerAddressRecordLookup(domain_url)
 	if ( status != 0 ):
 		status = 2
-		briefing = "This test was skipped because previous test <strong>xmpp_server_a_lookup</strong> has failed.<br/>"
+		briefing = "This test was skipped because previous test "
+		briefing += "<strong>xmpp_server_a_lookup</strong> has failed.<br/>"
 		new_message = briefing
 		new_message += "Reason:<br/>"
 		new_message += "<br/>" + message
