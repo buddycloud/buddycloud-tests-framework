@@ -173,6 +173,8 @@ def testFunction(domain_url):
 		status = 0
 		briefing = "XMPP server A records found: "
 		briefing += "<strong>" + string.join(A_records, " | ") + "</strong>"
-		message = "You are pointing your XMPP server SRV records to the following valid A records: <br/>"
+		message = "Congratulations! You've set up your A records appropriately."
+		message += "<br/>You are pointing your XMPP server SRV records to the following valid A records: <br/>"
 		message += "<strong><br/>" + string.join(A_records, "<br/>") + "<br/></strong>"
+		message += "<br/>Now, we expect that one of them is leading us to your buddycloud server."
 		return (status, briefing, message, addresses)
