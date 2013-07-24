@@ -1,14 +1,19 @@
 import dns.resolver, string
 from sleekxmpp import ClientXMPP
 
+#util_dependencies
+from dns_utils import getAuthoritativeNameserver
+
 #installation_suite_depedencies
 from xmpp_server_srv_lookup import testFunction as xmppServerServiceRecordLookup
 
 
 def classifyDomainByRecord(domain):
 
+		resolver = dns.resolver.Resolver()
 		try:
-			addresses = dns.resolver.query(domain, dns.rdatatype.CNAME)
+			resolver.nameservers = [ getAuthoritativeNameserver(domain) ]
+			addresses = resolver.query(domain, dns.rdatatype.CNAME)
 			return { 'type' : 'CNAME',
 				 'name' : domain, 
 				 'value' : addresses
@@ -25,7 +30,7 @@ def classifyDomainByRecord(domain):
 			}
 
 		try:
-			addresses = dns.resolver.query(domain, dns.rdatatype.A)
+			addresses = resolver.query(domain, dns.rdatatype.A)
 			return { 'type' : 'A',
 				 'name' : domain,
 				 'value' : addresses
@@ -58,7 +63,6 @@ def suggestPossibleARecords(domain_url, domainsPointedBySRV):
 
 		buddycloud_server_address = None
 		try:
-			
 			buddycloud_server_address = str(dns.resolver.query(possible_server)[0])
 			message += "<br/>Your A record should be <strong>EXACTLY</strong> this:<br/>"
 

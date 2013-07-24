@@ -3,7 +3,7 @@ from sleekxmpp import ClientXMPP
 
 #util_dependencies
 from domain_name_lookup import testFunction as domainNameLookup
-
+from dns_utils import getAuthoritativeNameserver
 
 def testFunction(domain_url):
 
@@ -16,7 +16,9 @@ def testFunction(domain_url):
 
 	try:
 
-		query_for_SRV_record = dns.resolver.query("_xmpp-server._tcp."+domain_url, dns.rdatatype.SRV)
+		resolver = dns.resolver.Resolver()
+		resolver.nameservers = [ getAuthoritativeNameserver(domain_url) ]
+		query_for_SRV_record = resolver.query("_xmpp-server._tcp."+domain_url, dns.rdatatype.SRV)
 
 	except dns.resolver.NXDOMAIN:
 

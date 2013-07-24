@@ -155,15 +155,15 @@ function showMessage(title, body, situation){
 
 function createButtons(domain_url, test_name, situation){
 
-	var buttons_html = "<button href='#' data-dismiss='modal' class='btn btn-";
-	buttons_html += situation + "'>Close</button>";	
-	buttons_html += "<button id='retry_this_btn' href='#' data-dismiss='modal' class='btn btn-";
-	buttons_html += situation + "'>Retry this</button>" + buttons_html;
-	buttons_html += "<button id='retry_all_failed_btn' href='#' data-dismiss='modal' class='btn";
-	buttons_html +=	" btn-" + situation + "'>Retry all that failed</button>" + buttons_html;
-	buttons_html += "<button id='retry_all_btn' href='#' data-dismiss='modal' class='btn btn-";
-	buttons_html += situation + "'>Retry all</button>" + buttons_html;
-	$("#message_buttons").html(buttons_html);
+	var close = "<button href='#' data-dismiss='modal' class='btn btn-";
+	close += situation + "'>Close</button>";	
+	var retry = "<button id='retry_this_btn' href='#' data-dismiss='modal' class='btn btn-";
+	retry += situation + "'>Retry this</button>" + close;
+	var retryFails = "<button id='retry_all_failed_btn' href='#' data-dismiss='modal' class='btn";
+	retryFails += " btn-" + situation + "'>Retry all that failed</button>" + retry;
+	var retryAll = "<button id='retry_all_btn' href='#' data-dismiss='modal' class='btn btn-";
+	retryAll += situation + "'>Retry all</button>" + retryFails;
+	$("#message_buttons").html(retryAll);
 
 	$("#retry_this_btn").attr("onclick", "runAgain('" + test_name + "', '" + domain_url + "');");
 	$("#retry_all_failed_btn").attr("onclick", "retryTests('" + domain_url + "');");
