@@ -76,6 +76,6 @@ def testFunction(domain_url):
 	message = "Congratulations! You have set up your SRV records correctly."
 	message += "<br/>These were the XMPP server SRV records we found:<br/>"
 	message += "<strong><br/>" + string.join(SRV_records, "<br/>") + "<br/></strong>"
-	message += "<br/>Now, we expect that at least of of them is pointing to an A record"
+	message += "<br/>Now, we expect that at least one of them is pointing to an A record"
 	message += " that will ultimately guide us to your buddycloud server."
 	return (status, briefing, message, answers)
