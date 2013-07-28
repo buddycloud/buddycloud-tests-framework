@@ -23,12 +23,12 @@ def testFunction(domain_url):
 	for answer in answers:
 		
 		xmpp_client = ClientXMPP("inspect@buddycloud", "ei3tseq")
-		if ( xmpp_client.connect((answer['address'], 5222), reattempt=False, use_ssl=False, use_tls=False) ):
+		if ( xmpp_client.connect((answer['address'], int(answer['port'])), reattempt=False, use_ssl=False, use_tls=False) ):
 
-			reachable.append(answer['domain'] + " = " + answer['address'])
+			reachable.append("%(domain)s = %(address)s:%(port)s" %answer)
 		else:
 
-			unreachable.append(answer['domain'] + " = " + answer['address'])
+			unreachable.append("%(domain)s = %(address)s:%(port)s" %answer)
 
 	if len(reachable) == 0:
 
@@ -38,7 +38,7 @@ def testFunction(domain_url):
 		message = "We could not connect to all XMPP servers you told us to look after!<br/>"
 		message += "<strong><br/>" + string.join(unreachable, "<br/>") + "<br/></strong>"
 		message += "<br/>Please make sure your XMPP server with the buddycloud component"
-		message += " is up and running on <strong>port 5222</strong> and try again."
+		message += " is up and running on the correct port and try again."
 		return (status, briefing, message, None)
 
 	else:
@@ -57,7 +57,7 @@ def testFunction(domain_url):
 			message += "<br/>Be warned it might result in problems, if any of those "
 			message += "are meant to host a buddycloud component."
 			message += " <br/>To be safe, be sure these are also up and running"
-			message += " on <strong>port 5222</strong> and try again."
+			message += " on the correct port and try again."
 		else:
 			message += "<br/>Congratulations!! All XMPP servers specified are up and running properly."
 			message += "<br/>Now, we expect that at least one of them has a buddycloud component."

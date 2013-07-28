@@ -15,8 +15,8 @@ def classifyDomainByRecord(domain):
 			resolver.nameservers = [ getAuthoritativeNameserver(domain) ]
 			addresses = resolver.query(domain, dns.rdatatype.CNAME)
 			return { 'type' : 'CNAME',
-				 'name' : domain, 
-				 'value' : addresses
+				 'domain' : domain, 
+				 'addresses' : addresses
 			}
 		
 		except dns.resolver.NXDOMAIN:
@@ -32,19 +32,19 @@ def classifyDomainByRecord(domain):
 		try:
 			addresses = resolver.query(domain, dns.rdatatype.A)
 			return { 'type' : 'A',
-				 'name' : domain,
-				 'value' : addresses
+				 'domain' : domain,
+				 'addresses' : addresses
 			}
 
 		except dns.resolver.NXDOMAIN:
 			return { 'type' : 'NONEXISTENT',
-				 'name' : domain,
-				 'value' : []
+				 'domain' : domain,
+				 'addresses' : []
 			}
 		except dns.resolver.NoAnswer, e:
 			return { 'type' : 'NONEXISTENT',
-				 'name' : domain,
-				 'value' : []
+				 'domain' : domain,
+				 'addresses' : []
 			}
 		except Exception, e:
 			return { 'type' : 'PROBLEM',
@@ -123,6 +123,8 @@ def testFunction(domain_url):
 			message += " Let us know at <email> if you think so." 
 			return (status, briefing, message, None)
 
+		answer_classified['port'] = answer['port']
+
 		classified[answer_classified['type']].append(answer_classified)
 
 	domainsPointedBySRV = domainsPointedBySRV.keys()
@@ -144,9 +146,9 @@ def testFunction(domain_url):
 		CNAME_records = []
 
 		for categorized in classified['CNAME']:
-			answers = categorized['value']
+			answers = categorized['addresses']
 			for answer in answers:
-				CNAME_record = "buddycloud." + categorized['name'] + " IN CNAME " + str(answer)
+				CNAME_record = "buddycloud." + categorized['domain'] + " IN CNAME " + str(answer)
 				CNAME_records.append(CNAME_record)
 
 		status = 1
@@ -169,10 +171,14 @@ def testFunction(domain_url):
 		A_records = []
 		
 		for categorized in classified['A']:
-			answers = categorized['value']
+			answers = categorized['addresses']
 			for answer in answers:
-				A_records.append(categorized['name'] + " IN A " + str(answer))
-				addresses.append({'domain' : categorized['name'], 'address' : str(answer)})
+				A_records.append(categorized['domain'] + " IN A " + str(answer))
+				addresses.append({
+					'domain' : categorized['domain'],
+					'address' : str(answer),
+					'port' : categorized['port']
+				})
 
 		status = 0
 		briefing = "XMPP server A records found: "
