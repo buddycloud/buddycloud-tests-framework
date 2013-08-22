@@ -33,7 +33,7 @@ def checkBuddycloudCompatibility(domain_url, xmpp_server_address):
 		"xmpp server [%s]!"
 		}
 
-	xmpp_client.process(block=False)
+	xmpp_client.process(block=True) # should be block=False but it is making things painful to debug for now
 
 	disco_items_ns = "http://jabber.org/protocol/disco#items"
 	iq = xmpp_client.make_iq_get(queryxmlns=disco_items_ns,
@@ -95,21 +95,23 @@ def testFunction(domain_url):
 
 		def message_builder(message, situation):
 			for address in classified.get(situation, []):
-				message += descriptions[situation] + "<br/>" % address
+				message += (descriptions[situation] + "<br/>") % address
 			return message
 
 		message = message_builder(message, 'UNREACHABLE')
 		message = message_builder(message, 'PROBLEM1')
 		message = message_builder(message, 'PROBLEM2')
 
-		message += "<br/>But these had outputs: <br/><br/>"
-		
-		def message_builder2(message, situation):
-			for address in classified.get(situation, []):
-				message += (descriptions[situation] + "<br/><strong>%s</strong>") % (address, Markup.escape(strxml(disco_items[address])))
-			return message
+		if ( len(classified.get('REACHABLE', [])) != 0 ):
 
-		message = message_builder2(message, 'REACHABLE')
+			message += "<br/>But these had outputs: <br/><br/>"
+		
+			def message_builder2(message, situation):
+				for address in classified.get(situation, []):
+					message += (descriptions[situation] + "<br/><strong>%s</strong>") % (address, Markup.escape(strxml(disco_items[address])))
+				return message
+
+			message = message_builder2(message, 'REACHABLE')
 		
 		return (status, briefing, message, None)	
 
@@ -128,12 +130,18 @@ def testFunction(domain_url):
 
 		return (status, briefing, message, None)
 
-	return (2, "oddly none were classified, ill fix this", "same as briefing", None)
+	return (2, "oddly none were classified, this should never happen, ill fix this", "", None)
 
 if __name__ == "__main__":
 	
 	logging.basicConfig(level="DEBUG", format='%(levelname)-8s %(message)s')
-	(status, briefing, message, output) = testFunction("buddycloud.eu")
+
+	try:
+		domain_url = sys.argv[1]
+	except:
+		domain_url = "buddycloud.org"
+
+	(status, briefing, message, output) = testFunction(domain_url)
 
 	print "status: %d" % status
 	print "briefing:\n%s" % briefing
