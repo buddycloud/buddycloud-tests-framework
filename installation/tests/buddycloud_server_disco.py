@@ -1,7 +1,6 @@
 import sys
 sys.path.append("suite_utils")
 
-
 import logging, string
 from sleekxmpp import ClientXMPP
 from sleekxmpp.exceptions import IqError
@@ -33,21 +32,22 @@ def checkBuddycloudCompatibility(domain_url, xmpp_server_address):
 		"xmpp server [%s]!"
 		}
 
-	xmpp_client.process(block=True) # should be block=False but it is making things painful to debug for now
+	xmpp_client.process(block=False)
 
 	disco_items_ns = "http://jabber.org/protocol/disco#items"
 	iq = xmpp_client.make_iq_get(queryxmlns=disco_items_ns,
 			ito=domain_url, ifrom=xmpp_client.boundjid)
 
 	try:
-		response = iq.send(block=True, timeout=5)
+		xmpp_client.send(iq, timeout=5, now=True)
+		response = iq.result
 	except:
 		return { 'type' : 'PROBLEM1',
 			 'description' : "Could not send query " +
 		"[disco#items] to xmpp server [%s]!"
 		}
 	finally:
-		xmpp_client.disconnect()
+		xmpp_client.disconnect(wait=False)
 
 	if ( response.xml.attrib['type'] == 'error' ):
 		return { 'type' : 'PROBLEM2',
