@@ -5,22 +5,6 @@ from sleekxmpp import ClientXMPP
 from domain_name_lookup import testFunction as domainNameLookup
 from dns_utils import getAuthoritativeNameserver
 
-
-def no_SRV_record(domain_url):
-
-	status = 1
-	briefing = "No XMPP server SRV record found at domain "+domain_url+"!"
-	message = "We were unable to find your XMPP server."
-	message += "<br/>Assuming the server running buddycloud will be named: <strong><em>buddycloud."
-	message += domain_url + "</em></strong>," 
-	message += "<br/>here you are a SRV record that should work:<br/>"
-	message += "<strong>_xmpp-server._tcp." + domain_url + "\tSRV\t5\t0\t5269\t<em>buddycloud."
-	message += domain_url + ".</em></strong><br/>"
-	message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#buddycloud_DNS'"
-	message += "target='_blank'>http://buddycloud.org/wiki/Install#buddycloud_DNS</a>"
-	message += " for more information on how to setup the DNS for your domain."
-	return (status, briefing, message, None)
-
 def testFunction(domain_url):
 
 	(status, briefing, message, output) = domainNameLookup(domain_url)
@@ -34,22 +18,30 @@ def testFunction(domain_url):
 
 		resolver = dns.resolver.Resolver()
 		resolver.nameservers = [ getAuthoritativeNameserver(domain_url) ]
-		query_for_SRV_record = resolver.query("_xmpp-server._tcp."+domain_url, dns.rdatatype.SRV)
+		query_for_SRV_record = resolver.query("_xmpp-client._tcp."+domain_url, dns.rdatatype.SRV)
 
 	except dns.resolver.NXDOMAIN:
 
-		return no_SRV_record(domain_url)
+		status = 1
+		briefing = "No XMPP client SRV record found at domain "+domain_url+"!"
+		message = "We were unable to find your XMPP client."
+		message += "<br/>Assuming the client running buddycloud will be named: <strong><em>buddycloud."
+		message += domain_url + "</em></strong>," 
+		message += "<br/>here you are a SRV record that should work:<br/>"
+		message += "<strong>_xmpp-client._tcp." + domain_url + "\tSRV\t5\t0\t5269\t<em>buddycloud."
+		message += domain_url + ".</em></strong><br/>"
+		message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#buddycloud_DNS'"
+		message += "target='_blank'>http://buddycloud.org/wiki/Install#buddycloud_DNS</a>"
+		message += " for more information on how to setup the DNS for your domain."
+		return (status, briefing, message, None)
 
 	except Exception, e:
 
-		if ( str(e) == "" ):
-			return no_SRV_record(domain_url)
-
 		status = 2
-		briefing = "A problem happened while searching for the XMPP server SRV record:"
-		briefing += " _xmpp-server._tcp." + domain_url + "!"
-		message = "Something odd happened while we were searching for the XMPP server SRV record:"
-		message += " _xmpp-server._tcp." + domain_url + "!"
+		briefing = "A problem happened while searching for the XMPP client SRV record:"
+		briefing += " _xmpp-client._tcp." + domain_url + "!"
+		message = "Something odd happened while we were searching for the XMPP client SRV record:"
+		message += " _xmpp-client._tcp." + domain_url + "!"
 		message += "<br/>This is the exception we got: {"+str(e)+"}"
 		message += "<br/>It is probably a temporary issue with domain " + domain_url + "."
 		message += "<br/>But it could also be a bug in our Inspector."
@@ -75,15 +67,15 @@ def testFunction(domain_url):
 
 	SRV_records = []
 	for i in range(len(answers)):
-		SRV_record = "_xmpp-server._tcp." + domain_url + " IN SRV "
+		SRV_record = "_xmpp-client._tcp." + domain_url + " IN SRV "
 		SRV_record += answers[i]['port'] + " " + str(answers[i]['domain'])
 		SRV_records.append(SRV_record)
 
 	status = 0
-	briefing = "XMPP server SRV records found: <strong>" + string.join(SRV_records, " | ") + "</strong>"
+	briefing = "XMPP client SRV records found: <strong>" + string.join(SRV_records, " | ") + "</strong>"
 	message = "Congratulations! You have set up your SRV records correctly."
-	message += "<br/>These were the XMPP server SRV records we found:<br/>"
+	message += "<br/>These were the XMPP client SRV records we found:<br/>"
 	message += "<strong><br/>" + string.join(SRV_records, "<br/>") + "<br/></strong>"
 	message += "<br/>Now, we expect that at least one of them is pointing to an A record"
-	message += " that will ultimately guide us to your buddycloud server."
+	message += " that will ultimately guide us to your buddycloud client."
 	return (status, briefing, message, answers)
