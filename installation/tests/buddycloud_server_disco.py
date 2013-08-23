@@ -2,12 +2,15 @@ import logging, string, sleekxmpp
 from xml.etree.ElementTree import tostring as strxml
 from flask import Markup
 
+#util_dependencies
+from domain_name_lookup import testFunction as domainNameLookup
+
 
 descriptions = {
-	'XMPP_CONNECTION_PROBLEM' : "Could not talk to %s. A problem happened while our Protocol Tester " +
+	'XMPP_CONNECTION_PROBLEM' : "A problem happened while our Protocol Tester " +
 	"attempted to stablish a XMPP!<br/> Beware it is NOT a problem with your XMPP server at %s.",
 	'QUERY_SEND_PROBLEM' : "A problem happened while our XMPP client attempted to send a query " +
-	"to XMPP server at %s!<br/> Beware it may not be a problem with your XMPP server at %s.",
+	"to XMPP server at %s!<br/> Beware it may not be a problem with your XMPP server.",
 	'SERVER_ERROR' : "Your XMPP server at %s returned an error as response to our query.",
 	'BUDDYCLOUD_ENABLED' : "Congratulations! %s is buddycloud enabled!",
 	'NOT_BUDDYCLOUD_ENABLED' : "Domain %s is NOT buddycloud enabled."
@@ -47,8 +50,10 @@ def xmppServerDiscoItems(to_this, xmpp):
 
 	try:
 		response = iq.send(block=True, timeout=5)
-	except:
+	except Exception, e:
 		xmpp.disconnect()
+		if (str(e) != ""):
+			descriptions['QUERY_SEND_PROBLEM'] += "<br/>Reason: %s..." % str(e)
 		return "QUERY_SEND_PROBLEM"
 
 	if ( len(response.xml.findall("iq[@type='error']")) != 0 ):
@@ -83,10 +88,17 @@ def checkBuddycloudCompatibility(domain_url):
 
 def testFunction(domain_url):
 
+	(status, briefing, message, output) = domainNameLookup(domain_url)
+	if ( status != 0 ):
+		return (status, briefing, message, None)
+
 	classified_as = checkBuddycloudCompatibility(domain_url)
 
-	briefing = descriptions[classified_as] % ("<strong>"+domain_url+"</strong>")
-	message = briefing
+	print classified_as + "!"
+
+	description =  descriptions[classified_as] % ("<strong>"+domain_url+"</strong>")
+	briefing = description.split("<br/>")[0]
+	message = description
 
 	if ( classified_as == "BUDDYCLOUD_ENABLED" ):
 		status = 0
@@ -98,21 +110,21 @@ def testFunction(domain_url):
 
 	return (status, briefing, message, None)
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
 	
-#	logging.basicConfig()
-#	logging.getLogger('sleekxmpp').setLevel(logging.DEBUG)
-#
-#	try:
-#		import sys
-#		domain_url = sys.argv[1]
-#	except:
-#		domain_url = "buddycloud.org"
-#
-#	print domain_url
-#
-#	(status, briefing, message, output) = testFunction(domain_url)
-#
-#	print "status: %d" % status
-#	print "briefing:\n%s" % briefing
-#	print "message:\n%s" % message
+	logging.basicConfig()
+	logging.getLogger('sleekxmpp').setLevel(logging.DEBUG)
+
+	try:
+		import sys
+		domain_url = sys.argv[1]
+	except:
+		domain_url = "prosody.im"
+
+	print domain_url
+
+	(status, briefing, message, output) = testFunction(domain_url)
+
+	print "status: %d" % status
+	print "briefing:\n%s" % briefing
+	print "message:\n%s" % message
