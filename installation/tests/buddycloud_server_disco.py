@@ -28,13 +28,13 @@ def componentDiscoInfo(to_this, xmpp):
 	except:
 		return "QUERY_SEND_PROBLEM"
 
+	if ( len(response.xml.findall("iq[@type='error']")) != 0 ):
+		return "SERVER_ERROR"
+
 	for identity in response.xml.findall("{%s}query/{%s}identity" % ((DISCO_INFO_NS,)*2)):
 
 		identity_category = identity.attrib['category']
 		identity_type = identity.attrib['type']
-
-		print 'cat', identity_category
-		print 'type', identity_type
 
 		if ( identity_category == 'pubsub' and identity_type == 'channels' ):
 			return "BUDDYCLOUD_ENABLED"
@@ -54,16 +54,17 @@ def xmppServerDiscoItems(to_this, xmpp):
 		xmpp.disconnect()
 		return "QUERY_SEND_PROBLEM"
 
-	if ( len(response.xml.findall("iq[@type='result']")) != 0 ):
+	if ( len(response.xml.findall("iq[@type='error']")) != 0 ):
 		return "SERVER_ERROR"
 
 	for item in response.xml.findall("{%s}query/{%s}item" % ((DISCO_ITEMS_NS,)*2)):
 	
-		print 'jid', item.attrib['jid']
+		if ( item.attrib['jid'] == "channels."+domain_url ):
+			return "BUDDYCLOUD_ENABLED"
 
-		situation = componentDiscoInfo(item.attrib['jid'], xmpp)
-		if ( situation == "BUDDYCLOUD_ENABLED" ):
-			return situation
+#		situation = componentDiscoInfo(item.attrib['jid'], xmpp)
+#		if ( situation == "BUDDYCLOUD_ENABLED" ):
+#			return situation
 
 	return "NOT_BUDDYCLOUD_ENABLED"
 
