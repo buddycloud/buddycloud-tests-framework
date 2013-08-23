@@ -4,14 +4,11 @@ from flask import Markup
 
 
 descriptions = {
-	'XMPP_CONNECTION_PROBLEM' : "A problem happened while our " + 
-	"Protocol Tester attempted to stablish a XMPP connection!<br/>" +
-	"Beware it is NOT a problem with your XMPP server at %s.",
-	'QUERY_SEND_PROBLEM' : "A problem happened while our " +
-	"XMPP client attempted to send a query to XMPP server at %s!<br/>" +
-	"Beware it may not be a problem with your XMPP server at %s.",
-	'SERVER_ERROR' : "Your XMPP server at %s returned an error as " +
-	" response to our query.",
+	'XMPP_CONNECTION_PROBLEM' : "Could not talk to %s. A problem happened while our Protocol Tester " +
+	"attempted to stablish a XMPP!<br/> Beware it is NOT a problem with your XMPP server at %s.",
+	'QUERY_SEND_PROBLEM' : "A problem happened while our XMPP client attempted to send a query " +
+	"to XMPP server at %s!<br/> Beware it may not be a problem with your XMPP server at %s.",
+	'SERVER_ERROR' : "Your XMPP server at %s returned an error as response to our query.",
 	'BUDDYCLOUD_ENABLED' : "Congratulations! %s is buddycloud enabled!",
 	'NOT_BUDDYCLOUD_ENABLED' : "Domain %s is NOT buddycloud enabled."
 }
@@ -59,7 +56,7 @@ def xmppServerDiscoItems(to_this, xmpp):
 
 	for item in response.xml.findall("{%s}query/{%s}item" % ((DISCO_ITEMS_NS,)*2)):
 	
-		if ( item.attrib['jid'] == "channels."+domain_url ):
+		if ( item.attrib['jid'] == "channels."+to_this ):
 			return "BUDDYCLOUD_ENABLED"
 
 #		situation = componentDiscoInfo(item.attrib['jid'], xmpp)
@@ -88,7 +85,7 @@ def testFunction(domain_url):
 
 	classified_as = checkBuddycloudCompatibility(domain_url)
 
-	briefing = descriptions[classified_as] % domain_url
+	briefing = descriptions[classified_as] % ("<strong>"+domain_url+"</strong>")
 	message = briefing
 
 	if ( classified_as == "BUDDYCLOUD_ENABLED" ):
@@ -101,21 +98,21 @@ def testFunction(domain_url):
 
 	return (status, briefing, message, None)
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
 	
-	logging.basicConfig()
-	logging.getLogger('sleekxmpp').setLevel(logging.DEBUG)
-
-	try:
-		import sys
-		domain_url = sys.argv[1]
-	except:
-		domain_url = "buddycloud.org"
-
-	print domain_url
-
-	(status, briefing, message, output) = testFunction(domain_url)
-
-	print "status: %d" % status
-	print "briefing:\n%s" % briefing
-	print "message:\n%s" % message
+#	logging.basicConfig()
+#	logging.getLogger('sleekxmpp').setLevel(logging.DEBUG)
+#
+#	try:
+#		import sys
+#		domain_url = sys.argv[1]
+#	except:
+#		domain_url = "buddycloud.org"
+#
+#	print domain_url
+#
+#	(status, briefing, message, output) = testFunction(domain_url)
+#
+#	print "status: %d" % status
+#	print "briefing:\n%s" % briefing
+#	print "message:\n%s" % message
