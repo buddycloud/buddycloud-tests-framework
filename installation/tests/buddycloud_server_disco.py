@@ -1,138 +1,120 @@
-#import sys
-#sys.path.append("suite_utils")
-
 import logging, string, sleekxmpp
 from xml.etree.ElementTree import tostring as strxml
 from flask import Markup
 
-#installation_suite_dependencies
-from xmpp_server_a_lookup import testFunction as xmppServerAddressRecordLookup
 
-
-classified_domains = {}
-disco_items_results = {}
-status_descriptions = {
-	'UNREACHABLE' : "Could not establish connection to XMPP server [%s]!",
-	'UNQUERIABLE' : "Could not send query [disco#items] to XMPP server [%s]!",
-	'SERVER_ERROR' : "XMPP server [%s] returned an error as response to query [disco#items]: ",
-	'BUDDYCLOUD_ENABLED' : "XMPP server [%s] returned something as response to query [disco#items]: "
+descriptions = {
+	'XMPP_CONNECTION_PROBLEM' : "A problem happened while our " + 
+	"Protocol Tester attempted to stablish a XMPP connection!<br/>" +
+	"Beware it is NOT a problem with your XMPP server at %s.",
+	'QUERY_SEND_PROBLEM' : "A problem happened while our " +
+	"XMPP client attempted to send a query to XMPP server at %s!<br/>" +
+	"Beware it may not be a problem with your XMPP server at %s.",
+	'SERVER_ERROR' : "Your XMPP server at %s returned an error as " +
+	" response to our query.",
+	'BUDDYCLOUD_ENABLED' : "Congratulations! %s is buddycloud enabled!",
+	'NOT_BUDDYCLOUD_ENABLED' : "Domain %s is NOT buddycloud enabled."
 }
 
-def message_builder(message, situation):
+def componentDiscoInfo(to_this, xmpp):
 
-	global classified_domains
-	
-	for address in classified_domains.get(situation, []):
-		message += (status_descriptions[situation] + "<br/>") % address
-	return message
+	DISCO_INFO_NS = 'http://jabber.org/protocol/disco#info'
 
-def message_builder2(message, situation):
-
-	global classified_domains
-	
-	for address in classified_domains.get(situation, []):
-		message += (status_descriptions[situation] + "<br/><strong>%s</strong>") % (address, Markup.escape(strxml(disco_items_results[address])))
-	return message
-
-def classifyXMPPServerAs(xmpp_server_address, status):
-
-	global classified_domains
-
-	if (not status in classified_domains):
-		classified_domains[status] = []
-	classified_domains[status].append(xmpp_server_address)
-
-
-def checkBuddycloudCompatibility(domain_url, xmpp_server_address):
-
-	DISCO_ITEM_NS = 'http://jabber.org/protocol/disco#items'
-
-	xmpp = sleekxmpp.ClientXMPP("inspect@buddycloud.org", "ei3tseq")
-
-	conn_address = xmpp_server_address, 5222
-
-	if ( not xmpp.connect(conn_address, reattempt=False, use_ssl=False, use_tls=False) ):
-		classifyXMPPServerAs(xmpp_server_address, 'UNREACHABLE')
-		return
-
-	xmpp.process(block=False)
-
-	iq = xmpp.make_iq_get(queryxmlns=DISCO_ITEM_NS, 
-			      ito=domain_url, ifrom=xmpp.boundjid)
+	iq = xmpp.make_iq_get(queryxmlns=DISCO_INFO_NS, 
+			      ito=to_this, ifrom=xmpp.boundjid)	
 
 	try:
 		response = iq.send(block=True, timeout=5)
 	except:
-		classifyXMPPServerAs(xmpp_server_address, 'UNQUERIABLE')
+		return "QUERY_SEND_PROBLEM"
+
+	for identity in response.xml.findall("{%s}query/{%s}identity" % ((DISCO_INFO_NS,)*2)):
+
+		identity_category = identity.attrib['category']
+		identity_type = identity.attrib['type']
+
+		print 'cat', identity_category
+		print 'type', identity_type
+
+		if ( identity_category == 'pubsub' and identity_type == 'channels' ):
+			return "BUDDYCLOUD_ENABLED"
+
+	return "NOT_BUDDYCLOUD_ENABLED"
+
+def xmppServerDiscoItems(to_this, xmpp):
+
+	DISCO_ITEMS_NS = 'http://jabber.org/protocol/disco#items'
+
+	iq = xmpp.make_iq_get(queryxmlns=DISCO_ITEMS_NS, 
+			      ito=to_this, ifrom=xmpp.boundjid)
+
+	try:
+		response = iq.send(block=True, timeout=5)
+	except:
+		xmpp.disconnect()
+		return "QUERY_SEND_PROBLEM"
+
+	if ( len(response.xml.findall("iq[@type='result']")) != 0 ):
+		return "SERVER_ERROR"
+
+	for item in response.xml.findall("{%s}query/{%s}item" % ((DISCO_ITEMS_NS,)*2)):
+	
+		print 'jid', item.attrib['jid']
+
+		situation = componentDiscoInfo(item.attrib['jid'], xmpp)
+		if ( situation == "BUDDYCLOUD_ENABLED" ):
+			return situation
+
+	return "NOT_BUDDYCLOUD_ENABLED"
+
+def checkBuddycloudCompatibility(domain_url):
+
+	xmpp = sleekxmpp.ClientXMPP("inspect@buddycloud.org", "ei3tseq")
+
+	conn_address = 'crater.buddycloud.org', 5222
+
+	if ( not xmpp.connect(conn_address, reattempt=False, use_ssl=False, use_tls=False) ):
+		return "XMPP_CONNECTION_PROBLEM"
+
+	xmpp.process(block=False)
+
+	try:
+		return xmppServerDiscoItems(domain_url, xmpp)
 	finally:
 		xmpp.disconnect()
 
-	if ( len(response.xml.findall("iq[@type='result']")) != 0 ):
-		classifyXMPPServerAs(xmpp_server_address, 'SERVER_ERROR')
-	else:
-		classifyXMPPServerAs(xmpp_server_address, 'BUDDYCLOUD_ENABLED')
-
-	disco_items_results[xmpp_server_address] = response.xml
-
 def testFunction(domain_url):
 
-	status, briefing, message, answers = xmppServerAddressRecordLookup("buddycloud.org")
-	if ( status != 0 ):
-		status = 2
-		briefing = "This test was skipped because previous test"
-		briefing += " <strong>xmpp_server_a_lookup</strong> has failed.<br/>"
-		new_message = briefing
-		new_message += "Reason:<br/>"
-		new_message += "<br/>" + message
-		return (status, briefing, new_message, None)
+	classified_as = checkBuddycloudCompatibility(domain_url)
 
-	for answer in answers:
+	briefing = descriptions[classified_as] % domain_url
+	message = briefing
 
-		checkBuddycloudCompatibility(domain_url, answer['domain'])
-
-
-	global classified_domains
-
-	if ( len(classified_domains.get('UNREACHABLE', [])) != 0 or len(classified_domains.get('SERVER_ERROR', [])) != 0 or len(classified_domains.get('UNQUERIABLE', [])) != 0 ):
-
-		status = 1
-		briefing = "Problems occurred."
-
-		message = "Full description of problems that occurred: <br/><br/>"
-		message = message_builder(message, 'UNREACHABLE')
-		message = message_builder(message, 'UNQUERIABLE')
-		message = message_builder2(message, 'SERVER_ERROR')
-
-		if ( len(classified_domains.get('BUDDYCLOUD_ENABLED', [])) != 0 ):
-
-			message += "<br/>But these had outputs: <br/><br/>"
-			message = message_builder2(message, 'BUDDYCLOUD_ENABLED')
-		
-		return (status, briefing, message, None)	
-
-	else:
-#	elif ( len(classified_domains.get('BUDDYCLOUD_ENABLED', [])) != 0 ):
-
+	if ( classified_as == "BUDDYCLOUD_ENABLED" ):
 		status = 0
-		briefing = "All xmpp servers had outputs: <strong>%s</strong>" % string.join(classified_domains['BUDDYCLOUD_ENABLED'], " | ")
+	elif ( classified_as == "SERVER_ERROR"
+	    or classified_as == "NOT_BUDDYCLOUD_ENABLED" ):
+		status = 1
+	else:
+		status = 2
 
-		message = "All xmpp servers had outputs. See: <br/>"
-		message = message_builder2(message, 'BUDDYCLOUD_ENABLED')
+	return (status, briefing, message, None)
 
-		return (status, briefing, message, None)
+if __name__ == "__main__":
+	
+	logging.basicConfig()
+	logging.getLogger('sleekxmpp').setLevel(logging.DEBUG)
 
-#if __name__ == "__main__":
-#	
-#	logging.basicConfig()
-#	logging.getLogger('sleekxmpp').setLevel(logging.DEBUG)
-#
-#	try:
-#		domain_url = sys.argv[1]
-#	except:
-#		domain_url = "buddycloud.org"
-#
-#	(status, briefing, message, output) = testFunction(domain_url)
-#
-#	print "status: %d" % status
-#	print "briefing:\n%s" % briefing
-#	print "message:\n%s" % message
+	try:
+		import sys
+		domain_url = sys.argv[1]
+	except:
+		domain_url = "buddycloud.org"
+
+	print domain_url
+
+	(status, briefing, message, output) = testFunction(domain_url)
+
+	print "status: %d" % status
+	print "briefing:\n%s" % briefing
+	print "message:\n%s" % message
