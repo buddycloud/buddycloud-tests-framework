@@ -107,21 +107,21 @@ def testFunction(domain_url):
 
 	return (status, briefing, message, None)
 
-if __name__ == "__main__":
-	
-	logging.basicConfig()
-	logging.getLogger('sleekxmpp').setLevel(logging.DEBUG)
-
-	try:
-		import sys
-		domain_url = sys.argv[1]
-	except:
-		domain_url = "prosody.im"
-
-	print domain_url
-
-	(status, briefing, message, output) = testFunction(domain_url)
-
-	print "status: %d" % status
-	print "briefing:\n%s" % briefing
-	print "message:\n%s" % message
+#if __name__ == "__main__":
+#	
+#	logging.basicConfig()
+#	logging.getLogger('sleekxmpp').setLevel(logging.DEBUG)
+#
+#	try:
+#		import sys
+#		domain_url = sys.argv[1]
+#	except:
+#		domain_url = "prosody.im"
+#
+#	print domain_url
+#
+#	(status, briefing, message, output) = testFunction(domain_url)
+#
+#	print "status: %d" % status
+#	print "briefing:\n%s" % briefing
+#	print "message:\n%s" % message
