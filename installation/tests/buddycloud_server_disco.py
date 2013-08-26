@@ -61,12 +61,9 @@ def xmppServerDiscoItems(to_this, xmpp):
 
 	for item in response.xml.findall("{%s}query/{%s}item" % ((DISCO_ITEMS_NS,)*2)):
 	
-		if ( item.attrib['jid'] == "channels."+to_this ):
-			return "BUDDYCLOUD_ENABLED"
-
-#		situation = componentDiscoInfo(item.attrib['jid'], xmpp)
-#		if ( situation == "BUDDYCLOUD_ENABLED" ):
-#			return situation
+		situation = componentDiscoInfo(item.attrib['jid'], xmpp)
+		if ( situation == "BUDDYCLOUD_ENABLED" ):
+			return situation
 
 	return "NOT_BUDDYCLOUD_ENABLED"
 
