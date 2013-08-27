@@ -1,6 +1,3 @@
-import sys
-sys.path.append("suite_utils")
-
 from requests import Request, Session
 
 #util_dependencies
