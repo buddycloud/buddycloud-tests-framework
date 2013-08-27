@@ -23,7 +23,8 @@ def testFunction(domain_url):
 	for answer in answers:
 		
 		xmpp_client = ClientXMPP("inspect@buddycloud", "ei3tseq")
-		if ( xmpp_client.connect((answer['address'], int(answer['port'])), reattempt=False, use_ssl=False, use_tls=False) ):
+		if ( xmpp_client.connect((answer['address'], int(answer['port'])),
+			reattempt=False, use_ssl=False, use_tls=False) ):
 
 			reachable.append("%(domain)s = %(address)s:%(port)s" %answer)
 		else:
