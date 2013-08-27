@@ -38,6 +38,13 @@ def classifyTXTRecord(TXT_record):
 	path = TXT_record[TXT_record.find("path=")+5 : TXT_record.find("\"", TXT_record.find("path="))]
 	protocol = TXT_record[TXT_record.find("protocol=")+9 : TXT_record.find("\"", TXT_record.find("protocol="))]
 
+	if protocol != "https":
+		return {
+			'type' : 'NOT_HTTPS',
+			'description' : 'PROTOCOL must be HTTPS.',
+			'record' : TXT_record
+		}
+
 	if ( domain == "" or port == "" or path == "" or protocol == "" ):
 		return {
 			'type' : 'MALFORMED',
@@ -121,7 +128,8 @@ def testFunction(domain_url):
 		message = briefing
 
 		if ( len(classified_records.get('INFO_MISSING', [])) != 0
-		  or len(classified_records.get('MALFORMED', [])) != 0 ):
+		  or len(classified_records.get('MALFORMED', [])) != 0
+		  or len(classified_records.get('NOT_HTTPS', [])) != 0 ):
 
 			message += "We detected you set up the following API server"
 			message += " TXT records, though.<br/>"
@@ -136,6 +144,15 @@ def testFunction(domain_url):
 
 			message += ("<strong>%s</strong><br/><em>%s</em><br/><br/>"
 					% (record['description'], record['record']))
+
+		for record in classified_records.get('NOT_HTTPS', []):
+
+			message += ("<strong>%s</strong><br/><em>%s</em><br/><br/>"
+					% (record['description'], record['record']))
+
+		if ( len(classified_records.get('NOT_HTTPS', [])) != 0 ):
+
+			message += "<br/>Please ensure your API server will run with HTTPS enabled."
 
 		return (status, briefing, message, None)
 

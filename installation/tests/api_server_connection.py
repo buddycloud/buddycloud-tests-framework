@@ -1,3 +1,6 @@
+import sys
+sys.path.append("suite_utils")
+
 from requests import Request, Session
 
 #util_dependencies
@@ -9,73 +12,48 @@ from api_server_lookup import testFunction as apiLookup
 
 def testFunction(domain_url):
 
-	status, briefing, message, answers = apiLookup(domain_url)
+	status, briefing, message, api_TXT_record = apiLookup(domain_url)
 	if ( status != 0 ):
 		status = 2
-		briefing = "This test was skipped because previous test <strong>api_server_lookup</strong> has failed.<br/>"
+		briefing = "This test was skipped because previous test "
+		briefing += "<strong>api_server_lookup</strong> has failed.<br/>"
 		new_message = briefing
 		new_message += "Reason:<br/>"
 		new_message += "<br/>" + message
 		return (status, briefing, new_message, None)
 
-	if ( len(answers) == 0 ):
+	try:
 
-		briefing = "No API server TXT record found!"
-		status = 1
-		message = "We could not find your API server TXT record!"
-		message += "You must setup your DNS to point to the API server endpoint using a TXT record similat to the one below: "
-		message += "<br/><br/>_buddycloud-api._tcp.EXAMPLE.COM.          IN TXT \"v=1.0\" \"host=buddycloud.EXAMPLE.COM\" \"protocol=https\" \"path=/api\" \"port=443\""
-		return (status, briefing, message, None)
-	
-	found = ""
+		req = Request('HEAD', "%(protocol)s://%(domain)s:%(port)s%(path)s" %api_TXT_record)
+		r = req.prepare()
 
-	for answer in answers:
+		s = Session()
+		s.mount('https://', SSLAdapter('TLSv1'))
 
-		try:
-
-			req = Request('HEAD', "%(protocol)s://%(domain)s:%(port)s%(path)s" %answer)
-			r = req.prepare()
-
-			s = Session()
-
-			if ( answer['protocol'] == 'https' ):
-				
-				s.mount('https://', SSLAdapter('TLSv1'))
-			else:
-
-				briefing = "Protocol specified in TXT record for API server at " + ("%(domain)s:%(port)s%(path)s" %answer) + " is not HTTPS!"
-				status = 1
-				message = briefing + "We have detected that your TXT record specifies a protocol other than HTTPS."
-				message += "<br/> Please ensure your API server will run with HTTPS enabled."
-				return (status, briefing, message, None)
-
-			if ( (s.send(r, verify=False)).ok ):
+		if ( (s.send(r, verify=False)).ok ):
 		
-				if ( found != "" ):
-					found += " | "
-
-				found += ("%(domain)s:%(port)s%(path)s" %answer)
-
-			else:
-
-				raise Exception("Could not reach server at " + ("%(domain)s:%(port)s%(path)s" %answer) + ".")
-
-		except Exception, e:
-
-			briefing = "Connection failed to API server at " + ("%(domain)s:%(port)s%(path)s" %answer) + "!"
-			status = 1
-			message = "The problem we found was: "+str(e)
-			message = "<br/>Please ensure your API server is running (with HTTPS)!"
-			message = briefing + message
+			status = 0
+			briefing = "Connection successful to API server at "
+			briefing += "<strong>%(domain)s:%(port)s%(path)s</strong>" %api_TXT_record
+			message = briefing
 			return (status, briefing, message, None)
 
-	if len(answers) == 1:
-		found = "Connection successful to API server: " + found
-	else:
-		found = "Connection successful to API servers: " + found
+		else:
 
-	briefing = found
-	status = 0
-	message = "We could locate and connect to your API server! Congratulations!"
-	message += briefing
-	return (status, briefing, message, None)
+			status = 1
+			briefing = "Could not connect to API server at "
+			briefing += "<strong>%(domain)s:%(port)s%(path)s</strong>." % api_TXT_record
+			message = briefing
+			return (status, briefing, message, None)
+
+	except Exception, e:
+
+		status = 2
+		briefing = "Something odd happened while trying to connect to API server at "
+		briefing += "<strong>%(domain)s:%(port)s%(path)s</strong>!" % api_TXT_record
+		message = briefing
+		message += "<br/>This is the exception we got: {%s}" % str(e)
+		message += "<br/>It is probably a temporary issue with domain " + domain_url + "."
+		message += "<br/>But it could also be a bug in our Inspector."
+		message += " Let us know at <email> if you think so." 
+		return (status, briefing, message, None)

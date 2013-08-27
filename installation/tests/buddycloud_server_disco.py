@@ -8,7 +8,7 @@ from domain_name_lookup import testFunction as domainNameLookup
 
 descriptions = {
 	'XMPP_CONNECTION_PROBLEM' : "A problem happened while our Protocol Tester " +
-	"attempted to stablish a XMPP!<br/> Beware it is NOT a problem with your XMPP server at %s.",
+	"attempted to stablish a XMPP connection!<br/> Beware it is NOT a problem with the server at %s.",
 	'QUERY_SEND_PROBLEM' : "A problem happened while our XMPP client attempted to send a query " +
 	"to XMPP server at %s!<br/> Beware it may not be a problem with your XMPP server.",
 	'SERVER_ERROR' : "Your XMPP server at %s returned an error as response to our query.",
@@ -90,8 +90,6 @@ def testFunction(domain_url):
 		return (status, briefing, message, None)
 
 	classified_as = checkBuddycloudCompatibility(domain_url)
-
-	print classified_as + "!"
 
 	description =  descriptions[classified_as] % ("<strong>"+domain_url+"</strong>")
 	briefing = description.split("<br/>")[0]
