@@ -1,4 +1,5 @@
 import dns.resolver, string
+from dns.resolver import NoAnswer, NXDOMAIN, Timeout
 from sleekxmpp import ClientXMPP
 
 #util_dependencies
@@ -9,7 +10,7 @@ from dns_utils import getAuthoritativeNameserver
 def no_SRV_record(domain_url):
 
 	status = 1
-	briefing = "No XMPP server SRV record found at domain "+domain_url+"!"
+	briefing = "No XMPP server SRV record found at domain <strong>%s</strong>!" % domain_url
 	message = "We were unable to find your XMPP server."
 	message += "<br/>Assuming the server running buddycloud will be named: <strong><em>buddycloud."
 	message += domain_url + "</em></strong>," 
@@ -34,22 +35,23 @@ def testFunction(domain_url):
 
 		resolver = dns.resolver.Resolver()
 		resolver.nameservers = [ getAuthoritativeNameserver(domain_url) ]
+		resolver.timeout = 5
 		query_for_SRV_record = resolver.query("_xmpp-server._tcp."+domain_url, dns.rdatatype.SRV)
 
-	except dns.resolver.NXDOMAIN:
+	except (NXDOMAIN, NoAnswer, Timeout):
 
 		return no_SRV_record(domain_url)
 
 	except Exception, e:
 
-		if ( str(e) == "" ):
+		if ( str(e) == "" or str(e) == ("%s. does not exist." % domain_url) ):
 			return no_SRV_record(domain_url)
 
 		status = 2
 		briefing = "A problem happened while searching for the XMPP server SRV record:"
-		briefing += " _xmpp-server._tcp." + domain_url + "!"
+		briefing += " <strong>_xmpp-server._tcp." + domain_url + "</strong>!"
 		message = "Something odd happened while we were searching for the XMPP server SRV record:"
-		message += " _xmpp-server._tcp." + domain_url + "!"
+		message += " <strong>_xmpp-server._tcp." + domain_url + "</strong>!"
 		message += "<br/>This is the exception we got: {"+str(e)+"}"
 		message += "<br/>It is probably a temporary issue with domain " + domain_url + "."
 		message += "<br/>But it could also be a bug in our Inspector."
@@ -70,7 +72,7 @@ def testFunction(domain_url):
 				'weight' : answer.weight
 			})
 
-		except Exception, e:
+		except Exception:
 			continue
 
 	SRV_records = []

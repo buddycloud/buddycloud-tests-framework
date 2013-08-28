@@ -7,7 +7,7 @@ from domain_name_lookup import testFunction as domainNameLookup
 
 
 descriptions = {
-	'XMPP_CONNECTION_PROBLEM' : "A problem happened while our Protocol Tester " +
+	'XMPP_CONNECTION_PROBLEM' : "A problem happened while we " +
 	"attempted to stablish a XMPP connection!<br/> Beware it is NOT a problem with the server at %s.",
 	'QUERY_SEND_PROBLEM' : "A problem happened while our XMPP client attempted to send a query " +
 	"to XMPP server at %s!<br/> Beware it may not be a problem with your XMPP server.",
@@ -50,9 +50,10 @@ def xmppServerDiscoItems(to_this, xmpp):
 
 	try:
 		response = iq.send(block=True, timeout=5)
-	except Exception, e:
+	except Exception as e:
 		xmpp.disconnect()
-		if (str(e) != ""):
+		
+		if ( str(e) != "" ):
 			descriptions['QUERY_SEND_PROBLEM'] += "<br/>Reason: %s..." % str(e)
 		return "QUERY_SEND_PROBLEM"
 
@@ -114,7 +115,7 @@ def testFunction(domain_url):
 #		import sys
 #		domain_url = sys.argv[1]
 #	except:
-#		domain_url = "prosody.im"
+#		domain_url = "buddycloud.org"
 #
 #	print domain_url
 #

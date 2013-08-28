@@ -1,4 +1,5 @@
 import dns.resolver, string
+from dns.resolver import NoAnswer, NXDOMAIN
 from sleekxmpp import ClientXMPP
 
 #util_dependencies
@@ -11,6 +12,7 @@ from xmpp_server_srv_lookup import testFunction as xmppServerServiceRecordLookup
 def classifyDomainByRecord(domain):
 
 		resolver = dns.resolver.Resolver()
+		resolver.timeout = 5
 		try:
 			resolver.nameservers = [ getAuthoritativeNameserver(domain) ]
 			addresses = resolver.query(domain, dns.rdatatype.CNAME)
@@ -23,7 +25,7 @@ def classifyDomainByRecord(domain):
 			pass
 		except dns.resolver.NoAnswer:
 			pass
-		except Exception, e:
+		except Exception as e:
 			return { 'type' : 'PROBLEM',
 				 'name' : 'CNAME record',
 				 'value' : str(e)
@@ -36,17 +38,12 @@ def classifyDomainByRecord(domain):
 				 'addresses' : addresses
 			}
 
-		except dns.resolver.NXDOMAIN:
+		except (NXDOMAIN, NoAnswer):
 			return { 'type' : 'NONEXISTENT',
 				 'domain' : domain,
 				 'addresses' : []
 			}
-		except dns.resolver.NoAnswer, e:
-			return { 'type' : 'NONEXISTENT',
-				 'domain' : domain,
-				 'addresses' : []
-			}
-		except Exception, e:
+		except Exception as e:
 			return { 'type' : 'PROBLEM',
 				 'name' : 'A record',
 				 'value' : str(e)

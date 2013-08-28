@@ -1,4 +1,5 @@
 import dns.resolver, string
+from dns.resolver import NoAnswer, NXDOMAIN
 from sleekxmpp import ClientXMPP
 
 #util_dependencies
@@ -61,7 +62,7 @@ def classifyTXTRecord(TXT_record):
 		'record' : TXT_record
 	}
 
-def no_TXT_record(domain_url):
+def noTXTRecord(domain_url):
 
 	status = 1
 	briefing = "No API server TXT record found at domain <strong>"+domain_url+"</strong>!"
@@ -89,22 +90,23 @@ def testFunction(domain_url):
 
 		resolver = dns.resolver.Resolver()
 		resolver.nameservers = [ getAuthoritativeNameserver(domain_url) ]
+		resolver.timeout = 5
 		query_for_TXT_record = resolver.query("_buddycloud-api._tcp."+domain_url, dns.rdatatype.TXT)
 
-	except dns.resolver.NXDOMAIN:
+	except (NXDOMAIN, NoAnswer):
 
-		return no_TXT_record(domain_url)
+		return noTXTRecord(domain_url)
 
-	except Exception, e:
+	except Exception as e:
 
-		if ( str(e) == "" ):
-			return no_TXT_record(domain_url)
+		if ( str(e) == "" or str(e) == ("%s. does not exist." % domain_url) ):
+			return noTXTRecord(domain_url)
 
 		status = 2
 		briefing = "A problem happened while searching for the API server TXT record:"
-		briefing += " _buddycloud-api._tcp." + domain_url + "!"
+		briefing += " <strong>_buddycloud-api._tcp." + domain_url + "</strong>!"
 		message = "Something odd happened while we were searching for the API server TXT record:"
-		message += " _buddycloud-api._tcp." + domain_url + "!"
+		message += " <strong>_buddycloud-api._tcp." + domain_url + "</strong>!"
 		message += "<br/>This is the exception we got: {"+str(e)+"}"
 		message += "<br/>It is probably a temporary issue with domain " + domain_url + "."
 		message += "<br/>But it could also be a bug in our Inspector."
@@ -124,7 +126,8 @@ def testFunction(domain_url):
 	if len(classified_records.get('CORRECT', [])) == 0:
 
 		status = 1
-		briefing = "No API server TXT record found!<br/>"
+		briefing = "No API server TXT record found at "
+		briefing += "domain <strong>%s</strong>!<br/>" % domain_url
 		message = briefing
 
 		if ( len(classified_records.get('INFO_MISSING', [])) != 0

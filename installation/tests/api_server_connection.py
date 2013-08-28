@@ -39,7 +39,7 @@ def testFunction(domain_url):
 
 			raise ConnectionError()
 
-	except ConnectionError, e:
+	except ConnectionError as e:
 	
 		status = 1
 
@@ -55,7 +55,7 @@ def testFunction(domain_url):
 		return (status, briefing, message, None)
 
 
-	except Exception, e:
+	except Exception as e:
 
 		status = 2
 		briefing = "Something odd happened while trying to connect to API server at "
