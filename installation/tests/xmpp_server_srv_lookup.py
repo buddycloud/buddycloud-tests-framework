@@ -35,7 +35,7 @@ def testFunction(domain_url):
 
 		resolver = dns.resolver.Resolver()
 		resolver.nameservers = [ getAuthoritativeNameserver(domain_url) ]
-		resolver.timeout = 5
+		resolver.lifetime = 5
 		query_for_SRV_record = resolver.query("_xmpp-server._tcp."+domain_url, dns.rdatatype.SRV)
 
 	except (NXDOMAIN, NoAnswer, Timeout):

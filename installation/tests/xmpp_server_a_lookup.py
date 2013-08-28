@@ -12,7 +12,7 @@ from xmpp_server_srv_lookup import testFunction as xmppServerServiceRecordLookup
 def classifyDomainByRecord(domain):
 
 		resolver = dns.resolver.Resolver()
-		resolver.timeout = 5
+		resolver.lifetime = 5
 		try:
 			resolver.nameservers = [ getAuthoritativeNameserver(domain) ]
 			addresses = resolver.query(domain, dns.rdatatype.CNAME)
