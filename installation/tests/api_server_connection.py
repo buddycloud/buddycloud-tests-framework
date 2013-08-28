@@ -1,4 +1,4 @@
-from requests import Request, Session
+from requests import Request, Session, ConnectionError
 
 #util_dependencies
 from ssl_adapter import SSLAdapter
@@ -37,11 +37,23 @@ def testFunction(domain_url):
 
 		else:
 
-			status = 1
-			briefing = "Could not connect to API server at "
-			briefing += "<strong>%(domain)s:%(port)s%(path)s</strong>." % api_TXT_record
-			message = briefing
-			return (status, briefing, message, None)
+			raise ConnectionError()
+
+	except ConnectionError, e:
+	
+		status = 1
+
+		error = "Could not connect to API server at "
+		error += "<strong>%(domain)s:%(port)s%(path)s</strong>." % api_TXT_record
+	
+		briefing = error
+		message = briefing
+
+		if str(e) != "":
+			message += "<br/>Reason: %s" % str(e)
+
+		return (status, briefing, message, None)
+
 
 	except Exception, e:
 
