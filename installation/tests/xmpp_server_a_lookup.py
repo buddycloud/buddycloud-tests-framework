@@ -82,26 +82,52 @@ def suggestPossibleARecords(domain_url, domainsPointedBySRV):
 
 	return message
 
-def doSkip(test_name, traceback):
+def doSkip(skipped_tests):
 	status = 2
 	briefing = "This test was skipped because previous test"
-	briefing += " <strong>%s</strong> has failed.<br/>" % test_name
+
+	test_names = string.join(skipped_tests.keys(), "</strong> and <strong>")
+
+	if ( len(skipped_tests) > 1 ):
+		briefing += "s"
+
+	briefing += " <strong>%s</strong> " % test_names
+
+	if ( len(skipped_tests) > 1 ):
+		briefing += "have failed.<br/>"
+	else:
+		briefing += "has failed.<br/>"
+
 	new_message = briefing
-	new_message += "Reason:<br/>"
-	new_message += "<br/>" + traceback
+	new_message += "<br/>Reason:<br/><br/>"
+
+	for test in skipped_tests:
+
+		new_message += "<strong>%s</strong> log:<br/>" % test
+		new_message += skipped_tests[test] + "<br/><br/>"
+
 	return (status, briefing, new_message, None)
 
 def testFunction(domain_url):
 
+	answers = []
+	skipped = {}
+
 	status, briefing, message, server_srvs = xmppServerServiceRecordLookup(domain_url)
 	if ( status != 0 ):
-		return doSkip("xmpp_server_srv_lookup", message)
+		skipped["xmpp_server_srv_lookup"] = message
+	else:
+		answers += server_srvs
 
 	status, briefing, message, client_srvs = xmppClientServiceRecordLookup(domain_url)
 	if ( status != 0 ):
-		return doSkip("xmpp_client_srv_lookup", message)
+		skipped["xmpp_client_srv_lookup"] = message
+	else:
+		answers += client_srvs
 
-	answers = server_srvs + client_srvs
+	if ( len(skipped.keys()) == 2 ):
+		return doSkip(skipped)
+
 
 	classified = { 'A' : [], 'CNAME' : [] }
 	domainsPointedBySRV = {}
