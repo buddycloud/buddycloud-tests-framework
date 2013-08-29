@@ -7,7 +7,7 @@ from dns_utils import getAuthoritativeNameserver
 
 #installation_suite_depedencies
 from xmpp_server_srv_lookup import testFunction as xmppServerServiceRecordLookup
-
+from xmpp_client_srv_lookup import testFunction as xmppClientServiceRecordLookup
 
 def classifyDomainByRecord(domain):
 
@@ -82,18 +82,26 @@ def suggestPossibleARecords(domain_url, domainsPointedBySRV):
 
 	return message
 
+def doSkip(test_name):
+	status = 2
+	briefing = "This test was skipped because previous test"
+	briefing += " <strong>%s</strong> has failed.<br/>" % test_name
+	new_message = briefing
+	new_message += "Reason:<br/>"
+	new_message += "<br/>" + message
+	return (status, briefing, new_message, None)
+
 def testFunction(domain_url):
 
-	status, briefing, message, answers = xmppServerServiceRecordLookup(domain_url)
+	status, briefing, message, server_srvs = xmppServerServiceRecordLookup(domain_url)
 	if ( status != 0 ):
-		status = 2
-		briefing = "This test was skipped because previous test"
-		briefing += " <strong>xmpp_server_srv_lookup</strong> has failed.<br/>"
-		new_message = briefing
-		new_message += "Reason:<br/>"
-		new_message += "<br/>" + message
-		return (status, briefing, new_message, None)
+		return doSkip("xmpp_server_srv_lookup")
 
+	status, briefing, message, client_srvs = xmppClientServiceRecordLookup(domain_url)
+	if ( status != 0 ):
+		return doSkip("xmpp_client_srv_lookup")
+
+	answers = server_srvs + client_srvs
 
 	classified = { 'A' : [], 'CNAME' : [] }
 	domainsPointedBySRV = {}
@@ -170,7 +178,11 @@ def testFunction(domain_url):
 		for categorized in classified['A']:
 			answers = categorized['addresses']
 			for answer in answers:
-				A_records.append(categorized['domain'] + " IN A " + str(answer))
+
+				A_record = categorized['domain'] + " IN A " + str(answer)
+				if not A_record in A_records:
+					A_records.append(A_record)
+
 				addresses.append({
 					'domain' : categorized['domain'],
 					'address' : str(answer),
