@@ -82,24 +82,24 @@ def suggestPossibleARecords(domain_url, domainsPointedBySRV):
 
 	return message
 
-def doSkip(test_name):
+def doSkip(test_name, traceback):
 	status = 2
 	briefing = "This test was skipped because previous test"
 	briefing += " <strong>%s</strong> has failed.<br/>" % test_name
 	new_message = briefing
 	new_message += "Reason:<br/>"
-	new_message += "<br/>" + message
+	new_message += "<br/>" + traceback
 	return (status, briefing, new_message, None)
 
 def testFunction(domain_url):
 
 	status, briefing, message, server_srvs = xmppServerServiceRecordLookup(domain_url)
 	if ( status != 0 ):
-		return doSkip("xmpp_server_srv_lookup")
+		return doSkip("xmpp_server_srv_lookup", message)
 
 	status, briefing, message, client_srvs = xmppClientServiceRecordLookup(domain_url)
 	if ( status != 0 ):
-		return doSkip("xmpp_client_srv_lookup")
+		return doSkip("xmpp_client_srv_lookup", message)
 
 	answers = server_srvs + client_srvs
 
