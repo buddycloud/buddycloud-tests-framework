@@ -11,11 +11,11 @@ def no_SRV_record(domain_url, srv_name, srv_description, srv_port):
 
 	status = 1
 	briefing = "No %s found at domain <strong>%s</strong>!" % (srv_description, domain_url)
-	message = "We were unable to find your XMPP server."
-	message += "<br/>Assuming the server running buddycloud will be named: <strong><em>buddycloud."
-	message += domain_url + "</em></strong>," 
+	message = "We were unable to find the %s." % srv_description
+	message += "<br/>Assuming the server running buddycloud will be named: <strong><em>bc."
+	message += domain_url + "</em></strong>,"
 	message += "<br/>here you are a SRV record that should work:<br/>"
-	message += "<strong>" + srv_name + domain_url + "\tSRV\t5\t0\t" + srv_port + "\t<em>buddycloud."
+	message += "<strong>" + srv_name + domain_url + "\tSRV\t5\t0\t" + srv_port + "\t<em>bc."
 	message += domain_url + ".</em></strong><br/>"
 	message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#buddycloud_DNS'"
 	message += "target='_blank'>http://buddycloud.org/wiki/Install#buddycloud_DNS</a>"
