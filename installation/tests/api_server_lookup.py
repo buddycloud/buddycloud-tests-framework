@@ -136,7 +136,7 @@ def testFunction(domain_url):
 
 			message += "We detected you set up the following API server"
 			message += " TXT records, though.<br/>"
-			message += "They have <strong>problems:</strong>"
+			message += "They have problems: <br/><br/>"
 
 		for record in classified_records.get('INFO_MISSING', []):
 
@@ -155,7 +155,7 @@ def testFunction(domain_url):
 
 		if ( len(classified_records.get('NOT_HTTPS', [])) != 0 ):
 
-			message += "<br/>Please ensure your API server will run with HTTPS enabled."
+			message += "Please ensure your API server will run with HTTPS enabled."
 
 		return (status, briefing, message, None)
 
