@@ -65,7 +65,7 @@ def classifyTXTRecord(TXT_record):
 def noTXTRecord(domain_url):
 
 	status = 1
-	briefing = "No API server TXT record found at domain <strong>"+domain_url+"</strong>!"
+	briefing = "No correct API server TXT record found at domain <strong>"+domain_url+"</strong>!"
 	message = "We were unable to find your API server TXT record."
 	message += "<br/>Assuming the server running buddycloud will be named: <strong><em>buddycloud."
 	message += domain_url + "</em></strong>," 
@@ -126,7 +126,7 @@ def testFunction(domain_url):
 	if len(classified_records.get('CORRECT', [])) == 0:
 
 		status = 1
-		briefing = "No API server TXT record found at "
+		briefing = "No correct API server TXT record found at "
 		briefing += "domain <strong>%s</strong>!<br/>" % domain_url
 		message = briefing
 
@@ -155,7 +155,10 @@ def testFunction(domain_url):
 
 		if ( len(classified_records.get('NOT_HTTPS', [])) != 0 ):
 
-			message += "Please ensure your API server will run with HTTPS enabled."
+			message += "Please ensure your API server will run with HTTPS enabled.<br/>"
+
+		message += "See <a href='https://buddycloud.org/wiki/Install#buddycloud_DNS' target='_blank'"
+		message += " >https://buddycloud.org/wiki/Install#buddycloud_DNS</a> for more information.<br/>"
 
 		return (status, briefing, message, None)
 
