@@ -11,4 +11,4 @@ from dns_utils import getAuthoritativeNameserver
 
 def testFunction(domain_url):
 
-	return performSRVLookup(domain_url, "_xmpp-server._tcp.", "XMPP server SRV record", "5269")
+	return performSRVLookup(domain_url, "_xmpp-server._tcp.anon.", "XMPP server anonymous SRV record", "5222")
