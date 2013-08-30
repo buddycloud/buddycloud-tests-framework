@@ -133,7 +133,8 @@ def testFunction(domain_url):
 		briefing += " <strong>%s</strong>." % domain_url
 		message = "We detected you set up the following incorrect API"
 		message += " server TXT records.<br/>"
-		message += "They have problems: <br/><br/>"
+		message += "Really you must have just one correct API server SRV record.<br/>"
+		message += "These are the SRV records we found and their problems: <br/><br/>"
 
 		for record in classified_records.get('INFO_MISSING', []):
 
@@ -164,6 +165,7 @@ def testFunction(domain_url):
 		briefing = "No correct API server TXT record found at "
 		briefing += "domain <strong>%s</strong>!<br/>" % domain_url
 		message = briefing + "<br/>"
+		message += "You must have one correct API server SRV record.<br/>"
 		message += "See <a href='https://buddycloud.org/wiki/Install#buddycloud_DNS' target='_blank'"
 		message += " >https://buddycloud.org/wiki/Install#buddycloud_DNS</a> for more information.<br/>"
 		return (status, briefing, message, None)
