@@ -134,6 +134,15 @@ def testFunction(domain_url):
 					xmpp_server = xmpp_server['domain']
 					message += "<strong>_xmpp-server._tcp.channels.%s." %domain_url
 					message += "\tSRV\t5\t0\t5269\t%s.<br/><br/></strong>" %xmpp_server
+
+		else:
+
+			message += "<br/>Please ensure your buddycloud channel server is running at %s" % domain_url
+			message += "and if not, run<br/><br/><strong>sudo /etc/init.d/buddycloud-server"
+			message += " start</strong><br/><br/>to start your buddycloud channel server.<br/>"
+			message += "See more information at <a href='https://buddycloud.org/wiki/Install"
+			message += "#buddycloud_Channel_Server' target='_blank'>"
+			message += "https://buddycloud.org/wiki/Install#buddycloud_Channel_Server</a>!"
 	else:
 		status = 2
 

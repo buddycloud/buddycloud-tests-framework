@@ -11,4 +11,4 @@ from dns_utils import getAuthoritativeNameserver
 
 def testFunction(domain_url):
 
-	return performSRVLookup(domain_url, "_xmpp-server._tcp.channels.", "Buddycloud channel SRV record", "5269")
+	return performSRVLookup(domain_url, "_xmpp-server._tcp.channels.", "buddycloud channel SRV record", "5269")

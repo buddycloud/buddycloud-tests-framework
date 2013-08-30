@@ -36,10 +36,14 @@ def testFunction(domain_url):
 		status = 1
 		briefing = "Could not connect to all XMPP servers specified: "
 		briefing += "<strong>" + string.join(unreachable, " | ") + "</strong>"
-		message = "We could not connect to all XMPP servers you told us to look after!<br/>"
+		message = "We could not connect to all XMPP servers specified!<br/>"
 		message += "<strong><br/>" + string.join(unreachable, "<br/>") + "<br/></strong>"
-		message += "<br/>Please make sure your XMPP server with the buddycloud component"
-		message += " is up and running on the correct port and try again."
+		message += "<br/>Please make sure your XMPP server the buddycloud XMPP component"
+		message += " is up and running on the correct port and try again.<br/>"
+		message += "You might want to execute the command <br/><br/><strong>/etc/init.d/prosody "
+		message += "restart</strong><br/><br/> at domain %s." %domain_url
+		message += "See <a href='https://buddycloud.org/wiki/Install#Prosody_Setup' target='_blank'>"
+		message += "https://buddycloud.org/wiki/Install#Prosody_Setup</a> for more information."
 		return (status, briefing, message, None)
 
 	else:
@@ -52,15 +56,14 @@ def testFunction(domain_url):
 
 		if len(unreachable) != 0:
 
-			message += "<br/>But beware - we could NOT connect to the following XMPP servers"
-			message += " you told us to look after:<br/>"
+			message += "<br/>But beware - we could NOT connect to the following XMPP servers:<br/>"
 			message += "<strong><br/>" + string.join(unreachable, "<br/>") + "<br/></strong>"
 			message += "<br/>Be warned it might result in problems, if any of those "
-			message += "are meant to host a buddycloud component."
+			message += "are meant to host the buddycloud component."
 			message += " <br/>To be safe, be sure these are also up and running"
 			message += " on the correct port and try again."
 		else:
 			message += "<br/>Congratulations!! All XMPP servers specified are up and running properly."
-			message += "<br/>Now, we expect that at least one of them has a buddycloud component."
+			message += "<br/>Now, we expect that one of them has the buddycloud XMPP component."
 
 		return (status, briefing, message, None)
