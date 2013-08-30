@@ -176,7 +176,7 @@ def testFunction(domain_url):
 		briefing = "We found multiple correct API server TXT records!"
 		message = briefing + "<br/>"
 		message += "But really, you should have just one.<br/>"
-		message += "These are the records we found: <br/>"
+		message += "These are the records we found: <br/><br/>"
 
 	else:
 
@@ -184,7 +184,7 @@ def testFunction(domain_url):
 		briefing = "API server TXT record found: "
 		briefing += "<strong>%s</strong>" % classified_records['CORRECT'][0]['record']
 		message = "Congratulations! You have set up your API server "
-		message += "TXT record correctly.<br/>"
+		message += "TXT record correctly.<br/><br/>"
 
 	for record in classified_records.get('CORRECT', []):
 
