@@ -9,7 +9,7 @@ from domain_name_lookup import testFunction as domainNameLookup
 #installation_suite_dependencies
 from buddycloud_server_srv_lookup import testFunction as buddycloudChannelSRVLookup
 from xmpp_server_srv_lookup import testFunction as xmppServerServiceRecordLookup
-
+from xmpp_server_connection import testFunction as xmppServerConnection
 
 descriptions = {
 	'XMPP_CONNECTION_PROBLEM' : "A problem happened while we " +
@@ -146,6 +146,15 @@ def testFunction(domain_url):
 			message += "https://buddycloud.org/wiki/Install#buddycloud_Channel_Server</a>."
 	else:
 		status = 2
+
+		(sts, brf, mes, out) = xmppServerConnection(domain_url)
+		if ( sts != 0 ):
+
+			status = 1
+			message = briefing + "<br/>"
+			message += "Reason: <br/>"
+			message += mes
+			return (status, briefing, message, None)
 
 	return (status, briefing, message, None)
 
