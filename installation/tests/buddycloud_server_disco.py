@@ -6,6 +6,11 @@ from flask import Markup
 from domain_name_lookup import testFunction as domainNameLookup
 
 
+#installation_suite_dependencies
+from buddycloud_server_srv_lookup import testFunction as buddycloudChannelSRVLookup
+from xmpp_server_srv_lookup import testFunction as xmppServerServiceRecordLookup
+
+
 descriptions = {
 	'XMPP_CONNECTION_PROBLEM' : "A problem happened while we " +
 	"attempted to stablish a XMPP connection!<br/> Beware it is NOT a problem with the server at %s.",
@@ -101,6 +106,34 @@ def testFunction(domain_url):
 	elif ( classified_as == "SERVER_ERROR"
 	    or classified_as == "NOT_BUDDYCLOUD_ENABLED" ):
 		status = 1
+
+		(sts, brf, mes, out) = buddycloudChannelSRVLookup(domain_url)
+		if ( sts != 0 ):
+
+			message += "<br/>You need to set up a SRV record "
+			
+			(sts2, brf2, mes2, xmpp_server_names) = xmppServerServiceRecordLookup(domain_url)
+			if ( sts2 != 0 ):
+
+				message += "similar to the following:"
+				message += "<br/><br/><em>(assuming your XMPP server is called"
+				message += " <strong>bc.%s</strong>)</em><br/>" % domain_url
+				message += "<strong>_xmpp-server._tcp.channels." + domain_url + "."
+				message += "\tSRV\t5\t0\t5269\tbc.%s.</strong>" % domain_url
+
+			else:
+				message += "exactly like the following:"
+				
+				if ( len(xmpp_server_names) > 1 ):
+					message += " (only one of them)"
+
+				message += "<br/><br/>"
+
+				for xmpp_server in xmpp_server_names:
+
+					xmpp_server = xmpp_server['domain']
+					message += "<strong>_xmpp-server._tcp.channels.%s." %domain_url
+					message += "\tSRV\t5\t0\t5269\t%s.<br/><br/></strong>" %xmpp_server
 	else:
 		status = 2
 
