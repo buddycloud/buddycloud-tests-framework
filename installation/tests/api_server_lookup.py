@@ -131,7 +131,7 @@ def testFunction(domain_url):
 		status = 1
 		briefing = "We detected incorrect API server TXT records at domain"
 		briefing += " <strong>%s</strong>." % domain_url
-		message += "We detected you set up the following incorrect API"
+		message = "We detected you set up the following incorrect API"
 		message += " server TXT records.<br/>"
 		message += "They have problems: <br/><br/>"
 
