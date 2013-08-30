@@ -40,8 +40,8 @@ def testFunction(domain_url):
 		message += "<strong><br/>" + string.join(unreachable, "<br/>") + "<br/></strong>"
 		message += "<br/>Please make sure your XMPP server the buddycloud XMPP component"
 		message += " is up and running on the correct port and try again.<br/>"
-		message += "You might want to execute the command <br/><br/><strong>/etc/init.d/prosody "
-		message += "restart</strong><br/><br/> at domain %s." %domain_url
+		message += "If that's not the case, please execute the command: <br/><br/><strong>"
+		message += "sudo /etc/init.d/prosody restart</strong><br/><br/>"
 		message += "See <a href='https://buddycloud.org/wiki/Install#Prosody_Setup' target='_blank'>"
 		message += "https://buddycloud.org/wiki/Install#Prosody_Setup</a> for more information."
 		return (status, briefing, message, None)

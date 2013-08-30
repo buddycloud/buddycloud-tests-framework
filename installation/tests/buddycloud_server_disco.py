@@ -137,12 +137,13 @@ def testFunction(domain_url):
 
 		else:
 
-			message += "<br/>Please ensure your buddycloud channel server is running at %s" % domain_url
-			message += "and if not, run<br/><br/><strong>sudo /etc/init.d/buddycloud-server"
-			message += " start</strong><br/><br/>to start your buddycloud channel server.<br/>"
+			message += "<br/>Please ensure your buddycloud channel server is running "
+			message += "at <strong>%s</strong> and if that's not the case, run:<br/>" % domain_url
+			message += "<br/><strong>sudo /etc/init.d/buddycloud-server"
+			message += " start</strong><br/><br/>...to start your buddycloud channel server.<br/>"
 			message += "See more information at <a href='https://buddycloud.org/wiki/Install"
 			message += "#buddycloud_Channel_Server' target='_blank'>"
-			message += "https://buddycloud.org/wiki/Install#buddycloud_Channel_Server</a>!"
+			message += "https://buddycloud.org/wiki/Install#buddycloud_Channel_Server</a>."
 	else:
 		status = 2
 
