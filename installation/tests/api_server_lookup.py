@@ -123,20 +123,17 @@ def testFunction(domain_url):
 			classified_records[classified['type']] = []
 		classified_records[classified['type']].append(classified)
 
-	if len(classified_records.get('CORRECT', [])) == 0:
+
+	if ( len(classified_records.get('INFO_MISSING', [])) != 0
+	  or len(classified_records.get('MALFORMED', [])) != 0
+	  or len(classified_records.get('NOT_HTTPS', [])) != 0 ):
 
 		status = 1
-		briefing = "No correct API server TXT record found at "
-		briefing += "domain <strong>%s</strong>!<br/>" % domain_url
-		message = briefing
-
-		if ( len(classified_records.get('INFO_MISSING', [])) != 0
-		  or len(classified_records.get('MALFORMED', [])) != 0
-		  or len(classified_records.get('NOT_HTTPS', [])) != 0 ):
-
-			message += "We detected you set up the following API server"
-			message += " TXT records, though.<br/>"
-			message += "They have problems: <br/><br/>"
+		briefing = "We detected incorrect API server TXT records at domain"
+		briefing += " <strong>%s</strong>." % domain_url
+		message += "We detected you set up the following incorrect API"
+		message += " server TXT records.<br/>"
+		message += "They have problems: <br/><br/>"
 
 		for record in classified_records.get('INFO_MISSING', []):
 
@@ -159,12 +156,21 @@ def testFunction(domain_url):
 
 		message += "See <a href='https://buddycloud.org/wiki/Install#buddycloud_DNS' target='_blank'"
 		message += " >https://buddycloud.org/wiki/Install#buddycloud_DNS</a> for more information.<br/>"
+		return (status, briefing, message, None)
 
+	elif len(classified_records.get('CORRECT', [])) == 0:
+
+		status = 1
+		briefing = "No correct API server TXT record found at "
+		briefing += "domain <strong>%s</strong>!<br/>" % domain_url
+		message = briefing + "<br/>"
+		message += "See <a href='https://buddycloud.org/wiki/Install#buddycloud_DNS' target='_blank'"
+		message += " >https://buddycloud.org/wiki/Install#buddycloud_DNS</a> for more information.<br/>"
 		return (status, briefing, message, None)
 
 	elif len(classified_records.get('CORRECT', [])) > 1:
 
-		status = 2
+		status = 1
 		briefing = "We found multiple correct API server TXT records!"
 		message = briefing + "<br/>"
 		message += "But really, you should have just one.<br/>"
