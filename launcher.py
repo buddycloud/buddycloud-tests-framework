@@ -15,8 +15,15 @@ test_names = {}
 for i in range(len(test_entries)):
 	test_names[test_entries[i]['name']] = i
 
+import logging
+from log_utils import LogStream
+
+
+root_log_stream = LogStream()
+logging.basicConfig(level=logging.DEBUG, stream=root_log_stream)
 
 server = Flask(__name__)
+
 
 @server.route('/')
 def index():
@@ -43,12 +50,12 @@ def get_test_names():
 @server.route('/perform_test/<test_name>/<path:domain_url>')
 def perform_test(test_name=None, domain_url=None):
 
-	print "~about to execute test "+test_name+"~"
+	logging.info("~about to execute test "+test_name+"~")
 
 	current_dir = os.getcwd()
 	os.chdir("execution_context")
 
-	print "\t~changed to execution context~"
+	logging.info("~changed to execution context~")
 
 	try:
 
@@ -66,7 +73,7 @@ def perform_test(test_name=None, domain_url=None):
 
 		if error_msg != None:
 
-			print "\t~test doesn't exist~"
+			logging.info("~the test "+test_name+" doesn't exist~")
 
 			(exit_status, briefing, message, results) = 2, "Invalid test name!", error_msg, None
 			json_return['exit_status'] = exit_status
@@ -76,6 +83,8 @@ def perform_test(test_name=None, domain_url=None):
 		else:
 	
 			error_msg = None
+
+			root_log_stream.reset()
 
 			test_output = test_entries[test_names[test_name]]['test'](domain_url)
 
@@ -97,8 +106,6 @@ def perform_test(test_name=None, domain_url=None):
 
 			if error_msg != None:
 
-				print "\t~test is malformed~"
-
 				exit_status = 2
 				briefing = "Malformed test! Reason: " + error_msg
 				message = "This test failed because either it is malformed "
@@ -109,15 +116,22 @@ def perform_test(test_name=None, domain_url=None):
 				json_return['briefing'] = briefing
 				json_return['message'] = message
 
-			else:
+				logging.info("~the test "+test_name+" is malformed~")
 
-				print "\t~test performed successfully~"
+			else:
 
 				(exit_status, briefing, message, results) = test_output 
 			
 				json_return['exit_status'] = exit_status
 				json_return['briefing'] = briefing
+
+				if ( root_log_stream.getContent() != "" ):
+					message += "<br/><br><strong>Test Log:</strong><br/>"
+					message += root_log_stream.getContent()
+
 				json_return['message'] = message
+
+				logging.info("~the test "+test_name+" performed successfully~")
 
 		response = make_response(json.dumps(json_return), 200)
 		response.headers["Content-Type"] = "application/json"
@@ -125,7 +139,7 @@ def perform_test(test_name=None, domain_url=None):
 
 	except Exception, e:
 
-		print "\t~test failed unexpectedly: "+str(e)+"~"
+		logging.info("~the test "+test_name+" failed unexpectedly: "+str(e)+"~")
 		
 		json_return = { 'name' : test_name,
 				'exit_status' : 1,
@@ -140,7 +154,7 @@ def perform_test(test_name=None, domain_url=None):
 
 	finally:
 		
-		print "\t~leaving execution context~"
+		logging.info("~leaving execution context~")
 		os.chdir(current_dir)
 
 @server.route('/<path:domain_url>')
@@ -154,4 +168,7 @@ def start_tests_server(domain_url=None):
 if __name__ == "__main__":
 	
 	port = int(os.environ.get("PORT", 5000))
+
+	logging.info("~about to start protocol server~")
+
 	server.run(host="0.0.0.0", port=port, debug=True)

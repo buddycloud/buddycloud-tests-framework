@@ -3,6 +3,8 @@ import os, sys
 os.chdir("installation")
 sys.path.insert(0, "tests")
 
+import logging
+logger = logging.getLogger(__name__)
 
 class InstallationTest:
 
@@ -37,12 +39,14 @@ for test_name in config.xreadlines():
 		test_reference = getattr(import_module(test_name), "testFunction")
 		test_reference = InstallationTest(test_name, test_reference)
 	except ImportError:
-		print "Could not import test "+test_name+"!"
-		print "Test "+test_name+" does not exist. Ignoring this test..."
+		logger.info("~could not import test "+test_name+"!~")
+		logger.info("~the test "+test_name+" doesn't exist~")
+		logger.info("~ignoring this test "+test_name+"~")
 		problem_loading = True
-	except Exception, e:
-		print "Problem: "+str(e)
-		print "Error: "+test_name+" could not be loaded. Ignoring this test..."
+	except Exception as e:
+		logger.info("~could not import test "+test_name+"!~")
+		logger.info("~problem: "+str(e)+"~")
+		logger.info("~ignoring this test "+test_name+"~")
 		problem_loading = True
 
 	if problem_loading or test_reference == None:
