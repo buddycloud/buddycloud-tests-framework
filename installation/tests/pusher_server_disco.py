@@ -1,6 +1,4 @@
-import logging, string, sleekxmpp
-from xml.etree.ElementTree import tostring as strxml
-from flask import Markup
+import string, sleekxmpp
 
 #util_dependencies
 from domain_name_lookup import testFunction as domainNameLookup

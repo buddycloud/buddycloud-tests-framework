@@ -1,5 +1,5 @@
-import os, sys, json
-from flask import Flask, render_template, redirect, url_for, request, make_response
+import os, sys, json, string
+from flask import Flask, render_template, redirect, url_for, request, make_response, Markup
 
 sys.path.append(os.path.join(os.getcwd(), "suite_utils"))
 
@@ -128,7 +128,9 @@ def perform_test(test_name=None, domain_url=None):
 
 				if ( log_stream.getContent() != "" ):
 					message += "<br/><br><strong>Test Log:</strong><br/>"
-					message += log_stream.getContent()
+					logged_content = map(lambda x: Markup.escape(x).__str__(),
+							log_stream.getContent().split("<br/>"))
+					message += "<small>%s</small>" % string.join(logged_content, "<br/>")
 
 				json_return['message'] = message
 
