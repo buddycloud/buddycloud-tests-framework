@@ -19,8 +19,8 @@ import logging
 from log_utils import LogStream
 
 
-root_log_stream = LogStream()
-logging.basicConfig(level=logging.DEBUG, stream=root_log_stream)
+log_stream = LogStream()
+logging.basicConfig(level=logging.DEBUG, stream=log_stream)
 
 server = Flask(__name__)
 
@@ -84,9 +84,10 @@ def perform_test(test_name=None, domain_url=None):
 	
 			error_msg = None
 
-			root_log_stream.reset()
-
+			log_stream.reset()
+			log_stream.setDelimiter("<br/>")
 			test_output = test_entries[test_names[test_name]]['test'](domain_url)
+			log_stream.setDelimiter("\n")
 
 			if ( not (isinstance(test_output, tuple) and len(test_output) == 4) ):
 			
@@ -125,9 +126,9 @@ def perform_test(test_name=None, domain_url=None):
 				json_return['exit_status'] = exit_status
 				json_return['briefing'] = briefing
 
-				if ( root_log_stream.getContent() != "" ):
+				if ( log_stream.getContent() != "" ):
 					message += "<br/><br><strong>Test Log:</strong><br/>"
-					message += root_log_stream.getContent()
+					message += log_stream.getContent()
 
 				json_return['message'] = message
 
