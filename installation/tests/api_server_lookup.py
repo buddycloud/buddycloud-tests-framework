@@ -1,6 +1,5 @@
 import dns.resolver, string
 from dns.resolver import NoAnswer, NXDOMAIN
-from sleekxmpp import ClientXMPP
 
 #util_dependencies
 from domain_name_lookup import testFunction as domainNameLookup
