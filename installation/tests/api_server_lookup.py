@@ -82,7 +82,6 @@ def testFunction(domain_url):
 	if ( status != 0 ):
 		return (status, briefing, message, None)
 
-	answers = []
 	query_for_TXT_record = None
 
 	try:

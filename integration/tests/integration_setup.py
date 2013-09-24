@@ -8,10 +8,13 @@ from ssl_adapter import SSLAdapter
 
 #installation_suite_dependencies
 from api_server_lookup import testFunction as apiLookup
+from api_server_connection import testFunction as apiConnection
 
 
-TEST_USER_EMAIL = 'email@email.com'
-TEST_USER_PASSWORD = 'passwd' #Those are not actually used for authentication
+TEST_USERNAMES = [ "1st_test_user", "2nd_test_user", "3rd_test_user", "4th_test_user", "5th_test_user" ]
+TEST_USER_EMAIL = 'some@email.com'
+TEST_USER_PASSWORD = 'a-password' #Those are not actually used for authentication
+TEST_CHANNEL_NAME = "test_topic_channel"
 
 def user_exists(domain_url, api_location, username):
 
@@ -131,7 +134,7 @@ def subscribe_to_channel(domain_url, api_location, username, channel_name, subsc
 		channel_name + "@topics." + domain_url + "/posts" : subscription
 	}
 
-	req = Request('POST', api_location + "/subscribed", data=json.dumps(data), headers=headers)
+	req = Request('POST', api_location + "subscribed", data=json.dumps(data), headers=headers)
 	r = req.prepare()
 
 	s = Session()
@@ -154,7 +157,7 @@ def is_subscribed_to_channel(domain_url, api_location, username, channel_name, s
 		'Authorization' : 'Basic ' + base64.b64encode(username+":"+TEST_USER_PASSWORD)
 	}
 
-	req = Request('GET', api_location + "/subscribed", headers=headers)
+	req = Request('GET', api_location + "subscribed", headers=headers)
 	r = req.prepare()
 
 	s = Session()
@@ -183,6 +186,36 @@ def is_subscribed_to_channel(domain_url, api_location, username, channel_name, s
 			message = briefing
 			return (0, briefing, message, None)
 
+def change_subscriber_role(domain_url, api_location, owner_username, username, channel_name, subscription):
+
+	headers = {
+		'Accept' : '*/*',
+		'Accept-Encoding' : 'gzip,deflate,sdch',
+		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
+		'Cache-Control' : 'no-cache',
+		'Connection' : 'keep-alive',
+		'Authorization' : 'Basic ' + base64.b64encode(owner_username+":"+TEST_USER_PASSWORD)
+	}
+
+	data = {
+		username + "@" + domain_url : subscription
+	}
+
+	req = Request('POST', api_location + channel_name + "@topics." + domain_url + "/subscribers/posts", data=json.dumps(data), headers=headers)
+	r = req.prepare()
+
+	s = Session()
+	s.mount("https://", SSLAdapter("TLSv1"))
+
+	resp = s.send(r, verify=False)
+
+	if (not resp.ok):
+
+		status = 1
+		briefing = "Onwer (%s) of channel (%s) could not promote subscriber (%s) to %s." % (owner_username + "@" + domain_url, channel_name, username + "@" + domain_url, subscription)
+		message = briefing
+		return (0, briefing, message, None)
+
 def testFunction(domain_url):
 
 	(status, briefing, message, output) = domainNameLookup(domain_url)
@@ -191,7 +224,7 @@ def testFunction(domain_url):
 
 	#First of all, let's find the API server
 
-	status, briefing, message, answers = apiLookup(domain_url)
+	status, briefing, message, data = apiLookup(domain_url)
 	if ( status != 0 ):
 		status = 2
 		briefing = "This test was skipped because previous test <strong>api_server_lookup</strong> has failed.<br/>"
@@ -200,53 +233,20 @@ def testFunction(domain_url):
 		new_message += "<br/>" + message
 		return (status, briefing, new_message, None)
 
-	if ( len(answers) == 0 ):
+	status, briefing, message, output = apiConnection(domain_url)
+	if ( status != 0 ):
+		status = 2
+		briefing = "This test was skipped because previous test <strong>api_server_connection</strong> has failed.<br/>"
+		new_message = briefing
+		new_message = "Reason:<br/>"
+		new_message += "<br/>" + message
+		return (status, briefing, new_message, None)
 
-		briefing = "No API server TXT record found!"
-		status = 1
-		message = "We could not find your API server TXT record!"
-		message += "You must setup your DNS to point to the API server endpoint using a TXT record similat to the one below: "
-		message += "<br/><br/>_buddycloud-api._tcp.EXAMPLE.COM.          IN TXT \"v=1.0\" \"host=buddycloud.EXAMPLE.COM\" \"protocol=https\" \"path=/api\" \"port=443\""
-		return (status, briefing, message, None)
+	api_location = "%(protocol)s://%(domain)s%(path)s/" % data
 
-	api_location = answers[0]['protocol'] + "://" + answers[0]['domain'] + answers[0]['path'] + "/"
+	# Then, create a user channel for each of the test usernames, if that does not exist yet.
 
-	# Then, read or create a file with 5 different test usernames in the format test_user_<integer>.
-
-	test_usernames = []
-	test_channel_name = ""
-
-	try:
-
-		f = open("setup_test_usernames", 'r')
-		for test_username in f.xreadlines():
-		
-			test_usernames.append(test_username.strip())
-
-		g = open("setup_test_channel_name", 'r')
-		test_channel_name = g.read().strip()
-
-	except:
-
-		f = open("setup_test_usernames", 'w')
-		for i in range(5):
-			
-			test_username = "test_user_" + str(random()).split(".")[1]
-			test_usernames.append(test_username+"\n")
-
-		f.writelines(test_usernames)
-
-		g = open("setup_test_channel_name", 'w')
-		test_channel_name = "test_channel_" + str(random()).split(".")[1]
-		g.write(test_channel_name+"\n")
-
-	finally:
-		f.close()
-		g.close()
-
-	# Then, create a user channel for each of these usernames, if that does not exist yet.
-
-	for test_username in test_usernames:
+	for test_username in TEST_USERNAMES:
 
 		test_username = test_username.strip()
 
@@ -259,24 +259,23 @@ def testFunction(domain_url):
 			return (status, briefing, message, None)
 
 
-	# Then, have user[1] create a topics channel. Assert he is a producer of that channel.
+	# Then, have user[1] create a topics channel. Assert he is the owner of that channel.
 
-	test_channel_name = test_channel_name.strip()
-
-	if not create_topic_channel(domain_url, api_location, test_usernames[0], test_channel_name) :
+	if not create_topic_channel(domain_url, api_location, TEST_USERNAMES[0], TEST_CHANNEL_NAME) :
 		status = 1
-		briefing = "Could not create topic channel named " + test_channel_name + "@topics." + domain_url + "."
+		briefing = "Could not create topic channel named " + TEST_CHANNEL_NAME + "@topics." + domain_url + "."
 		message = briefing
 		return (status, briefing, message, None)
 
-	output = is_subscribed_to_channel(domain_url, api_location, test_usernames[0], test_channel_name, "owner")
+	output = is_subscribed_to_channel(domain_url, api_location, TEST_USERNAMES[0], TEST_CHANNEL_NAME, "owner")
 	if ( output[0] != 0 ):
 		return output
 
 	# Then, have user[2] join the topic channel. Have user[1] make user[2] moderator of that channel. Assert user[2] is a moderator of that channel.	
 
-	subscribe_to_channel(domain_url, api_location, test_usernames[1], test_channel_name, "publisher")
-	output = is_subscribed_to_channel(domain_url, api_location, test_usernames[1], test_channel_name, "publisher")
+	subscribe_to_channel(domain_url, api_location, TEST_USERNAMES[1], TEST_CHANNEL_NAME, "publisher")
+	change_subscriber_role(domain_url, api_location, TEST_USERNAMES[0], TEST_USERNAMES[1], TEST_CHANNEL_NAME, "moderator")
+	output = is_subscribed_to_channel(domain_url, api_location, TEST_USERNAMES[1], TEST_CHANNEL_NAME, "moderator")
 	if ( output[0] != 0 ):
 		return output
 
@@ -284,26 +283,28 @@ def testFunction(domain_url):
 
 	# Then, have user[3] join the topic channel. Have user[1] give posting permission to user[3]. Assert user[3] is a follower+post of that channel.
 
-	subscribe_to_channel(domain_url, api_location, test_usernames[2], test_channel_name, "publisher")
-	output = is_subscribed_to_channel(domain_url, api_location, test_usernames[2], test_channel_name, "publisher")
+	subscribe_to_channel(domain_url, api_location, TEST_USERNAMES[2], TEST_CHANNEL_NAME, "publisher")
+	change_subscriber_role(domain_url, api_location, TEST_USERNAMES[0], TEST_USERNAMES[2], TEST_CHANNEL_NAME, "publisher")
+	output = is_subscribed_to_channel(domain_url, api_location, TEST_USERNAMES[2], TEST_CHANNEL_NAME, "publisher")
 	if ( output[0] != 0 ):
 		return output
 
 	# Then, have user[4] join the topic channel. Assert user[4] is a follower of that channel.
 
-	subscribe_to_channel(domain_url, api_location, test_usernames[3], test_channel_name, "member")
-	output = is_subscribed_to_channel(domain_url, api_location, test_usernames[3], test_channel_name, "member")
+	subscribe_to_channel(domain_url, api_location, TEST_USERNAMES[3], TEST_CHANNEL_NAME, "member")
+	output = is_subscribed_to_channel(domain_url, api_location, TEST_USERNAMES[3], TEST_CHANNEL_NAME, "member")
 	if ( output[0] != 0 ):
 		return output
 
 	# Then, have user[5] join the topic channel. Have user[1] ban user[5] in that channel. Assert user[5] is banned in that channel.
 
-	subscribe_to_channel(domain_url, api_location, test_usernames[4], test_channel_name, "member")
-	output = is_subscribed_to_channel(domain_url, api_location, test_usernames[4], test_channel_name, "member")
+	subscribe_to_channel(domain_url, api_location, TEST_USERNAMES[4], TEST_CHANNEL_NAME, "member")
+	change_subscriber_role(domain_url, api_location, TEST_USERNAMES[0], TEST_USERNAMES[4], TEST_CHANNEL_NAME, "outcast")
+	output = is_subscribed_to_channel(domain_url, api_location, TEST_USERNAMES[4], TEST_CHANNEL_NAME, "outcast")
 	if ( output[0] != 0 ):
 		return output
 
-	#TODO have this user test_usernames[4]@buddycloud.org be banned from this topic channel test_channel_name@topics.buddycloud.org
+	#TODO have this user TEST_USERNAMES[4]@buddycloud.org be banned from this topic channel TEST_CHANNEL_NAME@topics.buddycloud.org
 
 	briefing = "Integration test suite setup procedures executed properly. Ready to run integration tests."
 	message = briefing

@@ -1,4 +1,4 @@
-import os, sys, json, string
+import os, sys, json, string, traceback
 from flask import Flask, render_template, redirect, url_for, request, make_response, Markup
 
 sys.path.append(os.path.join(os.getcwd(), "suite_utils"))
@@ -142,12 +142,29 @@ def perform_test(test_name=None, domain_url=None):
 
 	except Exception, e:
 
-		logging.info("~the test "+test_name+" failed unexpectedly: "+str(e)+"~")
+		excpt = Markup.escape(str(type(e))).__str__() + ": " + str(e)
+
+		logging.info("~the test "+test_name+" failed unexpectedly: "+excpt+"~")
 		
+#		traceback_info = []
+#		for traceback_line in traceback.format_stack():
+#			traceback_info.append(traceback_line)
+#		traceback_info.reverse()
+		
+#		logging.info("~Traceback (most recent call last):~")
+		
+#		for traceback_line in traceback_info:
+#			logging.info("~%s~" % traceback_line)
+
+		message = "This test failed pretty badly.<br/>It raised an unexpected exception: "+excpt+"!<br/>"
+#		message += "Traceback (most recent call last):<br/>"
+#		message += string.join(traceback_info, "<br/>")
+		message += "</br>Please fix this problem before issuing this test again."
+
 		json_return = { 'name' : test_name,
 				'exit_status' : 1,
 				'briefing' : "Unexpected exception raised!!",
-				'message' : "This test failed pretty badly.<br/>It raised an unexpected exception: "+str(e)+"!</br>Please fix this problem before issuing this test again.",
+				'message' : message,
 				'output' : None
 		}
 
