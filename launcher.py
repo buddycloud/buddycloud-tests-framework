@@ -1,4 +1,4 @@
-import os, sys, json, string, traceback
+import os, sys, json, string, linecache
 from flask import Flask, render_template, redirect, url_for, request, make_response, Markup
 
 sys.path.append(os.path.join(os.getcwd(), "suite_utils"))
@@ -140,25 +140,21 @@ def perform_test(test_name=None, domain_url=None):
 		response.headers["Content-Type"] = "application/json"
 		return response
 
-	except Exception, e:
+	except Exception as e:
 
-		excpt = Markup.escape(str(type(e))).__str__() + ": " + str(e)
+		e_type, e_value, e_trace = sys.exc_info()
+		e_type = Markup.escape(str(type(e))).__str__()
+		filename = e_trace.tb_frame.f_code.co_filename
+		line_no = e_trace.tb_lineno
+		line_content = linecache.getline(filename, line_no)
+		exception_info = "<strong>%s<br/>\"%s\"</strong><br/>" % (e_type, e_value)
 
-		logging.info("~the test "+test_name+" failed unexpectedly: "+excpt+"~")
-		
-#		traceback_info = []
-#		for traceback_line in traceback.format_stack():
-#			traceback_info.append(traceback_line)
-#		traceback_info.reverse()
-		
-#		logging.info("~Traceback (most recent call last):~")
-		
-#		for traceback_line in traceback_info:
-#			logging.info("~%s~" % traceback_line)
+		#TODO get correct filename, file_no and file_content, maybe have it propagate all the way through the framework layers"
+		#at <em>%s</em>:<em>%d</em>: <small>\"%s\"</small>" % (e_type, e_value, filename, line_no, line_content)
 
-		message = "This test failed pretty badly.<br/>It raised an unexpected exception: "+excpt+"!<br/>"
-#		message += "Traceback (most recent call last):<br/>"
-#		message += string.join(traceback_info, "<br/>")
+		logging.info("~the test "+test_name+" failed unexpectedly: "+exception_info+"~")
+
+		message = "This test failed pretty badly.<br/>It raised an unexpected exception:<br/><br/>"+exception_info+"<br/>"
 		message += "</br>Please fix this problem before issuing this test again."
 
 		json_return = { 'name' : test_name,
