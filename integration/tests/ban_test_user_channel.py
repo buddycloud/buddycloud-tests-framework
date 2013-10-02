@@ -6,14 +6,14 @@ MEMBER_USERNAME = "test_user_channel_follower4"
 FOLLOWED_USER_CHANNELS = [ "test_user_channel_open", "test_user_channel_closed" ]
 FOLLOWED_TOPIC_CHANNEL = "test_topic_channel_open"
 
-CLASSIFIED = { 'SUBSCRIBED' : [],
-	'PROBLEM_SUBSCRIBING_ASKING' : [],
-	'PROBLEM_SUBSCRIBING_APPROVING' : [],
-	'PROBLEM_CHANGING_SUBSCRIBER_ROLE' : [],
-	'PROBLEM_DID_NOT_BAN' : [],
-	'ALREADY_BANNED' : []}
-
 def testFunction(domain_url):
+
+	CLASSIFIED = { 'SUBSCRIBED' : [],
+		'PROBLEM_SUBSCRIBING_ASKING' : [],
+		'PROBLEM_SUBSCRIBING_APPROVING' : [],
+		'PROBLEM_CHANGING_SUBSCRIBER_ROLE' : [],
+		'PROBLEM_DID_NOT_BAN' : [],
+		'ALREADY_BANNED' : []}
 
 	api_location = findAPILocation(domain_url)[3]
 

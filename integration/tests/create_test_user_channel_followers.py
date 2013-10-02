@@ -4,9 +4,9 @@ from find_api_location import findAPILocation
 
 TEST_USERNAME = "test_user_channel_follower"
 
-CLASSIFIED = { 'EXISTED' : [], 'CREATED' : [], 'PROBLEM' : [] }
-
 def testFunction(domain_url):
+
+	CLASSIFIED = { 'EXISTED' : [], 'CREATED' : [], 'PROBLEM' : [] }
 
 	api_location = findAPILocation(domain_url)[3]
 
@@ -48,7 +48,7 @@ def testFunction(domain_url):
 
 	if ( len(CLASSIFIED.get('CREATED', [])) > 0 ):
 
-		briefing += "<strong>%s</strong>" % string.join(CLASSIFIED['CREATED'], " | ")
+		briefing += "| <strong>%s</strong>" % string.join(CLASSIFIED['CREATED'], " | ")
 		message += "<br/><br/>The following user channels were successfully created: <br/><br/>"
 		message += "<strong>%s</strong>" % string.join(CLASSIFIED['CREATED'], "<br/>")
 

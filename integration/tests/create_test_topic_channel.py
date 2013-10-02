@@ -5,9 +5,9 @@ from find_api_location import findAPILocation
 TEST_TOPIC_CHANNEL_NAME = "test_topic_channel_open"
 TEST_TOPIC_CHANNEL_OWNER_USERNAME = "test_user_channel_open"
 
-CLASSIFIED = { 'EXISTED' : [], 'CREATED' : [], 'PROBLEM' : [] }
-
 def testFunction(domain_url):
+
+	CLASSIFIED = { 'EXISTED' : [], 'CREATED' : [], 'PROBLEM' : [] }
 
 	api_location = findAPILocation(domain_url)[3]
 
