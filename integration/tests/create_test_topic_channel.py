@@ -2,8 +2,8 @@ import string
 from api_utils import topic_channel_exists, create_topic_channel
 from find_api_location import findAPILocation
 
-TEST_TOPIC_CHANNEL_NAME = "test_topic_channel"
-TEST_TOPIC_CHANNEL_OWNER_USERNAME = "1st_test_user"
+TEST_TOPIC_CHANNEL_NAME = "test_topic_channel_open"
+TEST_TOPIC_CHANNEL_OWNER_USERNAME = "test_user_channel_open"
 
 CLASSIFIED = { 'EXISTED' : [], 'CREATED' : [], 'PROBLEM' : [] }
 
@@ -33,17 +33,19 @@ def testFunction(domain_url):
 	
 	else:
 
-		briefing = "Could successfully assert creation or existance of some topic channels."
+		briefing = "Could successfully assert creation or existance of some topic channels: "
 		message = "We could assert that topic channels which will be used later for testing purposes were either created "
 		message += "successfully or already existed."
 
 	if ( len(CLASSIFIED.get('EXISTED', [])) > 0 ):
 
+		briefing += "<strong>%s</strong>" % string.join(CLASSIFIED['EXISTED'], " | ")
 		message += "<br/><br/>The following topic channels already existed: <br/><br/>"
 		message += "<strong>%s</strong>" % string.join(CLASSIFIED['EXISTED'], "<br/>")
 
 	if ( len(CLASSIFIED.get('CREATED', [])) > 0 ):
 
+		briefing += "<strong>%s</strong>" % string.join(CLASSIFIED['CREATED'], " | ")
 		message += "<br/><br/>The following topic channels were successfully created: <br/><br/>"
 		message += "<strong>%s</strong>" % string.join(CLASSIFIED['CREATED'], "<br/>")
 

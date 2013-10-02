@@ -148,9 +148,9 @@ def perform_test(test_name=None, domain_url=None):
 		line_no = e_trace.tb_lineno
 		line_content = linecache.getline(filename, line_no)
 		exception_info = "<strong>%s<br/>\"%s\"</strong><br/>" % (e_type, e_value)
-
-		#TODO get correct filename, file_no and file_content, maybe have it propagate all the way through the framework layers"
 		#at <em>%s</em>:<em>%d</em>: <small>\"%s\"</small>" % (e_type, e_value, filename, line_no, line_content)
+		
+		#TODO get correct filename, file_no and file_content, maybe have it propagate all the way through the framework layers"
 
 		logging.info("~the test "+test_name+" failed unexpectedly: "+exception_info+"~")
 
