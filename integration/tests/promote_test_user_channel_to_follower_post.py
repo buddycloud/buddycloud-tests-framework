@@ -14,7 +14,9 @@ def testFunction(domain_url):
 		'PROBLEM_CHANGING_SUBSCRIBER_ROLE' : [],
 		'PROBLEM_DID_NOT_PROMOTE' : []}
 
-	api_location = findAPILocation(domain_url)[3]
+	(status, briefing, message, api_location) = findAPILocation(domain_url)
+	if status != 0:
+		return (status, briefing, message, None)
 
 	for followed_channel in FOLLOWED_USER_CHANNELS:
 

@@ -9,7 +9,9 @@ def testFunction(domain_url):
 
 	CLASSIFIED = { 'EXISTED' : [], 'CREATED' : [], 'PROBLEM' : [] }
 
-	api_location = findAPILocation(domain_url)[3]
+	(status, briefing, message, api_location) = findAPILocation(domain_url)
+	if status != 0:
+		return (status, briefing, message, None)
 
 	if topic_channel_exists(domain_url, api_location, TEST_TOPIC_CHANNEL_NAME):
 		CLASSIFIED['EXISTED'].append(TEST_TOPIC_CHANNEL_NAME + "@topics." + domain_url)

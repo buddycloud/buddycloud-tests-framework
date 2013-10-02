@@ -8,7 +8,9 @@ def testFunction(domain_url):
 
 	CLASSIFIED = { 'EXISTED' : [], 'CREATED' : [], 'PROBLEM' : [] }
 
-	api_location = findAPILocation(domain_url)[3]
+	(status, briefing, message, api_location) = findAPILocation(domain_url)
+	if status != 0:
+		return (status, briefing, message, None)
 
 	for i in range(1, 5):
 

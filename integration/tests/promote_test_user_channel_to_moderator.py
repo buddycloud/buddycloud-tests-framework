@@ -14,7 +14,9 @@ def testFunction(domain_url):
 		'PROBLEM_CHANGING_SUBSCRIBER_ROLE' : [],
 		'PROBLEM_DID_NOT_PROMOTE' : []}
 
-	api_location = findAPILocation(domain_url)[3]
+	(status, briefing, message, api_location) = findAPILocation(domain_url)
+	if status != 0:
+		return (status, briefing, message, None)
 
 	for moderated_channel in MODERATED_USER_CHANNELS:
 
