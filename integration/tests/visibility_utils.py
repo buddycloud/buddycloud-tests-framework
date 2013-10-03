@@ -44,6 +44,21 @@ def subscribers_access(api_location, username, target_channel_name):
 
 	return status
 
+#HTTP_API endpoint: /:channel/subscribers/posts
+def banned_subscribers_access(api_location, username, target_channel_name):
+
+	(status, response) = prepare_and_send_request('GET', "%s%s/subscribers/posts" % (api_location,
+		target_channel_name), authorization=username)
+
+	if status:
+
+		response = json.loads(response.content)
+
+		for jid in response.keys():
+			if response[jid] == 'outcast':
+				return True
+	return False
+
 #HTTP_API endpoint: /subscribed
 def subscribed_to_access(api_location, username, target_channel_name):
 
@@ -64,6 +79,7 @@ VISIBILITY_TESTS = {
 	'MOOD_STATUS_ACCESS' 		: ( mood_status_access, "Access to channel mood status" ),
 	'POSTS_READ_ACCESS'		: ( posts_read_access, "Read access to channel posts" ),
 	'SUBSCRIBERS_ACCESS'		: ( subscribers_access, "Access to channel subscribers list" ),
+	'BANNED_SUBSCRIBERS_ACCESS'	: ( banned_subscribers_access, "Access to channel banned subscribers list" ),
 	'SUBSCRIBED_TO_ACCESS'		: ( subscribed_to_access, "Access to channel outside roles" ),
 	'GEOLOC_ACCESS'			: ( geoloc_access, "Access to channel geolocation" )
 
@@ -93,14 +109,12 @@ def performVisibilityTests(domain_url, username, expected_results):
 			else:
 				veredict = "%s (%s)" % (target_channel_name, "should have access")
 				actual_results_match_expected_results[test][False].append(veredict)
-				print veredict
 				status = 1
 
 		for target_channel_name in expected_results[test].get(False, []):
 
 			if VISIBILITY_TESTS[test][0](api_location, username, target_channel_name):
 				veredict = "%s (%s)" % (target_channel_name, "should not have access")
-				print veredict
 				actual_results_match_expected_results[test][False].append(veredict)
 				status = 1
 			else:

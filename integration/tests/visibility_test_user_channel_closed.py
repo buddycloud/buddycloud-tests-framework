@@ -7,6 +7,7 @@ def testFunction(domain_url):
 		'MOOD_STATUS_ACCESS'	: { True : ["test_user_channel_closed@" + domain_url] },
 		'POSTS_READ_ACCESS'	: { True : ["test_user_channel_closed@" + domain_url] },
 		'SUBSCRIBERS_ACCESS'	: { True : ["test_user_channel_closed@" + domain_url] },
+		'BANNED_SUBSCRIBERS_ACCESS' : { True : ["test_user_channel_closed@" + domain_url] },
 		'SUBSCRIBED_TO_ACCESS'	: { True : ["test_user_channel_closed@" + domain_url] }#,
 #		'GEOLOC_ACCESS'		: { True : ["test_user_channel_closed@" + domain_url] }
 	}
