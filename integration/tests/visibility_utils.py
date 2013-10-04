@@ -105,7 +105,8 @@ def performVisibilityTests(domain_url, username, expected_results):
 		for target_channel_name in expected_results[test].get(True, []):
 
 			if VISIBILITY_TESTS[test][0](api_location, username, target_channel_name):
-				actual_results_match_expected_results[test][True].append(target_channel_name)
+				veredict = "%s (%s)" % (target_channel_name, "had access, as expected")
+				actual_results_match_expected_results[test][True].append(veredict)
 			else:
 				veredict = "%s (%s)" % (target_channel_name, "should have access")
 				actual_results_match_expected_results[test][False].append(veredict)
@@ -118,21 +119,34 @@ def performVisibilityTests(domain_url, username, expected_results):
 				actual_results_match_expected_results[test][False].append(veredict)
 				status = 1
 			else:
-				actual_results_match_expected_results[test][True].append(target_channel_name)
+				veredict = "%s (%s)" % (target_channel_name, "didn't have access, as expected")
+				actual_results_match_expected_results[test][True].append(veredict)
 
 	if status == 0:
-		partial_report = "Every visibility test had the expected results!<br/>"
-		show_problems_only = False
+		partial_report = "<br/>Every visibility test had the expected results!<br/>"
 	else:
-		partial_report = "Not all visibility tests had the expected results!<br/>"
-		show_problems_only = True
+		partial_report = "<br/>Not all visibility tests had the expected results!<br/>"
 
 	for test in actual_results_match_expected_results.keys():
 
-		if len(actual_results_match_expected_results[test][not show_problems_only]) == 0:
+		if len(actual_results_match_expected_results[test][(status == 0)]) == 0:
 			continue
 
 		partial_report += "<br/><em>%s</em>:<br/><strong>%s</strong>" % (VISIBILITY_TESTS[test][1],
-				string.join(actual_results_match_expected_results[test][not show_problems_only], "<br/>"))
+				string.join(actual_results_match_expected_results[test][(status == 0)], "<br/>"))
+
+	if (status != 0):
+
+		partial_report += "<br/><br/><small>The following visibility tests were successful:<br/>"
+
+		for test in actual_results_match_expected_results.keys():
+
+			if len(actual_results_match_expected_results[test][(status != 0)]) == 0:
+				continue
+
+			partial_report += "<br/><em>%s</em>:<br/><strong>%s</strong>" % (VISIBILITY_TESTS[test][1],
+					string.join(actual_results_match_expected_results[test][(status != 0)], "<br/>"))
+
+		partial_report += "</small>"
 
 	return (status, partial_report)
