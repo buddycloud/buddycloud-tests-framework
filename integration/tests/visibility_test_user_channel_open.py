@@ -7,8 +7,8 @@ def testFunction(domain_url):
 		'MOOD_STATUS_ACCESS'	: { True : ["test_user_channel_open@" + domain_url] },
 		'POSTS_READ_ACCESS'	: { True : ["test_user_channel_open@" + domain_url, "test_topic_channel_open@topics." + domain_url] },
 		'SUBSCRIBERS_ACCESS'	: { True : ["test_user_channel_open@" + domain_url, "test_topic_channel_open@topics." + domain_url] },
-		'BANNED_SUBSCRIBERS_ACCESS' : { True : ["test_user_channel_open@" + domain_url] },
-		'SUBSCRIBED_TO_ACCESS'	: { True : ["test_user_channel_open@" + domain_url] }#,
+		'BANNED_SUBSCRIBERS_ACCESS' : { True : ["test_user_channel_open@" + domain_url] }
+#		'SUBSCRIBED_TO_ACCESS'	: { True : ["test_user_channel_open@" + domain_url] },
 #		'GEOLOC_ACCESS'		: { True : ["test_user_channel_open@" + domain_url] }
 	}
 

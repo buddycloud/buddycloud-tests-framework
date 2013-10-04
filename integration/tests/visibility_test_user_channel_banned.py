@@ -44,15 +44,15 @@ def testFunction(domain_url):
 			"test_topic_channel_open@topics." + domain_url,
 			"test_user_channel_closed@" + domain_url
 			]
-		},
-		'SUBSCRIBED_TO_ACCESS'	: {
-			True : [
-			"test_user_channel_open@" + domain_url
-			],
-			False : [
-			"test_user_channel_closed@" + domain_url
-			]
 		}#,
+#		'OUTSIDE_ROLES_ACCESS'	: {
+#			True : [
+#			"test_user_channel_open@" + domain_url
+#			],
+#			False : [
+#			"test_user_channel_closed@" + domain_url
+#			]
+#		},
 #		'GEOLOC_ACCESS'		: {
 #			False : [
 #			"test_user_channel_open@" + domain_url,

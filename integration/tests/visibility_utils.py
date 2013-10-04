@@ -90,7 +90,7 @@ def banned_subscribers_access(api_location, username, target_channel_name):
 	return False
 
 #HTTP_API endpoint: /subscribed
-def subscribed_to_access(api_location, username, target_channel_name):
+def outside_roles_access(api_location, username, target_channel_name):
 
 	if username != None:
 
@@ -123,7 +123,7 @@ VISIBILITY_TESTS = {
 	'POSTS_READ_ACCESS'		: ( posts_read_access, "Read access to channel posts" ),
 	'SUBSCRIBERS_ACCESS'		: ( subscribers_access, "Access to channel subscribers list" ),
 	'BANNED_SUBSCRIBERS_ACCESS'	: ( banned_subscribers_access, "Access to channel banned subscribers list" ),
-	'SUBSCRIBED_TO_ACCESS'		: ( subscribed_to_access, "Access to channel outside roles" ),
+	'OUTSIDE_ROLES_ACCESS'		: ( outside_roles_access, "Access to channel outside roles" ),
 	'GEOLOC_ACCESS'			: ( geoloc_access, "Access to channel geolocation" )
 
 }
@@ -180,7 +180,7 @@ def performVisibilityTests(domain_url, username, expected_results):
 
 	if (status != 0):
 
-		partial_report += "<br/><br/><small>The following visibility tests were successful:<br/>"
+		partial_report += "<br/><br/><span class='muted'>The following visibility tests were successful:<br/>"
 
 		for test in actual_results_match_expected_results.keys():
 
@@ -190,6 +190,6 @@ def performVisibilityTests(domain_url, username, expected_results):
 			partial_report += "<br/><em>%s</em>:<br/><strong>%s</strong>" % (VISIBILITY_TESTS[test][1],
 					string.join(actual_results_match_expected_results[test][(status != 0)], "<br/>"))
 
-		partial_report += "</small>"
+		partial_report += "</span>"
 
 	return (status, partial_report)
