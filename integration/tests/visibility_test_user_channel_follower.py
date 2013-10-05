@@ -6,27 +6,27 @@ def testFunction(domain_url):
 		'ALL_METADATA_ACCESS'	: {
 			True : [
 			"test_user_channel_open@" + domain_url,
-			"test_user_channel_closed@" + domain_url,
+			"test_user_channel_authorized@" + domain_url,
 			"test_topic_channel_open@topics." + domain_url
 			]
 		},
 		'MOOD_STATUS_ACCESS'	: {
 			True : [
 			"test_user_channel_open@" + domain_url,
-			"test_user_channel_closed@" + domain_url
+			"test_user_channel_authorized@" + domain_url
 			]
 		},
 		'POSTS_READ_ACCESS'	: {
 			True : [
 			"test_user_channel_open@" + domain_url,
-			"test_user_channel_closed@" + domain_url,
+			"test_user_channel_authorized@" + domain_url,
 			"test_topic_channel_open@topics." + domain_url
 			]
 		},
 		'SUBSCRIBERS_ACCESS'	: {
 			True : [
 			"test_user_channel_open@" + domain_url,
-			"test_user_channel_closed@" + domain_url,
+			"test_user_channel_authorized@" + domain_url,
 			"test_topic_channel_open@topics." + domain_url
 			]
 		},
@@ -34,19 +34,19 @@ def testFunction(domain_url):
 			False : [
 			"test_user_channel_open@" + domain_url,
 			"test_topic_channel_open@topics." + domain_url,
-			"test_user_channel_closed@" + domain_url
+			"test_user_channel_authorized@" + domain_url
 			]
 		}#,
 #		'OUTSIDE_ROLES_ACCESS'	: {
 #			True : [
 #			"test_user_channel_open@" + domain_url,
-#			"test_user_channel_closed@" + domain_url
+#			"test_user_channel_authorized@" + domain_url
 #			]
 #		},
 #		'GEOLOC_ACCESS'		: {
 #			True : [
 #			"test_user_channel_open@" + domain_url,
-#			"test_user_channel_closed@" + domain_url
+#			"test_user_channel_authorized@" + domain_url
 #			]
 #		}
 	}

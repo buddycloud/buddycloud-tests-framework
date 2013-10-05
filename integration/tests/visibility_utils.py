@@ -1,11 +1,17 @@
 import string, json
 from api_utils import prepare_and_send_request
 from find_api_location import findAPILocation
+from names_persistence_utils import obtainActualName
+
 
 #HTTP_API endpoint: /:channel/metadata/posts
 def all_metadata_access(api_location, username, target_channel_name):
 
+	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+
 	if username != None:
+
+		username = obtainActualName(username)
 
 		(status, response) = prepare_and_send_request('GET', "%s%s/metadata/posts" % (api_location,
 			target_channel_name), authorization=username)
@@ -29,7 +35,11 @@ def all_metadata_access(api_location, username, target_channel_name):
 #HTTP_API endpoint: /:channel/content/status
 def mood_status_access(api_location, username, target_channel_name):
 
+	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	
 	if username != None:
+
+		username = obtainActualName(username)
 
 		(status, response) = prepare_and_send_request('GET', "%s%s/content/status" % (api_location,
 			target_channel_name), authorization=username)
@@ -43,7 +53,11 @@ def mood_status_access(api_location, username, target_channel_name):
 #HTTP_API endpoint: /:channel/content/posts
 def posts_read_access(api_location, username, target_channel_name):
 
+	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	
 	if username != None:
+
+		username = obtainActualName(username)
 
 		(status, response) = prepare_and_send_request('GET', "%s%s/content/posts" % (api_location,
 			target_channel_name), authorization=username)
@@ -57,7 +71,11 @@ def posts_read_access(api_location, username, target_channel_name):
 #HTTP_API endpoint: /:channel/subscribers/posts
 def subscribers_access(api_location, username, target_channel_name):
 
+	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	
 	if username != None:
+
+		username = obtainActualName(username)
 
 		(status, response) = prepare_and_send_request('GET', "%s%s/subscribers/posts" % (api_location,
 			target_channel_name), authorization=username)
@@ -71,7 +89,11 @@ def subscribers_access(api_location, username, target_channel_name):
 #HTTP_API endpoint: /:channel/subscribers/posts
 def banned_subscribers_access(api_location, username, target_channel_name):
 
+	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+
 	if username != None:
+	
+		username = obtainActualName(username)
 
 		(status, response) = prepare_and_send_request('GET', "%s%s/subscribers/posts" % (api_location,
 			target_channel_name), authorization=username)
@@ -91,9 +113,13 @@ def banned_subscribers_access(api_location, username, target_channel_name):
 
 #HTTP_API endpoint: /subscribed
 def outside_roles_access(api_location, username, target_channel_name):
-
+	
+	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	
 	if username != None:
 
+		username = obtainActualName(username)
+		
 		(status, response) = prepare_and_send_request('GET', "%ssubscribed" % (api_location), authorization=username)
 
 	else:
@@ -105,8 +131,12 @@ def outside_roles_access(api_location, username, target_channel_name):
 #HTTP_API endpoint: /:channel/content/geoloc
 def geoloc_access(api_location, username, target_channel_name):
 
+	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	
 	if username != None:
-
+	
+		username = obtainActualName(username)
+		
 		(status, response) = prepare_and_send_request('GET', "%s%s/content/geoloc" % (api_location,
 			target_channel_name), authorization=username)
 
@@ -180,16 +210,19 @@ def performVisibilityTests(domain_url, username, expected_results):
 
 	if (status != 0):
 
-		partial_report += "<br/><br/><span class='muted'>The following visibility tests were successful:<br/>"
+		correct_results = ""
 
 		for test in actual_results_match_expected_results.keys():
 
 			if len(actual_results_match_expected_results[test][(status != 0)]) == 0:
 				continue
 
-			partial_report += "<br/><em>%s</em>:<br/><strong>%s</strong>" % (VISIBILITY_TESTS[test][1],
+			correct_results += "<br/><em>%s</em>:<br/><strong>%s</strong>" % (VISIBILITY_TESTS[test][1],
 					string.join(actual_results_match_expected_results[test][(status != 0)], "<br/>"))
 
-		partial_report += "</span>"
+		if correct_results != "":
+
+			partial_report += "<br/><br/><span class='muted'>The following visibility tests were successful:<br/>"
+			partial_report += correct_results + "</span>"
 
 	return (status, partial_report)

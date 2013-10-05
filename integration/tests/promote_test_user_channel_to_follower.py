@@ -1,5 +1,5 @@
 import string
-from api_utils import subscribe_to_user_channel, subscribe_to_topic_channel, has_subscriber_role_in_user_channel, has_subscriber_role_in_topic_channel, change_user_channel_subscriber_role, change_topic_channel_subscriber_role, approve_user_channel_subscription_request, approve_topic_channel_subscription_request
+from api_utils import *
 from find_api_location import findAPILocation
 
 MEMBER_USERNAME = "test_user_channel_follower3"
