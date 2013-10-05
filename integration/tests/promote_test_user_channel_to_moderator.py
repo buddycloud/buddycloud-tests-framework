@@ -3,7 +3,7 @@ from api_utils import *
 from find_api_location import findAPILocation
 
 MODERATOR_USERNAME = "test_user_channel_follower1"
-MODERATED_USER_CHANNELS = [ "test_user_channel_open", "test_user_channel_closed" ]
+MODERATED_USER_CHANNELS = [ "test_user_channel_open", "test_user_channel_authorized" ]
 MODERATED_TOPIC_CHANNEL = "test_topic_channel_open"
 
 def testFunction(domain_url):

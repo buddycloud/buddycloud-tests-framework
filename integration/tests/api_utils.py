@@ -108,7 +108,7 @@ def open_this_user_channel(domain_url, api_location, username):
 			payload=data, authorization=username)
 
 #HTTP_API endpoint /:channel/metadata/:node
-def is_closed_user_channel(domain_url, api_location, username):
+def is_authorized_user_channel(domain_url, api_location, username):
 
 	username = obtainActualName(username)
 
