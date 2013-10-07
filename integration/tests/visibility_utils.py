@@ -22,14 +22,17 @@ def all_metadata_access(api_location, username, target_channel_name):
 
 	if status:
 
-		response = json.loads(response.content)
-		return ( 'title' in response
-		and 'description' in response
-		and 'access_model' in response
-		and 'creation_date' in response
-		and 'channel_type' in response
-		and 'default_affiliation' in response )
-	
+		try:
+			response = json.loads(response.content)
+			return ( 'title' in response
+			and 'description' in response
+			and 'access_model' in response
+			and 'creation_date' in response
+			and 'channel_type' in response
+			and 'default_affiliation' in response )
+		except ValueError:
+			pass
+
 	return False
 
 #HTTP_API endpoint: /:channel/content/status
@@ -104,11 +107,14 @@ def banned_subscribers_access(api_location, username, target_channel_name):
 
 	if status:
 
-		response = json.loads(response.content)
+		try:
+			response = json.loads(response.content)
+			for jid in response.keys():
+				if response[jid] == 'outcast':
+					return True
+		except ValueError:
+			pass
 
-		for jid in response.keys():
-			if response[jid] == 'outcast':
-				return True
 	return False
 
 #HTTP_API endpoint: /subscribed
