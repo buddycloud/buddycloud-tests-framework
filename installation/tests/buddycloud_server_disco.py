@@ -11,7 +11,7 @@ from xmpp_server_connection import testFunction as xmppServerConnection
 
 descriptions = {
 	'XMPP_CONNECTION_PROBLEM' : "A problem happened while we " +
-	"attempted to stablish a XMPP connection!<br/> Beware it is NOT a problem with the server at %s.",
+	"attempted to establish a XMPP connection!<br/> Beware it is NOT a problem with the server at %s.",
 	'QUERY_SEND_PROBLEM' : "A problem happened while our XMPP client attempted to send a query " +
 	"to XMPP server at %s!<br/> Beware it may not be a problem with your XMPP server.",
 	'SERVER_ERROR' : "Your XMPP server at %s returned an error as response to our query.",
