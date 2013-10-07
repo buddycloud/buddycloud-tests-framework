@@ -43,7 +43,12 @@ def user_channel_exists(domain_url, api_location, username):
 	username = obtainActualName(username)
 
 	(status, response) = prepare_and_send_request('GET', '%s%s@%s/metadata/posts' % (api_location, username, domain_url))
-	return status
+
+	try:
+		response = json.loads(response.content)
+		return status
+	except ValueError:
+		return False
 
 #HTTP_API endpoint: /account
 def create_user_channel(domain_url, api_location, username):
@@ -67,7 +72,12 @@ def topic_channel_exists(domain_url, api_location, channel_name):
 	channel_name = obtainActualName(channel_name)
 	
 	(status, response) = prepare_and_send_request('GET', '%s%s@topics.%s/metadata/posts' % (api_location, channel_name, domain_url))
-	return status
+
+	try:
+		response = json.loads(response.content)
+		return status
+	except ValueError:
+		return False
 
 #HTTP_API endpoint: /:channel
 def create_topic_channel(domain_url, api_location, username, channel_name):
@@ -90,9 +100,11 @@ def is_open_user_channel(domain_url, api_location, username):
 
 	if status == True:
 
-		response = json.loads(response.content)
-
-		return 'access_model' in response and response['access_model'] == 'open'
+		try:
+			response = json.loads(response.content)
+			return 'access_model' in response and response['access_model'] == 'open'
+		except ValueError:
+			pass
 
 	return False
 
@@ -116,9 +128,11 @@ def is_authorized_user_channel(domain_url, api_location, username):
 
 	if status == True:
 
-		response = json.loads(response.content)
-
-		return 'access_model' in response and response['access_model'] == 'authorize'
+		try:
+			response = json.loads(response.content)
+			return 'access_model' in response and response['access_model'] == 'authorize'
+		except ValueError:
+			pass
 
 	return False
 
