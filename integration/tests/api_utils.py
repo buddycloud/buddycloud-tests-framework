@@ -179,10 +179,12 @@ def has_subscriber_role_in_user_channel(domain_url, api_location, username, chan
 
 	if status == True:
 
-		response = json.loads(response.content)
-		channel_node = '%s@%s/posts' % (channel_name, domain_url)
-
-		return channel_node in response and response[channel_node] == subscription
+		try:
+			response = json.loads(response.content)
+			channel_node = '%s@%s/posts' % (channel_name, domain_url)
+			return channel_node in response and response[channel_node] == subscription
+		except ValueError:
+			pass
 
 	return False
 
@@ -231,10 +233,12 @@ def has_subscriber_role_in_topic_channel(domain_url, api_location, username, cha
 
 	if status == True:
 
-		response = json.loads(response.content)
-		channel_node = '%s@topics.%s/posts' % (channel_name, domain_url)
-
-		return channel_node in response and response[channel_node] == subscription
+		try:
+			response = json.loads(response.content)
+			channel_node = '%s@topics.%s/posts' % (channel_name, domain_url)
+			return channel_node in response and response[channel_node] == subscription
+		except ValueError:
+			pass
 
 	return False
 
