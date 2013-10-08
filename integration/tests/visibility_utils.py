@@ -168,7 +168,7 @@ def performVisibilityTests(domain_url, username, expected_results):
 
 	(status, briefing, message, api_location) = findAPILocation(domain_url)
 	if status != 0:
-		return (status, briefing, message, None)
+		return (status, message)
 
 	actual_results_match_expected_results = {}
 	status = 0
