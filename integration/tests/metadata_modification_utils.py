@@ -1,5 +1,5 @@
 import string, json
-from api_utils import prepare_and_send_request
+from api_utils import prepare_and_send_request, user_channel_exists
 from names_persistence_utils import obtainActualName
 
 
@@ -97,6 +97,14 @@ METADATA_MODIFICATION_TESTS = {
 }
 
 def performMetadataModificationTests(domain_url, api_location, username, expected_results):
+
+	if username != None:
+
+		if not user_channel_exists(domain_url, api_location, username):
+
+			status = 1
+			message = "Metadata modification tests skipped because %s does not exist." % username
+			return (status, message)
 
 	actual_results_match_expected_results = {}
 	status = 0
