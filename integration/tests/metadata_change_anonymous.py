@@ -55,9 +55,9 @@ def testFunction(domain_url):
 	(status, partial_report) = performMetadataModificationTests(domain_url, api_location, None, expected_results)
 
 	if status == 0:
-		briefing = "Metadata modification tests for <strong>anonymous user@%s</strong> were successful!" % domain_url
+		briefing = "Metadata modification tests for <strong>anonymous user</strong> were successful!" % domain_url
 	else:
-		briefing = "Metadata modification tests for <strong>anonymous user@%s</strong> were not entirely successful!" % domain_url
+		briefing = "Metadata modification tests for <strong>anonymous user</strong> were not entirely successful!" % domain_url
 
 	message = briefing + "<br/>"
 	message += partial_report

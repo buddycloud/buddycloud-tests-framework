@@ -13,7 +13,7 @@ TEST_USER_PASSWORD = 'a-password' #Those are not actually used for authenticatio
 def prepare_and_send_request(request_method, request_url, payload=None, authorization=None):
 
 	headers = {
-		'Accept' : '*/*',
+		'Accept' : 'application/json',
 		'Accept-Encoding' : 'gzip,deflate,sdch',
 		'Accept-Language' : 'en-US,en;q=0.8,pt-BR;q=0.6,pt;q=0.4',
 		'Cache-Control' : 'no-cache',
@@ -55,15 +55,25 @@ def create_user_channel(domain_url, api_location, username):
 
 	username = obtainActualName(username)
 	
-	if user_channel_exists(domain_url, api_location, username):
-		return True
-
 	data = {
 		'username' : username,
 		'password' : TEST_USER_PASSWORD,
 		'email' : TEST_USER_EMAIL
 	}
 	(status, response) = prepare_and_send_request('POST', '%saccount' % (api_location), payload=data)
+	return status
+
+#HTTP_API endpoint: /account
+def delete_user_channel(domain_url, api_location, username):
+
+	username = obtainActualName(username)
+
+	data = {
+		'username' : username,
+		'password' : TEST_USER_PASSWORD,
+		'email' : TEST_USER_EMAIL
+	}
+	(status, response) = prepare_and_send_request('DELETE', '%saccount' % (api_location), payload=data)
 	return status
 
 #HTTP_API endpoint: /:channel/metadata/:node
@@ -85,10 +95,16 @@ def create_topic_channel(domain_url, api_location, username, channel_name):
 	username = obtainActualName(username)
 	channel_name = obtainActualName(channel_name)
 
-	if topic_channel_exists(domain_url, api_location, channel_name):
-		return True
-
 	(status, response) = prepare_and_send_request('POST', '%s%s@topics.%s' % (api_location, channel_name, domain_url), authorization=username)
+	return status
+
+#HTTP_API endpoint: /:channel
+def delete_topic_channel(domain_url, api_location, username, channel_name):
+
+	username = obtainActualName(username)
+	channel_name = obtainActualName(channel_name)
+
+	(status, response) = prepare_and_send_request('DELETE', '%s%s@topics.%s' % (api_location, channel_name, domain_url), authorization=username)
 	return status
 
 #HTTP_API endpoint /:channel/metadata/:node

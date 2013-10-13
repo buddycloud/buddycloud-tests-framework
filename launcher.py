@@ -33,7 +33,7 @@ def index():
 
 @server.route('/test_names', methods=['GET'])
 def get_test_names():
-	
+
 	entries = []
 	for entry in test_entries:
 
@@ -140,7 +140,7 @@ def perform_test(test_name=None, domain_url=None):
 		response.headers["Content-Type"] = "application/json"
 		return response
 
-#	except Exception as e:
+	except Exception as e:
 
 		e_type, e_value, e_trace = sys.exc_info()
 		e_type = Markup.escape(str(type(e))).__str__()
