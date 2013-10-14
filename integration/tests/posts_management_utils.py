@@ -21,11 +21,11 @@ def add_new_post_and_get_by_id_direct_access(api_location, username, target_chan
 		username = obtainActualName(username)
 
 		(status, response) = prepare_and_send_request('POST', "%s%s/content/posts" % (api_location,
-			target_channel_name), authorization=username)
+			target_channel_name), payload=data, authorization=username)
 	else:
 
 		(status, response) = prepare_and_send_request('POST', "%s%s/content/posts" % (api_location,
-			target_channel_name))
+			target_channel_name), payload=data)
 
 	if status:
 
@@ -36,7 +36,7 @@ def add_new_post_and_get_by_id_direct_access(api_location, username, target_chan
 			post_author = response['author']
 			content_obtained = response['content']
 
-			if ( post_author != "%s@%s" % (username, domain_url) or content_obtained != content_posted ):
+			if ( post_author != "%s@%s" % (username, domain_url.replace("topics.", "")) or content_obtained != content_posted ):
 
 				return False
 
@@ -84,11 +84,11 @@ def add_new_post_and_get_by_matching_id(api_location, username, target_channel_n
 		username = obtainActualName(username)
 
 		(status, response) = prepare_and_send_request('POST', "%s%s/content/posts" % (api_location,
-			target_channel_name), authorization=username)
+			target_channel_name), payload=data, authorization=username)
 	else:
 
 		(status, response) = prepare_and_send_request('POST', "%s%s/content/posts" % (api_location,
-			target_channel_name))
+			target_channel_name), payload=data)
 
 	if status:
 
@@ -99,7 +99,7 @@ def add_new_post_and_get_by_matching_id(api_location, username, target_channel_n
 			post_author = response['author']
 			content_obtained = response['content']
 
-			if ( post_author != "%s@%s" % (username, domain_url) or content_obtained != content_posted ):
+			if ( post_author != "%s@%s" % (username, domain_url.replace("topics.", "")) or content_obtained != content_posted ):
 
 				return False
 
@@ -134,9 +134,169 @@ def add_new_post_and_get_by_matching_id(api_location, username, target_channel_n
 
 	return False
 
+#HTTP_API endpoint: /:channel/content/posts
+def remove_own_post(api_location, username, target_channel_name):
+
+	target_username = obtainActualName(target_channel_name.split("@")[0])
+	domain_url =  target_channel_name.split("@")[1]
+	target_channel_name = "%s@%s" % (target_username, domain_url)
+
+	content_posted = "The Lost finale was pretty bad."
+
+	data = {
+		"content" : content_posted
+	}
+
+	if username != None:
+
+		username = obtainActualName(username)
+
+		(status, response) = prepare_and_send_request('POST', "%s%s/content/posts" % (api_location,
+			target_channel_name), payload=data, authorization=username)
+	else:
+
+		(status, response) = prepare_and_send_request('POST', "%s%s/content/posts" % (api_location,
+			target_channel_name), payload=data)
+
+	if status:
+
+		try:
+			response = json.loads(response.content)
+			
+			post_id = response['id']
+			post_author = response['author']
+			content_obtained = response['content']
+
+			if ( post_author != "%s@%s" % (username, domain_url.replace("topics.", "")) or content_obtained != content_posted ):
+
+				return False
+
+			if username != None:
+
+				(status, response) = prepare_and_send_request('DELETE', "%s%s/content/posts/%s" % (api_location,
+					target_channel_name, post_id), authorization=username)
+			else:
+				
+				(status, response) = prepare_and_send_request('DELETE', "%s%s/content/posts/%s" % (api_location,
+					target_channel_name, post_id))
+
+			return status
+
+		except ValueError:
+			pass
+
+	return False
+
+#HTTP_API endpoint: /:channel/content/posts
+def remove_post_created_by_owner(api_location, username, target_channel_name):
+
+	target_username = obtainActualName(target_channel_name.split("@")[0])
+	domain_url =  target_channel_name.split("@")[1]
+	target_channel_name = "%s@%s" % (target_username, domain_url)
+
+	if ( 'open' in target_username ):
+		owner_username = 'test_user_channel_open'
+	else:
+		owner_username = 'test_user_channel_authorized'
+
+	owner_username = obtainActualName(owner_username)
+
+	content_posted = "By the way, what happened to Waaaaaalt?"
+
+	data = {
+		"content" : content_posted
+	}
+
+	(status, response) = prepare_and_send_request('POST', "%s%s/content/posts" % (api_location,
+			target_channel_name), payload=data, authorization=owner_username)
+
+	if status:
+
+		try:
+			response = json.loads(response.content)
+			
+			post_id = response['id']
+			post_author = response['author']
+			content_obtained = response['content']
+
+			if ( post_author != "%s@%s" % (owner_username, domain_url.replace("topics.", "")) or content_obtained != content_posted ):
+
+				return False
+
+			if username != None:
+
+				username = obtainActualName(username)
+		
+				(status, response) = prepare_and_send_request('DELETE', "%s%s/content/posts/%s" % (api_location,
+					target_channel_name, post_id), authorization=username)
+			else:
+				
+				(status, response) = prepare_and_send_request('DELETE', "%s%s/content/posts/%s" % (api_location,
+					target_channel_name, post_id))
+
+			return status
+
+		except ValueError:
+			pass
+
+	return False
+
+#HTTP_API endpoint: /:channel/content/posts
+def remove_post_created_by_moderator(api_location, username, target_channel_name):
+
+	target_username = obtainActualName(target_channel_name.split("@")[0])
+	domain_url =  target_channel_name.split("@")[1]
+	target_channel_name = "%s@%s" % (target_username, domain_url)
+
+	owner_username = 'test_user_channel_follower1'
+	owner_username = obtainActualName(owner_username)
+
+	content_posted = "By the way, what happened to Waaaaaalt?"
+
+	data = {
+		"content" : content_posted
+	}
+
+	(status, response) = prepare_and_send_request('POST', "%s%s/content/posts" % (api_location,
+			target_channel_name), payload=data, authorization=owner_username)
+
+	if status:
+
+		try:
+			response = json.loads(response.content)
+			
+			post_id = response['id']
+			post_author = response['author']
+			content_obtained = response['content']
+
+			if ( post_author != "%s@%s" % (owner_username, domain_url.replace("topics.", "")) or content_obtained != content_posted ):
+
+				return False
+
+			if username != None:
+
+				username = obtainActualName(username)
+		
+				(status, response) = prepare_and_send_request('DELETE', "%s%s/content/posts/%s" % (api_location,
+					target_channel_name, post_id), authorization=username)
+			else:
+				
+				(status, response) = prepare_and_send_request('DELETE', "%s%s/content/posts/%s" % (api_location,
+					target_channel_name, post_id))
+
+			return status
+
+		except ValueError:
+			pass
+
+	return False
+
 POSTS_MANAGEMENT_TESTS = {
 	'ADD_NEW_POST_AND_GET_BY_ID_DIRECT_ACCESS' : ( add_new_post_and_get_by_id_direct_access, "Permission to add new post (so that it's readable using id)" ),
-	'ADD_NEW_POST_AND_GET_BY_MATCHING_ID'      : ( add_new_post_and_get_by_matching_id, "Permission to add new post (so that it's shown among all posts)" )
+	'ADD_NEW_POST_AND_GET_BY_MATCHING_ID'      : ( add_new_post_and_get_by_matching_id, "Permission to add new post (so that it's shown among all posts)" ),
+	'REMOVE_OWN_POST'			   : ( remove_own_post, "Permission to remove posts created by itself" ),
+	'REMOVE_POST_CREATED_BY_OWNER'		   : ( remove_post_created_by_owner, "Permission to remove posts created by the channel owner" ),
+	'REMOVE_POST_CREATED_BY_MODERATOR'	   : ( remove_post_created_by_moderator, "Permission to remove posts created by a channel moderator" )	
 }
 
 def performPostsManagementTests(domain_url, api_location, username, expected_results):
