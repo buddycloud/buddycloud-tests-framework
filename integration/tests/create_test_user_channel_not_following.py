@@ -1,57 +1,56 @@
 import string
-from api_utils import user_channel_exists, create_user_channel
+from api_utils import user_channel_exists, create_user_channel, delete_user_channel
 from find_api_location import findAPILocation
 
-TEST_USERNAME = "test_user_channel_not_following"
+
+def setUp(domain_url):
+	create_user_channel(domain_url)
+
+def tearDown(domain_url):
+	delete_user_channel(domain_url)
 
 def testFunction(domain_url):
 
-	CLASSIFIED = { 'EXISTED' : [], 'CREATED' : [], 'PROBLEM_CREATING' : [] }
-	
 	(status, briefing, message, api_location) = findAPILocation(domain_url)
 	if status != 0:
 		return (status, briefing, message, None)
 
-	username = TEST_USERNAME
+	username = "test_user_channel_not_following"
 
-	if user_channel_exists(domain_url, api_location, username):
+	if create_user_channel(domain_url, api_location, username):
 
-		CLASSIFIED['EXISTED'].append(username + "@" + domain_url)
+		status = 0
+		briefing = "Could successfully create test user channel: <strong>%s@%s</strong>" % (username, domain_url)
+		message = "We could successfully assert creation of test user channel <strong>%s@%s</strong>." % (username, domain_url)
+		message += "<br/>That test user channel will be used for testing purposes."
+
 	else:
-		if create_user_channel(domain_url, api_location, username):
-	
-			CLASSIFIED['CREATED'].append(username + "@" + domain_url)
+
+		if user_channel_exists(domain_url, api_location, username):			
+
+			status = 2
+			briefing = "The test user channel <strong>%s@%s</strong> wasn't " % (username, domain_url)
+			briefing += "expected to exist but it did, so it could not be created again."
+			message = briefing
+
+			if ( delete_user_channel(domain_url, api_location, username)
+			and create_user_channel(domain_url, api_location, username) ):
+
+				status = 0
+				additional_info = "<br/>But we could assert that user channel creation is being "
+				additional_info += "properly implemented by your API server."
+				briefing += additional_info
+				message += additional_info
+				message += "<br/>We deleted the existing test user channel and then were successful in creating it again."
+			else:
+				message += "<br/>The problem is we cannot assert that user channel creation is working."
+
 		else:
-			CLASSIFIED['PROBLEM_CREATING'].append(username + "@" + domain_url)
 
-	status = 0
-
-	if ( len(CLASSIFIED.get('PROBLEM_CREATING', [])) > 0 ):
-	
-		status = 1
-		briefing = "Could not create some test user channels: "
-		briefing += "<strong>%s</strong>" % string.join(CLASSIFIED['PROBLEM_CREATING'], " | ")
-		message = "Something weird happened while we tried creating some user channels for testing purposes."
-		message += "<br/>The following test user channels could not be created: <br/><br/>"
-		message += "<strong>%s</strong>" % string.join(CLASSIFIED['PROBLEM_CREATING'], "<br/>")
-		message += "<br/><br/>It seems like your HTTP API is problematic."
-
-	else:
-
-		briefing = "Could successfully assert creation or existance of some user channels: "
-		message = "We could assert that user channels which will be used later for testing purposes were either created "
-		message += "successfully or already existed."
-
-	if ( len(CLASSIFIED.get('EXISTED', [])) > 0 ):
-
-		briefing += "<strong>%s</strong>" % string.join(CLASSIFIED['EXISTED'], " | ")
-		message += "<br/><br/>The following user channels already existed: <br/><br/>"
-		message += "<strong>%s</strong>" % string.join(CLASSIFIED['EXISTED'], "<br/>")
-
-	if ( len(CLASSIFIED.get('CREATED', [])) > 0 ):
-
-		briefing += "| <strong>%s</strong>" % string.join(CLASSIFIED['CREATED'], " | ")
-		message += "<br/><br/>The following user channels were successfully created: <br/><br/>"
-		message += "<strong>%s</strong>" % string.join(CLASSIFIED['CREATED'], "<br/>")
-
+			status = 1
+			briefing = "The test user channel <strong>%s@%s</strong> could not be created." % (username, domain_url)
+			message = briefing
+			message += "<br/>It seems like your HTTP API server is problematic. It had trouble creating an "
+			message += "user channel - that operation must work."
+			
 	return (status, briefing, message, None)

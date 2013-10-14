@@ -19,8 +19,6 @@ def testFunction(domain_url):
 		message = "We could successfully assert creation of test topic channel <strong>%s@topics.%s</strong>." % (test_topic_channel_name, domain_url)
 		message += "<br/>That topic channel will be used for testing purposes."
 
-		return (status, briefing, message, None)
-
 	else:
 
 		if topic_channel_exists(domain_url, api_location, test_topic_channel_name):
@@ -30,8 +28,8 @@ def testFunction(domain_url):
 			briefing += "expected to exist but it did, so it could not be created again."
 			message = briefing
 
-			if ( delete_user_channel(domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name)
-			and create_user_channel(domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name) ):
+			if ( delete_topic_channel(domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name)
+			and create_topic_channel(domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name) ):
 
 				status = 0
 				additional_info = "<br/>But we could assert that topic channel creation is being properly implemented by your API server."
@@ -41,8 +39,6 @@ def testFunction(domain_url):
 			else:
 				message += "<br/>The problem is we cannot assert that topic channel creation is working."
 
-			return (status, briefing, message, None)
-
 		else:
 
 			status = 1
@@ -50,4 +46,4 @@ def testFunction(domain_url):
 			message = briefing
 			message += "<br/>It seems like your HTTP API server is problematic. It had trouble creating a topic channel - that operation must work."
 			
-			return (status, briefing, message, None)
+	return (status, briefing, message, None)

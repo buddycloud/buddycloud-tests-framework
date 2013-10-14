@@ -1,3 +1,4 @@
+#from Flask import session
 import random
 
 def storeActualName(name):
@@ -7,6 +8,8 @@ def storeActualName(name):
 	f = open(name, 'w')
 	f.write(actual_name)
 	f.close()
+
+	#session[name] = actual_name
 
 def obtainActualName(name):
 
@@ -19,3 +22,8 @@ def obtainActualName(name):
 	except IOError:
 		storeActualName(name)
 		return obtainActualName(name)
+
+	#if not name in session:
+	#	storeActualName(name)
+	#
+	#return session[name]

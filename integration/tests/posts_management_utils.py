@@ -136,7 +136,7 @@ def add_new_post_and_get_by_matching_id(api_location, username, target_channel_n
 
 POSTS_MANAGEMENT_TESTS = {
 	'ADD_NEW_POST_AND_GET_BY_ID_DIRECT_ACCESS' : ( add_new_post_and_get_by_id_direct_access, "Permission to add new post (so that it's readable using id)" ),
-	'ADD_NEW_POST_AND_GET_BY_MATCHING_ID'      : ( add_new_post_and_get_by_macthing_id, "Permission to add new post (so that it's shown among all posts)" )
+	'ADD_NEW_POST_AND_GET_BY_MATCHING_ID'      : ( add_new_post_and_get_by_matching_id, "Permission to add new post (so that it's shown among all posts)" )
 }
 
 def performPostsManagementTests(domain_url, api_location, username, expected_results):

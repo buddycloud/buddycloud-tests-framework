@@ -68,12 +68,7 @@ def delete_user_channel(domain_url, api_location, username):
 
 	username = obtainActualName(username)
 
-	data = {
-		'username' : username,
-		'password' : TEST_USER_PASSWORD,
-		'email' : TEST_USER_EMAIL
-	}
-	(status, response) = prepare_and_send_request('DELETE', '%saccount' % (api_location), payload=data)
+	(status, response) = prepare_and_send_request('DELETE', '%saccount' % (api_location), authorization=username)
 	return status
 
 #HTTP_API endpoint: /:channel/metadata/:node

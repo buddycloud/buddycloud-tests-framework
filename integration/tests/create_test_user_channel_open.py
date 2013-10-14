@@ -28,12 +28,13 @@ def testFunction(domain_url):
 			message = "We could successfully assert creation of test user channel <strong>%s@%s</strong>." % (username, domain_url)
 			message += "<br/>The problem is we could not have its privacy setting set to <em>open</em>."
 			message += "<br/>That test user channel is intended to be open and will be used for testing purposes."
+
 	else:
 
 		if user_channel_exists(domain_url, api_location, username):			
 
 			status = 2
-			briefing "The test user channel <strong>%s@%s</strong> wasn't " % (username, domain_url)
+			briefing = "The test user channel <strong>%s@%s</strong> wasn't " % (username, domain_url)
 			briefing += "expected to exist but it did, so it could not be created again."
 			message = briefing
 
@@ -49,8 +50,6 @@ def testFunction(domain_url):
 			else:
 				message += "<br/>The problem is we cannot assert that <em>open</em> user channel creation is working."
 
-			return (status, briefing, message, None)
-		
 		else:
 
 			status = 1
@@ -59,4 +58,4 @@ def testFunction(domain_url):
 			message += "<br/>It seems like your HTTP API server is problematic. It had trouble creating an "
 			message += "<em>open</em> user channel - that operation must work."
 			
-			return (status, briefing, message, None)
+	return (status, briefing, message, None)
