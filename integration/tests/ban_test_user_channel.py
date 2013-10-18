@@ -6,7 +6,7 @@ MEMBER_USERNAME = "test_user_channel_follower4"
 FOLLOWED_USER_CHANNELS = [ "test_user_channel_open", "test_user_channel_authorized" ]
 FOLLOWED_TOPIC_CHANNEL = "test_topic_channel_open"
 
-def testFunction(domain_url):
+def testFunction(domain_url, session):
 
 	CLASSIFIED = { 'SUBSCRIBED' : [],
 		'PROBLEM_SUBSCRIBING_ASKING' : [],
@@ -21,17 +21,17 @@ def testFunction(domain_url):
 
 	for followed_channel in FOLLOWED_USER_CHANNELS:
 
-		if has_subscriber_role_in_user_channel(domain_url, api_location, MEMBER_USERNAME, followed_channel, "outcast"):
+		if has_subscriber_role_in_user_channel(session, domain_url, api_location, MEMBER_USERNAME, followed_channel, "outcast"):
 			CLASSIFIED['ALREADY_BANNED'].append(followed_channel + "@" + domain_url)
 		else:
 
-			if subscribe_to_user_channel(domain_url, api_location, MEMBER_USERNAME, followed_channel, "member"):
+			if subscribe_to_user_channel(session, domain_url, api_location, MEMBER_USERNAME, followed_channel, "member"):
 			
-				if approve_user_channel_subscription_request(domain_url, api_location, followed_channel, [MEMBER_USERNAME]):
+				if approve_user_channel_subscription_request(session, domain_url, api_location, followed_channel, [MEMBER_USERNAME]):
 
-					if change_user_channel_subscriber_role(domain_url, api_location, followed_channel, MEMBER_USERNAME, "outcast"):
+					if change_user_channel_subscriber_role(session, domain_url, api_location, followed_channel, MEMBER_USERNAME, "outcast"):
 
-						if has_subscriber_role_in_user_channel(domain_url, api_location, MEMBER_USERNAME, followed_channel, "outcast"):
+						if has_subscriber_role_in_user_channel(session, domain_url, api_location, MEMBER_USERNAME, followed_channel, "outcast"):
 							CLASSIFIED['SUBSCRIBED'].append(followed_channel + "@" + domain_url)
 						else:
 							CLASSIFIED['PROBLEM_DID_NOT_BAN'].append(followed_channel + "@" + domain_url)
@@ -47,17 +47,17 @@ def testFunction(domain_url):
 
 	for followed_channel in [FOLLOWED_TOPIC_CHANNEL]:
 
-		if has_subscriber_role_in_topic_channel(domain_url, api_location, MEMBER_USERNAME, followed_channel, "outcast"):
+		if has_subscriber_role_in_topic_channel(session, domain_url, api_location, MEMBER_USERNAME, followed_channel, "outcast"):
 			CLASSIFIED['ALREADY_BANNED'].append(followed_channel + "@" + domain_url)
 		else:
 
-			if subscribe_to_topic_channel(domain_url, api_location, MEMBER_USERNAME, followed_channel, "member"):
+			if subscribe_to_topic_channel(session, domain_url, api_location, MEMBER_USERNAME, followed_channel, "member"):
 	
-				if approve_topic_channel_subscription_request(domain_url, api_location, followed_channel, FOLLOWED_USER_CHANNELS[0], [MEMBER_USERNAME]):
+				if approve_topic_channel_subscription_request(session, domain_url, api_location, followed_channel, FOLLOWED_USER_CHANNELS[0], [MEMBER_USERNAME]):
 
-					if change_topic_channel_subscriber_role(domain_url, api_location, FOLLOWED_USER_CHANNELS[0], MEMBER_USERNAME, followed_channel, "outcast"):
+					if change_topic_channel_subscriber_role(session, domain_url, api_location, FOLLOWED_USER_CHANNELS[0], MEMBER_USERNAME, followed_channel, "outcast"):
 
-						if has_subscriber_role_in_topic_channel(domain_url, api_location, MEMBER_USERNAME, followed_channel, "outcast"):
+						if has_subscriber_role_in_topic_channel(session, domain_url, api_location, MEMBER_USERNAME, followed_channel, "outcast"):
 							CLASSIFIED['SUBSCRIBED'].append(followed_channel + "@" + domain_url)
 						else:
 							CLASSIFIED['PROBLEM_DID_NOT_BAN'].append(followed_channel + "@" + domain_url)

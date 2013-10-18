@@ -3,7 +3,7 @@ from api_utils import topic_channel_exists, create_topic_channel, delete_topic_c
 from find_api_location import findAPILocation
 
 
-def testFunction(domain_url):
+def testFunction(domain_url, session):
 
 	(status, briefing, message, api_location) = findAPILocation(domain_url)
 	if status != 0:
@@ -12,7 +12,7 @@ def testFunction(domain_url):
 	test_topic_channel_name = "test_topic_channel_open"
 	test_topic_channel_owner_username = "test_user_channel_open"
 
-	if delete_topic_channel(domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name):
+	if delete_topic_channel(session, domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name):
 	
 		status = 0
 		briefing = "Could successfully remove test topic channel: <strong>%s@topics.%s</strong>" % (test_topic_channel_name, domain_url)
@@ -21,7 +21,7 @@ def testFunction(domain_url):
 
 	else:
 
-		if not user_channel_exists(domain_url, api_location, test_topic_channel_owner_username):
+		if not user_channel_exists(session, domain_url, api_location, test_topic_channel_owner_username):
 
 			status = 1
 			briefing = "Channel owner <strong>%s</strong> doesn't exist anymore, so we can't assert that " % test_topic_channel_owner_username
@@ -30,15 +30,15 @@ def testFunction(domain_url):
 			message += "<br/>The channel owner <strong>%s</strong> was deleted and " % test_topic_channel_owner_username
 			message += " so was its topic channel <strong>%s</strong> along with him." % test_topic_channel_name
 
-		elif not topic_channel_exists(domain_url, api_location, test_topic_channel_name):
+		elif not topic_channel_exists(session, domain_url, api_location, test_topic_channel_name):
 
 			status = 2
 			briefing = "The test topic channel <strong>%s@topics.%s</strong> was " % (test_topic_channel_name, domain_url)
 			briefing += "expected to exist but it didn't, so it could not be deleted."
 			message = briefing
 
-			if ( create_topic_channel(domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name)
-			and delete_topic_channel(domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name) ):
+			if ( create_topic_channel(session, domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name)
+			and delete_topic_channel(session, domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name) ):
 
 				status = 0
 				additional_info = "<br/>But we could assert that topic channel deletion is being properly implemented by your API server."

@@ -1,5 +1,5 @@
-import os, sys, json, string, linecache
-from flask import Flask, render_template, redirect, url_for, request, make_response, Markup
+import os, sys, json, string, linecache, re, random
+from flask import Flask, render_template, redirect, url_for, request, make_response, Markup, session
 
 sys.path.append(os.path.join(os.getcwd(), "suite_utils"))
 
@@ -23,7 +23,7 @@ log_stream = LogStream()
 logging.basicConfig(level=logging.DEBUG, stream=log_stream)
 
 server = Flask(__name__)
-
+server.secret_key = os.urandom(24)
 
 @server.route('/')
 def index():
@@ -86,7 +86,20 @@ def perform_test(test_name=None, domain_url=None):
 
 			log_stream.reset()
 			log_stream.setDelimiter("<br/>")
-			test_output = test_entries[test_names[test_name]]['test'](domain_url)
+
+			arguments = [ domain_url, session ]
+			regex = re.compile("^.*takes exactly [0-9]+ arguments? \([0-9]+ given\)")
+			for i in range(len(arguments), 0, -1):
+				try:
+					test_output = test_entries[test_names[test_name]]['test'](*(arguments[:i]))
+					break
+				except TypeError:
+					e_type, e_value, e_trace = sys.exc_info()
+					if regex.match(str(e_value)) != None:
+						continue
+					else:
+						raise
+
 			log_stream.setDelimiter("\n")
 
 			if ( not (isinstance(test_output, tuple) and len(test_output) == 4) ):

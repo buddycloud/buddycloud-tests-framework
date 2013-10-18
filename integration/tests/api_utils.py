@@ -38,9 +38,9 @@ def prepare_and_send_request(request_method, request_url, payload=None, authoriz
 	return (resp.ok, resp)
 
 #HTTP_API endpoint: /:channel/metadata/:node
-def user_channel_exists(domain_url, api_location, username):
+def user_channel_exists(session, domain_url, api_location, username):
 
-	username = obtainActualName(username)
+	username = obtainActualName(session, username)
 
 	(status, response) = prepare_and_send_request('GET', '%s%s@%s/metadata/posts' % (api_location, username, domain_url))
 
@@ -51,9 +51,9 @@ def user_channel_exists(domain_url, api_location, username):
 		return False
 
 #HTTP_API endpoint: /account
-def create_user_channel(domain_url, api_location, username):
+def create_user_channel(session, domain_url, api_location, username):
 
-	username = obtainActualName(username)
+	username = obtainActualName(session, username)
 	
 	data = {
 		'username' : username,
@@ -64,17 +64,17 @@ def create_user_channel(domain_url, api_location, username):
 	return status
 
 #HTTP_API endpoint: /account
-def delete_user_channel(domain_url, api_location, username):
+def delete_user_channel(session, domain_url, api_location, username):
 
-	username = obtainActualName(username)
+	username = obtainActualName(session, username)
 
 	(status, response) = prepare_and_send_request('DELETE', '%saccount' % (api_location), authorization=username)
 	return status
 
 #HTTP_API endpoint: /:channel/metadata/:node
-def topic_channel_exists(domain_url, api_location, channel_name):
+def topic_channel_exists(session, domain_url, api_location, channel_name):
 
-	channel_name = obtainActualName(channel_name)
+	channel_name = obtainActualName(session, channel_name)
 	
 	(status, response) = prepare_and_send_request('GET', '%s%s@topics.%s/metadata/posts' % (api_location, channel_name, domain_url))
 
@@ -85,19 +85,19 @@ def topic_channel_exists(domain_url, api_location, channel_name):
 		return False
 
 #HTTP_API endpoint: /:channel
-def create_topic_channel(domain_url, api_location, username, channel_name):
+def create_topic_channel(session, domain_url, api_location, username, channel_name):
 
-	username = obtainActualName(username)
-	channel_name = obtainActualName(channel_name)
+	username = obtainActualName(session, username)
+	channel_name = obtainActualName(session, channel_name)
 
 	(status, response) = prepare_and_send_request('POST', '%s%s@topics.%s' % (api_location, channel_name, domain_url), authorization=username)
 	return status
 
 #HTTP_API endpoint: /:channel
-def delete_topic_channel(domain_url, api_location, username, channel_name):
+def delete_topic_channel(session, domain_url, api_location, username, channel_name):
 
-	username = obtainActualName(username)
-	channel_name = obtainActualName(channel_name)
+	username = obtainActualName(session, username)
+	channel_name = obtainActualName(session, channel_name)
 
 	(status, response) = prepare_and_send_request('DELETE', '%s%s@topics.%s' % (api_location, channel_name, domain_url), authorization=username)
 	return status
@@ -105,7 +105,7 @@ def delete_topic_channel(domain_url, api_location, username, channel_name):
 #HTTP_API endpoint /:channel/metadata/:node
 def is_open_user_channel(domain_url, api_location, username):
 
-	username = obtainActualName(username)
+	username = obtainActualName(session, username)
 
 	(status, response) = prepare_and_send_request('GET', '%s%s@%s/metadata/posts' % (api_location, username, domain_url))
 
@@ -120,9 +120,9 @@ def is_open_user_channel(domain_url, api_location, username):
 	return False
 
 #HTTP_API endpoint /:channel/metadata/:node
-def open_this_user_channel(domain_url, api_location, username):
+def open_this_user_channel(session, domain_url, api_location, username):
 
-	username = obtainActualName(username)
+	username = obtainActualName(session, username)
 
 	data = {
 		'access_model' : 'open'
@@ -133,7 +133,7 @@ def open_this_user_channel(domain_url, api_location, username):
 #HTTP_API endpoint /:channel/metadata/:node
 def is_authorized_user_channel(domain_url, api_location, username):
 
-	username = obtainActualName(username)
+	username = obtainActualName(session, username)
 
 	(status, response) = prepare_and_send_request('GET', '%s%s@%s/metadata/posts' % (api_location, username, domain_url))
 
@@ -148,9 +148,9 @@ def is_authorized_user_channel(domain_url, api_location, username):
 	return False
 
 #HTTP_API endpoint /:channel/metadata/:node
-def close_this_user_channel(domain_url, api_location, username):
+def close_this_user_channel(session, domain_url, api_location, username):
 
-	username = obtainActualName(username)
+	username = obtainActualName(session, username)
 
 	data = {
 		'access_model' : 'authorize'
@@ -159,10 +159,10 @@ def close_this_user_channel(domain_url, api_location, username):
 			payload=data, authorization=username)
 
 #HTTP_API endpoint: /subscribed
-def subscribe_to_user_channel(domain_url, api_location, username, channel_name, subscription):
+def subscribe_to_user_channel(session, domain_url, api_location, username, channel_name, subscription):
 
-	username = obtainActualName(username)
-	channel_name = obtainActualName(channel_name)
+	username = obtainActualName(session, username)
+	channel_name = obtainActualName(session, channel_name)
 
 	data = {
 		'%s@%s/posts' % (channel_name, domain_url) : subscription
@@ -171,20 +171,20 @@ def subscribe_to_user_channel(domain_url, api_location, username, channel_name, 
 	return status
 
 #HTTP_API endpoint: /:channel/subscribers/:node/approve
-def approve_user_channel_subscription_request(domain_url, api_location, username, subscriber_jids):
+def approve_user_channel_subscription_request(session, domain_url, api_location, username, subscriber_jids):
 
-	username = obtainActualName(username)
-	subscriber_jids = map(lambda x: obtainActualName(x), subscriber_jids)
+	username = obtainActualName(session, username)
+	subscriber_jids = map(lambda x: obtainActualName(session, x), subscriber_jids)
 
 	data = [ {'subscription' : 'subscribed', 'jid' : jid + "@" + domain_url} for jid in subscriber_jids ]
 	return prepare_and_send_request('POST', '%s%s@%s/subscribers/posts/approve' % (api_location, username, domain_url),
 			payload=data, authorization=username)
 
 #HTTP_API endpoint: /subscribed
-def has_subscriber_role_in_user_channel(domain_url, api_location, username, channel_name, subscription):
+def has_subscriber_role_in_user_channel(session, domain_url, api_location, username, channel_name, subscription):
 
-	username = obtainActualName(username)
-	channel_name = obtainActualName(channel_name)
+	username = obtainActualName(session, username)
+	channel_name = obtainActualName(session, channel_name)
 
 	(status, response) = prepare_and_send_request('GET', '%ssubscribed' % (api_location), authorization=username)
 
@@ -200,10 +200,10 @@ def has_subscriber_role_in_user_channel(domain_url, api_location, username, chan
 	return False
 
 #HTTP_API endpoint /:channel/subscribers/:node 
-def change_user_channel_subscriber_role(domain_url, api_location, username, subscriber_username, subscription):
+def change_user_channel_subscriber_role(session, domain_url, api_location, username, subscriber_username, subscription):
 
-	username = obtainActualName(username)
-	subscriber_username = obtainActualName(subscriber_username)
+	username = obtainActualName(session, username)
+	subscriber_username = obtainActualName(session, subscriber_username)
 
 	data = {
 		subscriber_username + "@" + domain_url : subscription
@@ -212,10 +212,10 @@ def change_user_channel_subscriber_role(domain_url, api_location, username, subs
 			payload=data, authorization=username)
 
 #HTTP_API endpoint: /subscribed
-def subscribe_to_topic_channel(domain_url, api_location, username, channel_name, subscription):
+def subscribe_to_topic_channel(session, domain_url, api_location, username, channel_name, subscription):
 
-	username = obtainActualName(username)
-	channel_name = obtainActualName(channel_name)
+	username = obtainActualName(session, username)
+	channel_name = obtainActualName(session, channel_name)
 
 	data = {
 		'%s@topics.%s/posts' % (channel_name, domain_url) : subscription
@@ -224,21 +224,21 @@ def subscribe_to_topic_channel(domain_url, api_location, username, channel_name,
 	return status
 
 #HTTP_API endpoint: /:channel/subscribers/:node/approve
-def approve_topic_channel_subscription_request(domain_url, api_location, channel_name, owner_username, subscriber_jids):
+def approve_topic_channel_subscription_request(session, domain_url, api_location, channel_name, owner_username, subscriber_jids):
 
-	channel_name = obtainActualName(channel_name)
-	owner_username = obtainActualName(owner_username)
-	subscriber_jids = map(lambda x: obtainActualName(x), subscriber_jids)
+	channel_name = obtainActualName(session, channel_name)
+	owner_username = obtainActualName(session, owner_username)
+	subscriber_jids = map(lambda x: obtainActualName(session, x), subscriber_jids)
 
 	data = [ {'subscription' : 'subscribed', 'jid' : jid + "@" + domain_url} for jid in subscriber_jids ]
 	return prepare_and_send_request('POST', '%s%s@topics.%s/subscribers/posts/approve' % (api_location, channel_name, domain_url),
 			payload=data, authorization=owner_username)
 
 #HTTP_API endpoint: /subscribed
-def has_subscriber_role_in_topic_channel(domain_url, api_location, username, channel_name, subscription):
+def has_subscriber_role_in_topic_channel(session, domain_url, api_location, username, channel_name, subscription):
 
-	username = obtainActualName(username)
-	channel_name = obtainActualName(channel_name)
+	username = obtainActualName(session, username)
+	channel_name = obtainActualName(session, channel_name)
 
 	(status, response) = prepare_and_send_request('GET', '%ssubscribed' % (api_location), authorization=username)
 
@@ -254,11 +254,11 @@ def has_subscriber_role_in_topic_channel(domain_url, api_location, username, cha
 	return False
 
 #HTTP_API endpoint /:channel/subscribers/:node 
-def change_topic_channel_subscriber_role(domain_url, api_location, owner_username, username, channel_name, subscription):
+def change_topic_channel_subscriber_role(session, domain_url, api_location, owner_username, username, channel_name, subscription):
 
-	owner_username = obtainActualName(owner_username)
-	username = obtainActualName(username)
-	channel_name = obtainActualName(channel_name)
+	owner_username = obtainActualName(session, owner_username)
+	username = obtainActualName(session, username)
+	channel_name = obtainActualName(session, channel_name)
 
 	data = {
 		username + "@" + domain_url : subscription

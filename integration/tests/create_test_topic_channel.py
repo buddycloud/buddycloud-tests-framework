@@ -3,7 +3,7 @@ from api_utils import topic_channel_exists, create_topic_channel, delete_topic_c
 from find_api_location import findAPILocation
 
 
-def testFunction(domain_url):
+def testFunction(domain_url, session):
 
 	(status, briefing, message, api_location) = findAPILocation(domain_url)
 	if status != 0:
@@ -12,7 +12,7 @@ def testFunction(domain_url):
 	test_topic_channel_name = "test_topic_channel_open"
 	test_topic_channel_owner_username = "test_user_channel_open"
 
-	if create_topic_channel(domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name):
+	if create_topic_channel(session, domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name):
 	
 		status = 0
 		briefing = "Could successfully create test topic channel: <strong>%s@topics.%s</strong>" % (test_topic_channel_name, domain_url)
@@ -21,15 +21,15 @@ def testFunction(domain_url):
 
 	else:
 
-		if topic_channel_exists(domain_url, api_location, test_topic_channel_name):
+		if topic_channel_exists(session, domain_url, api_location, test_topic_channel_name):
 
 			status = 2
 			briefing = "The test topic channel <strong>%s@topics.%s</strong> wasn't " % (test_topic_channel_name, domain_url)
 			briefing += "expected to exist but it did, so it could not be created again."
 			message = briefing
 
-			if ( delete_topic_channel(domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name)
-			and create_topic_channel(domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name) ):
+			if ( delete_topic_channel(session, domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name)
+			and create_topic_channel(session, domain_url, api_location, test_topic_channel_owner_username, test_topic_channel_name) ):
 
 				status = 0
 				additional_info = "<br/>But we could assert that topic channel creation is being properly implemented by your API server."

@@ -3,7 +3,7 @@ from api_utils import user_channel_exists, create_user_channel, delete_user_chan
 from find_api_location import findAPILocation
 
 
-def testFunction(domain_url):
+def testFunction(domain_url, session):
 
 	CLASSIFIED = { 'CREATED' : [], 'UNEXPECTED' : [], 'UNEXPECTED_BUT_WORKED' : [], 'NOT_CREATED' : [] }
 
@@ -17,13 +17,13 @@ def testFunction(domain_url):
 
 		username = prefix + str(i)
 
-		if create_user_channel(domain_url, api_location, username):
+		if create_user_channel(session, domain_url, api_location, username):
 			CLASSIFIED['CREATED'].append("%s@%s" % (username, domain_url))
 		else:
-			if user_channel_exists(domain_url, api_location, username):
+			if user_channel_exists(session, domain_url, api_location, username):
 
-				if ( delete_user_channel(domain_url, api_location, username)
-				and create_user_channel(domain_url, api_location, username) ):
+				if ( delete_user_channel(session, domain_url, api_location, username)
+				and create_user_channel(session, domain_url, api_location, username) ):
 					CLASSIFIED['UNEXPECTED_BUT_WORKED'].append("%s@%s" % (username, domain_url))
 				else:
 					CLASSIFIED['UNEXPECTED'].append("%s@%s" % (username, domain_url))

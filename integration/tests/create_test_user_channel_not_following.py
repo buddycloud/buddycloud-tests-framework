@@ -3,13 +3,7 @@ from api_utils import user_channel_exists, create_user_channel, delete_user_chan
 from find_api_location import findAPILocation
 
 
-def setUp(domain_url):
-	create_user_channel(domain_url)
-
-def tearDown(domain_url):
-	delete_user_channel(domain_url)
-
-def testFunction(domain_url):
+def testFunction(domain_url, session):
 
 	(status, briefing, message, api_location) = findAPILocation(domain_url)
 	if status != 0:
@@ -17,7 +11,7 @@ def testFunction(domain_url):
 
 	username = "test_user_channel_not_following"
 
-	if create_user_channel(domain_url, api_location, username):
+	if create_user_channel(session, domain_url, api_location, username):
 
 		status = 0
 		briefing = "Could successfully create test user channel: <strong>%s@%s</strong>" % (username, domain_url)
@@ -26,15 +20,15 @@ def testFunction(domain_url):
 
 	else:
 
-		if user_channel_exists(domain_url, api_location, username):			
+		if user_channel_exists(session, domain_url, api_location, username):			
 
 			status = 2
 			briefing = "The test user channel <strong>%s@%s</strong> wasn't " % (username, domain_url)
 			briefing += "expected to exist but it did, so it could not be created again."
 			message = briefing
 
-			if ( delete_user_channel(domain_url, api_location, username)
-			and create_user_channel(domain_url, api_location, username) ):
+			if ( delete_user_channel(session, domain_url, api_location, username)
+			and create_user_channel(session, domain_url, api_location, username) ):
 
 				status = 0
 				additional_info = "<br/>But we could assert that user channel creation is being "

@@ -3,7 +3,7 @@ from api_utils import user_channel_exists, create_user_channel, delete_user_chan
 from find_api_location import findAPILocation
 
 
-def testFunction(domain_url):
+def testFunction(domain_url, session):
 
 	(status, briefing, message, api_location) = findAPILocation(domain_url)
 	if status != 0:
@@ -11,7 +11,7 @@ def testFunction(domain_url):
 
 	username = "test_user_channel_not_following"
 
-	if delete_user_channel(domain_url, api_location, username):
+	if delete_user_channel(session, domain_url, api_location, username):
 
 		status = 0
 		briefing = "Could successfully delete test user channel: <strong>%s@%s</strong>" % (username, domain_url)
@@ -20,15 +20,15 @@ def testFunction(domain_url):
 	
 	else:
 
-		if not user_channel_exists(domain_url, api_location, username):			
+		if not user_channel_exists(session, domain_url, api_location, username):			
 
 			status = 2
 			briefing = "The test user channel <strong>%s@%s</strong> was " % (username, domain_url)
 			briefing += "expected to exist but it didn't, so it could not be deleted again."
 			message = briefing
 
-			if ( create_user_channel(domain_url, api_location, username)
-			and delete_user_channel(domain_url, api_location, username) ):
+			if ( create_user_channel(session, domain_url, api_location, username)
+			and delete_user_channel(session, domain_url, api_location, username) ):
 
 				status = 0
 				additional_info = "<br/>But we could assert that user channel deletion is being "
