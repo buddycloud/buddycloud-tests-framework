@@ -87,6 +87,7 @@ def perform_test(test_name=None, domain_url=None):
 			log_stream.reset()
 			log_stream.setDelimiter("<br/>")
 
+			test_output = None
 			arguments = [ domain_url, session ]
 			regex = re.compile("^.*takes exactly [0-9]+ arguments? \([0-9]+ given\)")
 			for i in range(len(arguments), 0, -1):
@@ -102,7 +103,11 @@ def perform_test(test_name=None, domain_url=None):
 
 			log_stream.setDelimiter("\n")
 
-			if ( not (isinstance(test_output, tuple) and len(test_output) == 4) ):
+			if ( test_output == None ):
+
+				error_msg = "Test must receive 1 or 2 arguments!"
+
+			elif ( not (isinstance(test_output, tuple) and len(test_output) == 4) ):
 			
 				error_msg = "Wrong return type; must be a tuple with exactly 4 elements!"
 		
@@ -153,7 +158,7 @@ def perform_test(test_name=None, domain_url=None):
 		response.headers["Content-Type"] = "application/json"
 		return response
 
-	except Exception as e:
+#	except Exception as e:
 
 		e_type, e_value, e_trace = sys.exc_info()
 		e_type = Markup.escape(str(type(e))).__str__()

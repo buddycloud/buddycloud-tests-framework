@@ -6,7 +6,7 @@ MODERATOR_USERNAME = "test_user_channel_follower1"
 MODERATED_USER_CHANNELS = [ "test_user_channel_open", "test_user_channel_authorized" ]
 MODERATED_TOPIC_CHANNEL = "test_topic_channel_open"
 
-def testFunction(domain_url):
+def testFunction(domain_url, session):
 
 	CLASSIFIED = { 'SUBSCRIBED' : [],
 		'PROBLEM_SUBSCRIBING_ASKING' : [],
@@ -20,13 +20,13 @@ def testFunction(domain_url):
 
 	for moderated_channel in MODERATED_USER_CHANNELS:
 
-		if subscribe_to_user_channel(domain_url, api_location, MODERATOR_USERNAME, moderated_channel, "member"):
+		if subscribe_to_user_channel(session, domain_url, api_location, MODERATOR_USERNAME, moderated_channel, "member"):
 			
-			if approve_user_channel_subscription_request(domain_url, api_location, moderated_channel, [MODERATOR_USERNAME]):
+			if approve_user_channel_subscription_request(session, domain_url, api_location, moderated_channel, [MODERATOR_USERNAME]):
 
-				if change_user_channel_subscriber_role(domain_url, api_location, moderated_channel, MODERATOR_USERNAME, "moderator"):
+				if change_user_channel_subscriber_role(session, domain_url, api_location, moderated_channel, MODERATOR_USERNAME, "moderator"):
 
-					if has_subscriber_role_in_user_channel(domain_url, api_location, MODERATOR_USERNAME, moderated_channel, "moderator"):
+					if has_subscriber_role_in_user_channel(session, domain_url, api_location, MODERATOR_USERNAME, moderated_channel, "moderator"):
 						CLASSIFIED['SUBSCRIBED'].append(moderated_channel + "@" + domain_url)
 					else:
 						CLASSIFIED['PROBLEM_DID_NOT_PROMOTE'].append(moderated_channel + "@" + domain_url)
@@ -42,13 +42,13 @@ def testFunction(domain_url):
 
 	for moderated_channel in [MODERATED_TOPIC_CHANNEL]:
 
-		if subscribe_to_topic_channel(domain_url, api_location, MODERATOR_USERNAME, moderated_channel, "member"):
+		if subscribe_to_topic_channel(session, domain_url, api_location, MODERATOR_USERNAME, moderated_channel, "member"):
 	
-			if approve_topic_channel_subscription_request(domain_url, api_location, moderated_channel, MODERATED_USER_CHANNELS[0], [MODERATOR_USERNAME]):
+			if approve_topic_channel_subscription_request(session, domain_url, api_location, moderated_channel, MODERATED_USER_CHANNELS[0], [MODERATOR_USERNAME]):
 
-				if change_topic_channel_subscriber_role(domain_url, api_location, MODERATED_USER_CHANNELS[0], MODERATOR_USERNAME, moderated_channel, "moderator"):
+				if change_topic_channel_subscriber_role(session, domain_url, api_location, MODERATED_USER_CHANNELS[0], MODERATOR_USERNAME, moderated_channel, "moderator"):
 
-					if has_subscriber_role_in_topic_channel(domain_url, api_location, MODERATOR_USERNAME, moderated_channel, "moderator"):
+					if has_subscriber_role_in_topic_channel(session, domain_url, api_location, MODERATOR_USERNAME, moderated_channel, "moderator"):
 						CLASSIFIED['SUBSCRIBED'].append(moderated_channel + "@" + domain_url)
 					else:
 						CLASSIFIED['PROBLEM_DID_NOT_PROMOTE'].append(moderated_channel + "@" + domain_url)
