@@ -4,7 +4,7 @@ from names_persistence_utils import obtainActualName
 
 
 #HTTP_API endpoint: /:channel/metadata/posts
-def update_metadata_info(api_location, username, target_channel_name, metadata_field, metadata_value):
+def update_metadata_info(session, api_location, username, target_channel_name, metadata_field, metadata_value):
 
 	target_channel_name = "%s@%s" % (obtainActualName(session, target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
 	
