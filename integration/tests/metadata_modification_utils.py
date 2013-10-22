@@ -6,11 +6,11 @@ from names_persistence_utils import obtainActualName
 #HTTP_API endpoint: /:channel/metadata/posts
 def update_metadata_info(api_location, username, target_channel_name, metadata_field, metadata_value):
 
-	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	target_channel_name = "%s@%s" % (obtainActualName(session, target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
 	
 	if username != None:
 
-		username = obtainActualName(username)
+		username = obtainActualName(session, username)
 
 		(status, response) = prepare_and_send_request('GET', "%s%s/metadata/posts" % (api_location,
 			target_channel_name), authorization=username)
@@ -63,28 +63,28 @@ def update_metadata_info(api_location, username, target_channel_name, metadata_f
 	return False
 
 #HTTP_API endpoint: /:channel/metadata/posts
-def update_channel_title(api_location, username, target_channel_name):
-	return update_metadata_info(api_location, username, target_channel_name, metadata_field="title", metadata_value="* (Updated)")
+def update_channel_title(session, api_location, username, target_channel_name):
+	return update_metadata_info(session, api_location, username, target_channel_name, metadata_field="title", metadata_value="* (Updated)")
 
 #HTTP_API endpoint: /:channel/metadata/posts
-def update_channel_description(api_location, username, target_channel_name):
-	return update_metadata_info(api_location, username, target_channel_name, metadata_field="description", metadata_value="* (Updated)")
+def update_channel_description(session, api_location, username, target_channel_name):
+	return update_metadata_info(session, api_location, username, target_channel_name, metadata_field="description", metadata_value="* (Updated)")
 
 #HTTP_API endpoint: /:channel/metadata/posts
-def update_channel_access_model(api_location, username, target_channel_name):
-	return update_metadata_info(api_location, username, target_channel_name, metadata_field="access_model", metadata_value="open/authorize")
+def update_channel_access_model(session, api_location, username, target_channel_name):
+	return update_metadata_info(session, api_location, username, target_channel_name, metadata_field="access_model", metadata_value="open/authorize")
 
 #HTTP_API endpoint: /:channel/metadata/posts
-def update_channel_creation_date(api_location, username, target_channel_name):
-	return update_metadata_info(api_location, username, target_channel_name, metadata_field="creation_date", metadata_value="* (Updated)")
+def update_channel_creation_date(session, api_location, username, target_channel_name):
+	return update_metadata_info(session, api_location, username, target_channel_name, metadata_field="creation_date", metadata_value="* (Updated)")
 
 #HTTP_API endpoint: /:channel/metadata/posts
-def update_channel_type(api_location, username, target_channel_name):
-	return update_metadata_info(api_location, username, target_channel_name, metadata_field="channel_type", metadata_value="personal/topic")
+def update_channel_type(session, api_location, username, target_channel_name):
+	return update_metadata_info(session, api_location, username, target_channel_name, metadata_field="channel_type", metadata_value="personal/topic")
 
 #HTTP_API endpoint: /:channel/metadata/posts
-def update_channel_default_affiliation(api_location, username, target_channel_name):
-	return update_metadata_info(api_location, username, target_channel_name, metadata_field="default_affiliation", metadata_value="member/publisher")
+def update_channel_default_affiliation(session, api_location, username, target_channel_name):
+	return update_metadata_info(session, api_location, username, target_channel_name, metadata_field="default_affiliation", metadata_value="member/publisher")
 
 
 METADATA_MODIFICATION_TESTS = {
@@ -96,11 +96,11 @@ METADATA_MODIFICATION_TESTS = {
 	'UPDATE_DEFAULT_AFFILIATION'	: ( update_channel_default_affiliation, "Change permission to channel default affiliation metadata" )
 }
 
-def performMetadataModificationTests(domain_url, api_location, username, expected_results):
+def performMetadataModificationTests(session, domain_url, api_location, username, expected_results):
 
 	if username != None:
 
-		if not user_channel_exists(domain_url, api_location, username):
+		if not user_channel_exists(session, domain_url, api_location, username):
 
 			status = 1
 			message = "Metadata modification tests skipped because %s does not exist." % username
@@ -119,7 +119,7 @@ def performMetadataModificationTests(domain_url, api_location, username, expecte
 
 		for target_channel_name in expected_results[test].get(True, []):
 
-			if METADATA_MODIFICATION_TESTS[test][0](api_location, username, target_channel_name):
+			if METADATA_MODIFICATION_TESTS[test][0](session, api_location, username, target_channel_name):
 				veredict = "%s (%s)" % (target_channel_name, "had change permission, as expected")
 				actual_results_match_expected_results[test][True].append(veredict)
 			else:
@@ -129,7 +129,7 @@ def performMetadataModificationTests(domain_url, api_location, username, expecte
 
 		for target_channel_name in expected_results[test].get(False, []):
 
-			if METADATA_MODIFICATION_TESTS[test][0](api_location, username, target_channel_name):
+			if METADATA_MODIFICATION_TESTS[test][0](session, api_location, username, target_channel_name):
 				veredict = "%s (%s)" % (target_channel_name, "should not have change permission")
 				actual_results_match_expected_results[test][False].append(veredict)
 				status = 1

@@ -51,7 +51,7 @@ function issueTest(test_name, domain_url, decide_next, retry){
 		type: "get",
 		dataType: "json",
 		success: function(data){
-			handleTestResponse(data, domain_url);
+			handleTestResponse(data);
 			decide_next(domain_url, data, retry);
 		},
 		error: function(jqXHR) {
@@ -64,7 +64,7 @@ function issueTest(test_name, domain_url, decide_next, retry){
 
 			if ( jqXHR.status == 503 && !reattempted_issuing_test ){
 				data['briefing'] = "Server busy. Could not launch test " + test_name + ". Retrying again in 5 seconds...";
-				handleTestResponse(data, domain_url);
+				handleTestResponse(data);
 				window.setTimeout(function(){
 					handleTestRelaunch(test_name);
 					issueTest(test_name, domain_url, decide_next, retry);
@@ -75,7 +75,7 @@ function issueTest(test_name, domain_url, decide_next, retry){
 				data['message'] = "A problem (" + jqXHR.status + " " + jqXHR.statusText + ") occurred while launching test " + test_name + ".";
 				data['message'] += "<br/> Server returned status (" + jqXHR.status + " " + jqXHR.statusText + ").";
 				data['message'] += "<br/> Be warned that this does not necessarily mean a problem with the actual test.";
-				handleTestResponse(data, domain_url);
+				handleTestResponse(data);
 				decide_next(domain_url, data, retry);
 				reattempted_issuing_test = false;
 			}

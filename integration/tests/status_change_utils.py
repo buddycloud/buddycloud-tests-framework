@@ -4,9 +4,9 @@ from names_persistence_utils import obtainActualName
 
 
 #HTTP_API endpoint: /:channel/content/status
-def add_new_status_and_check(api_location, username, target_channel_name):
+def add_new_status_and_check(session, api_location, username, target_channel_name):
 
-	target_username = obtainActualName(target_channel_name.split("@")[0])
+	target_username = obtainActualName(session, target_channel_name.split("@")[0])
 	domain_url =  target_channel_name.split("@")[1]
 	target_channel_name = "%s@%s" % (target_username, domain_url)
 
@@ -18,7 +18,7 @@ def add_new_status_and_check(api_location, username, target_channel_name):
 
 	if username != None:
 
-		username = obtainActualName(username)
+		username = obtainActualName(session, username)
 
 		(status, response) = prepare_and_send_request('POST', "%s%s/content/status" % (api_location,
 			target_channel_name), payload=data, authorization=username)
@@ -71,11 +71,11 @@ STATUS_MANAGEMENT_TESTS = {
 	'ADD_NEW_STATUS_AND_CHECK' : ( add_new_status_and_check, "Permission to change status" )
 }
 
-def performStatusManagementTests(domain_url, api_location, username, expected_results):
+def performStatusManagementTests(session, domain_url, api_location, username, expected_results):
 
 	if username != None:
 
-		if not user_channel_exists(domain_url, api_location, username):
+		if not user_channel_exists(session, domain_url, api_location, username):
 
 			status = 1
 			message = "Status management tests skipped because %s does not exist." % username
@@ -94,7 +94,7 @@ def performStatusManagementTests(domain_url, api_location, username, expected_re
 
 		for target_channel_name in expected_results[test].get(True, []):
 
-			if STATUS_MANAGEMENT_TESTS[test][0](api_location, username, target_channel_name):
+			if STATUS_MANAGEMENT_TESTS[test][0](session, api_location, username, target_channel_name):
 				veredict = "%s (%s)" % (target_channel_name, "could perform operation, as expected")
 				actual_results_match_expected_results[test][True].append(veredict)
 			else:
@@ -104,7 +104,7 @@ def performStatusManagementTests(domain_url, api_location, username, expected_re
 
 		for target_channel_name in expected_results[test].get(False, []):
 
-			if STATUS_MANAGEMENT_TESTS[test][0](api_location, username, target_channel_name):
+			if STATUS_MANAGEMENT_TESTS[test][0](session, api_location, username, target_channel_name):
 				veredict = "%s (%s)" % (target_channel_name, "should not have permission to perform operation")
 				actual_results_match_expected_results[test][False].append(veredict)
 				status = 1

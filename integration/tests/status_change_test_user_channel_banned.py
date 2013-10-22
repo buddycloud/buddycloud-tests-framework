@@ -1,7 +1,7 @@
 from status_change_utils import performStatusManagementTests
 from find_api_location import findAPILocation
 
-def testFunction(domain_url):
+def testFunction(domain_url, session):
 
 	(status, briefing, message, api_location) = findAPILocation(domain_url)
 	if status != 0:
@@ -16,7 +16,7 @@ def testFunction(domain_url):
 		}
 	}
 
-	(status, partial_report) = performStatusManagementTests(domain_url, api_location, "test_user_channel_follower4", expected_results)
+	(status, partial_report) = performStatusManagementTests(session, domain_url, api_location, "test_user_channel_follower4", expected_results)
 
 	if status == 0:
 		briefing = "Status management tests for <strong>test_user_channel_follower4@%s</strong> were successful!" % domain_url

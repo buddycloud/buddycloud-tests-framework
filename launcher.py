@@ -1,19 +1,8 @@
 import os, sys, json, string, linecache, re, random
 from flask import Flask, render_template, redirect, url_for, request, make_response, Markup, session
+from multiprocessing import Process, Manager
 
 sys.path.append(os.path.join(os.getcwd(), "suite_utils"))
-
-sys.path.append(os.path.join(os.getcwd(), "installation"))
-from installation_tests import test_entries as installation_test_entries
-
-sys.path.append(os.path.join(os.getcwd(), "integration"))
-from integration_tests import test_entries as integration_test_entries
-
-test_entries = installation_test_entries + integration_test_entries
-
-test_names = {}
-for i in range(len(test_entries)):
-	test_names[test_entries[i]['name']] = i
 
 import logging
 from log_utils import LogStream
@@ -22,33 +11,122 @@ from log_utils import LogStream
 log_stream = LogStream()
 logging.basicConfig(level=logging.DEBUG, stream=log_stream)
 
+def perform_tests(domain_url, run):
+
+	sys.path.append(os.path.join(os.getcwd(), "suite_utils"))
+	sys.path.append(os.path.join(os.getcwd(), "installation"))
+	from installation_tests import test_entries as installation_test_entries
+	sys.path.append(os.path.join(os.getcwd(), "integration"))
+	from integration_tests import test_entries as integration_test_entries
+	test_entries = installation_test_entries + integration_test_entries
+
+	test_names = {}
+	for i in range(len(test_entries)):
+		test_names[test_entries[i]['name']] = i
+
+	run['run_status'] = 1
+
+	tests = []
+	for test_entry in test_entries:
+
+		tests.append({
+			'name' : test_entry['name'],
+			'test_run_status' : 0,
+			'result' : None,
+			'source' : test_entry['source']
+		})
+
+	run['tests'] = tests
+
+	updated_tests = tests
+
+	run_variables = {}
+
+	for index_test_entry in range(len(test_entries)):
+
+		updated_tests[index_test_entry]['test_run_status'] = 1
+		run['tests'] = updated_tests
+
+		response = perform_test(test_entries[index_test_entry]['name'], domain_url, test_names, test_entries, run_variables)
+
+		updated_tests[index_test_entry]['test_run_status'] = 2
+		updated_tests[index_test_entry]['result'] = response
+		run['tests'] = updated_tests
+
+
+	run['run_status'] = 2
+
 server = Flask(__name__)
 server.secret_key = os.urandom(24)
 
-@server.route('/')
-def index():
-	
-	return render_template("index.html", domain_url=None)
+@server.route('/active_session')
+def active_session_exists():
 
+	if 'run_id' in session:
 
-@server.route('/test_names', methods=['GET'])
-def get_test_names():
+		response = make_response(json.dumps({'active_session' : session['run_id'].split("_")[0]}), 200)
+		response.headers["Content-Type"] = "application/json"
 
-	entries = []
-	for entry in test_entries:
+	else:
 
-		entries.append({
-			'name' : entry['name'],
-			'continue_if_fail' : entry['continue_if_fail'],
-			'source' : entry['source']
-		})
+		response = make_response(json.dumps({'active_session' : None}), 410)
+		response.headers["Content-Type"] = "application/json"
+		response.headers["Cache-Control"] = "no-cache"
 
-	response = make_response(json.dumps(entries), 200)
-	response.headers["Content-Type"] = "application/json"
 	return response
 
-@server.route('/perform_test/<test_name>/<path:domain_url>')
-def perform_test(test_name=None, domain_url=None):
+@server.route('/get_results')
+def get_results():
+
+	global runs
+
+	if 'run_id' in session:
+
+		response = make_response(json.dumps(dict(runs[session['run_id']])), 200)
+		response.headers["Content-Type"] = "application/json"
+
+	else:
+
+		response = make_response(json.dumps({'active_session' : None}), 410)
+		response.headers["Content-Type"] = "application/json"
+		response.headers["Cache-Control"] = "no-cache"
+
+	return response
+
+@server.route('/launch/<path:domain_url>')
+def launch_tester(domain_url=None):
+
+	global runs
+	
+	if not 'run_id' in session:
+
+		session['run_id'] = domain_url + "_" + str(random.random()).split(".")[1]
+
+
+		manager = Manager()
+		runs[session['run_id']] = manager.dict()
+		runs[session['run_id']]['run_id'] = session['run_id']
+		runs[session['run_id']]['run_status'] = 0
+		runs[session['run_id']]['tests'] = {}
+
+		p = Process(target=perform_tests, args=(domain_url, runs[session['run_id']],))
+		p.daemon = True
+		p.start()
+
+		response = make_response(json.dumps(dict(runs[session['run_id']])), 200)
+		response.headers["Content-Type"] = "application/json"
+		return response
+	
+	else:
+
+		if ( runs[session['run_id']]['run_status'] == 2 ):
+
+			session.pop('run_id')
+			return launch_tester(domain_url)
+
+		return get_results()
+
+def perform_test(test_name, domain_url, test_names, test_entries, run_variables):
 
 	logging.info("~about to execute test "+test_name+"~")
 
@@ -59,7 +137,7 @@ def perform_test(test_name=None, domain_url=None):
 
 	try:
 
-		json_return = { 'name' : test_name }
+		response = { 'name' : test_name }
 
 		error_msg = None
 
@@ -76,9 +154,9 @@ def perform_test(test_name=None, domain_url=None):
 			logging.info("~the test "+test_name+" doesn't exist~")
 
 			(exit_status, briefing, message, results) = 2, "Invalid test name!", error_msg, None
-			json_return['exit_status'] = exit_status
-			json_return['briefing'] = briefing
-			json_return['message'] = message
+			response['exit_status'] = exit_status
+			response['briefing'] = briefing
+			response['message'] = message
 
 		else:
 	
@@ -88,7 +166,7 @@ def perform_test(test_name=None, domain_url=None):
 			log_stream.setDelimiter("<br/>")
 
 			test_output = None
-			arguments = [ domain_url, session ]
+			arguments = [ domain_url, run_variables ]
 			regex = re.compile("^.*takes exactly [0-9]+ arguments? \([0-9]+ given\)")
 			for i in range(len(arguments), 0, -1):
 				try:
@@ -131,9 +209,9 @@ def perform_test(test_name=None, domain_url=None):
 				message += "or because a test that this test reuses is malformed."
 				message += " <br/>Reason: " + error_msg
 
-				json_return['exit_status'] = exit_status
-				json_return['briefing'] = briefing
-				json_return['message'] = message
+				response['exit_status'] = exit_status
+				response['briefing'] = briefing
+				response['message'] = message
 
 				logging.info("~the test "+test_name+" is malformed~")
 
@@ -141,8 +219,8 @@ def perform_test(test_name=None, domain_url=None):
 
 				(exit_status, briefing, message, results) = test_output 
 			
-				json_return['exit_status'] = exit_status
-				json_return['briefing'] = briefing
+				response['exit_status'] = exit_status
+				response['briefing'] = briefing
 
 				if ( log_stream.getContent() != "" ):
 					message += "<br/><br><strong>Test Log:</strong><br/>"
@@ -150,12 +228,13 @@ def perform_test(test_name=None, domain_url=None):
 							log_stream.getContent().split("<br/>"))
 					message += "<small>%s</small>" % string.join(logged_content, "<br/>")
 
-				json_return['message'] = message
+				response['message'] = message
 
 				logging.info("~the test "+test_name+" performed successfully~")
 
-		response = make_response(json.dumps(json_return), 200)
-		response.headers["Content-Type"] = "application/json"
+#		response = make_response(json.dumps(response), 200)
+#		response.headers["Content-Type"] = "application/json"
+#		return response
 		return response
 
 #	except Exception as e:
@@ -175,21 +254,27 @@ def perform_test(test_name=None, domain_url=None):
 		message = "This test failed pretty badly.<br/>It raised an unexpected exception:<br/><br/>"+exception_info+"<br/>"
 		message += "</br>Please fix this problem before issuing this test again."
 
-		json_return = { 'name' : test_name,
+		response = { 'name' : test_name,
 				'exit_status' : 1,
 				'briefing' : "Unexpected exception raised!!",
 				'message' : message,
 				'output' : None
 		}
 
-		response = make_response(json.dumps(json_return), 200)
-		response.headers["Content-Type"] = "application/json"
+#		response = make_response(json.dumps(response), 200)
+#		response.headers["Content-Type"] = "application/json"
+#		return response
 		return response
 
 	finally:
 		
 		logging.info("~leaving execution context~")
 		os.chdir(current_dir)
+
+@server.route('/')
+def index():
+	
+	return render_template("index.html", domain_url=None)
 
 @server.route('/<path:domain_url>')
 def start_tests_server(domain_url=None):
@@ -200,7 +285,9 @@ def start_tests_server(domain_url=None):
 	return resp
 
 if __name__ == "__main__":
-	
+
+	runs = {}
+
 	port = int(os.environ.get("PORT", 5000))
 
 	logging.info("~about to start protocol server~")

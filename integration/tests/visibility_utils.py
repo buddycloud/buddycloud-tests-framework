@@ -5,13 +5,13 @@ from names_persistence_utils import obtainActualName
 
 
 #HTTP_API endpoint: /:channel/metadata/posts
-def all_metadata_access(api_location, username, target_channel_name):
+def all_metadata_access(session, api_location, username, target_channel_name):
 
-	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	target_channel_name = "%s@%s" % (obtainActualName(session, target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
 
 	if username != None:
 
-		username = obtainActualName(username)
+		username = obtainActualName(session, username)
 
 		(status, response) = prepare_and_send_request('GET', "%s%s/metadata/posts" % (api_location,
 			target_channel_name), authorization=username)
@@ -36,13 +36,13 @@ def all_metadata_access(api_location, username, target_channel_name):
 	return False
 
 #HTTP_API endpoint: /:channel/content/status
-def mood_status_access(api_location, username, target_channel_name):
+def mood_status_access(session, api_location, username, target_channel_name):
 
-	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	target_channel_name = "%s@%s" % (obtainActualName(session, target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
 	
 	if username != None:
 
-		username = obtainActualName(username)
+		username = obtainActualName(session, username)
 
 		(status, response) = prepare_and_send_request('GET', "%s%s/content/status" % (api_location,
 			target_channel_name), authorization=username)
@@ -54,13 +54,13 @@ def mood_status_access(api_location, username, target_channel_name):
 	return status
 
 #HTTP_API endpoint: /:channel/content/posts
-def posts_read_access(api_location, username, target_channel_name):
+def posts_read_access(session, api_location, username, target_channel_name):
 
-	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	target_channel_name = "%s@%s" % (obtainActualName(session, target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
 	
 	if username != None:
 
-		username = obtainActualName(username)
+		username = obtainActualName(session, username)
 
 		(status, response) = prepare_and_send_request('GET', "%s%s/content/posts" % (api_location,
 			target_channel_name), authorization=username)
@@ -72,13 +72,13 @@ def posts_read_access(api_location, username, target_channel_name):
 	return status
 
 #HTTP_API endpoint: /:channel/subscribers/posts
-def subscribers_access(api_location, username, target_channel_name):
+def subscribers_access(session, api_location, username, target_channel_name):
 
-	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	target_channel_name = "%s@%s" % (obtainActualName(session, target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
 	
 	if username != None:
 
-		username = obtainActualName(username)
+		username = obtainActualName(session, username)
 
 		(status, response) = prepare_and_send_request('GET', "%s%s/subscribers/posts" % (api_location,
 			target_channel_name), authorization=username)
@@ -90,13 +90,13 @@ def subscribers_access(api_location, username, target_channel_name):
 	return status
 
 #HTTP_API endpoint: /:channel/subscribers/posts
-def banned_subscribers_access(api_location, username, target_channel_name):
+def banned_subscribers_access(session, api_location, username, target_channel_name):
 
-	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	target_channel_name = "%s@%s" % (obtainActualName(session, target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
 
 	if username != None:
 	
-		username = obtainActualName(username)
+		username = obtainActualName(session, username)
 
 		(status, response) = prepare_and_send_request('GET', "%s%s/subscribers/posts" % (api_location,
 			target_channel_name), authorization=username)
@@ -118,13 +118,13 @@ def banned_subscribers_access(api_location, username, target_channel_name):
 	return False
 
 #HTTP_API endpoint: /subscribed
-def outside_roles_access(api_location, username, target_channel_name):
+def outside_roles_access(session, api_location, username, target_channel_name):
 	
-	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	target_channel_name = "%s@%s" % (obtainActualName(session, target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
 	
 	if username != None:
 
-		username = obtainActualName(username)
+		username = obtainActualName(session, username)
 		
 		(status, response) = prepare_and_send_request('GET', "%ssubscribed" % (api_location), authorization=username)
 
@@ -135,13 +135,13 @@ def outside_roles_access(api_location, username, target_channel_name):
 	return status
 
 #HTTP_API endpoint: /:channel/content/geoloc
-def geoloc_access(api_location, username, target_channel_name):
+def geoloc_access(session, api_location, username, target_channel_name):
 
-	target_channel_name = "%s@%s" % (obtainActualName(target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
+	target_channel_name = "%s@%s" % (obtainActualName(session, target_channel_name.split("@")[0]), target_channel_name.split("@")[1])
 	
 	if username != None:
 	
-		username = obtainActualName(username)
+		username = obtainActualName(session, username)
 		
 		(status, response) = prepare_and_send_request('GET', "%s%s/content/geoloc" % (api_location,
 			target_channel_name), authorization=username)
@@ -164,7 +164,7 @@ VISIBILITY_TESTS = {
 
 }
 
-def performVisibilityTests(domain_url, username, expected_results):
+def performVisibilityTests(session, domain_url, username, expected_results):
 
 	(status, briefing, message, api_location) = findAPILocation(domain_url)
 	if status != 0:
@@ -183,7 +183,7 @@ def performVisibilityTests(domain_url, username, expected_results):
 
 		for target_channel_name in expected_results[test].get(True, []):
 
-			if VISIBILITY_TESTS[test][0](api_location, username, target_channel_name):
+			if VISIBILITY_TESTS[test][0](session, api_location, username, target_channel_name):
 				veredict = "%s (%s)" % (target_channel_name, "had access, as expected")
 				actual_results_match_expected_results[test][True].append(veredict)
 			else:
@@ -193,7 +193,7 @@ def performVisibilityTests(domain_url, username, expected_results):
 
 		for target_channel_name in expected_results[test].get(False, []):
 
-			if VISIBILITY_TESTS[test][0](api_location, username, target_channel_name):
+			if VISIBILITY_TESTS[test][0](session, api_location, username, target_channel_name):
 				veredict = "%s (%s)" % (target_channel_name, "should not have access")
 				actual_results_match_expected_results[test][False].append(veredict)
 				status = 1

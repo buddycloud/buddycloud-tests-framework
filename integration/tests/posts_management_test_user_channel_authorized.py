@@ -1,7 +1,7 @@
 from posts_management_utils import performPostsManagementTests
 from find_api_location import findAPILocation
 
-def testFunction(domain_url):
+def testFunction(domain_url, session):
 
 	(status, briefing, message, api_location) = findAPILocation(domain_url)
 	if status != 0:
@@ -35,7 +35,7 @@ def testFunction(domain_url):
 		}
 	}
 
-	(status, partial_report) = performPostsManagementTests(domain_url, api_location, "test_user_channel_authorized", expected_results)
+	(status, partial_report) = performPostsManagementTests(session, domain_url, api_location, "test_user_channel_authorized", expected_results)
 
 	if status == 0:
 		briefing = "Posts management tests for <strong>test_user_channel_authorized@%s</strong> were successful!" % domain_url

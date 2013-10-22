@@ -40,18 +40,32 @@
 	</body>
 
 	<script src={{url_for('static', filename="js/jquery-1.9.1.min.js")}} language="javascript" type="text/javascript"></script>
-	<script src={{url_for('static', filename="js/launcher.js")}} language="javascript" type="text/javascript"></script>
+	<script src={{url_for('static', filename="js/jquery-cookie.js")}} language="javascript" type="text/javascript"></script>
+	<script src={{url_for('static', filename="js/server_side_launcher.js")}} language="javascript" type="text/javascript"></script>
 	<script src={{url_for('static', filename="js/view.js")}} language="javascript" type="text/javascript"></script>
 	<script src={{url_for('static', filename="js/bootstrap.min.js")}} language="javascript" type="text/javascript"></script>
 	<script async="" src="//www.google-analytics.com/ga.js"></script>
 	<script language="javascript" type="text/javascript">
 	$(document).ready(function(){
-	{% if domain_url %}
-		$("#domain_url_box").val("{{ domain_url }}");
-		startInspection();
-	{% else %}
-		$("#domain_url_box").val("buddycloud.org");
-	{% endif %}
+
+		$.ajax({
+			url: "/active_session",
+			type: "get",
+			dataType: "json",
+			success: function(data){
+				$("#domain_url_box").val(data.active_session);
+				startInspection();
+			},
+			error: function(jqXHR){
+			{% if domain_url %}
+				$("#domain_url_box").val("{{ domain_url }}");
+				startInspection();
+			{% else %}
+				$("#domain_url_box").val("buddycloud.org");
+			{% endif %}
+			}
+		});
+
 	});
 	</script>
 </html>

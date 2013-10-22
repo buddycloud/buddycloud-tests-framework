@@ -48,7 +48,7 @@ function handleTestRelaunch(test_name){
 }
 
 // What to do in the page once a test finishes running
-function handleTestResponse(data, domain_url){
+function handleTestResponse(data){
 
 	$("#td_"+data.name).addClass("btn-"+getExitStatusClass(data.exit_status));
 	$("#td_"+data.name).removeClass("disabled");

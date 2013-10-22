@@ -1,7 +1,9 @@
 from importlib import import_module
 import os, sys
-os.chdir("integration")
-sys.path.insert(0, "tests")
+#os.chdir("integration")
+tests_path = os.path.join(os.getcwd(), "integration", "tests")
+if not tests_path in sys.path:
+	sys.path.insert(0, tests_path)
 
 
 class IntegrationTest:
@@ -23,7 +25,8 @@ class IntegrationTest:
 
 
 test_entries = []
-config = open("integration_tests.cfg")
+suite_config_path = os.path.join(os.getcwd(), "integration", "integration_tests.cfg")
+config = open(suite_config_path)
 
 for test_name in config.xreadlines():
 
@@ -52,6 +55,6 @@ for test_name in config.xreadlines():
 
 
 config.close()
-os.chdir("../")
+#os.chdir("../")
 
 del config

@@ -4,9 +4,9 @@ from names_persistence_utils import obtainActualName
 
 
 #HTTP_API endpoint: /:channel/content/posts
-def add_new_post_and_get_by_id_direct_access(api_location, username, target_channel_name):
+def add_new_post_and_get_by_id_direct_access(session, api_location, username, target_channel_name):
 
-	target_username = obtainActualName(target_channel_name.split("@")[0])
+	target_username = obtainActualName(session, target_channel_name.split("@")[0])
 	domain_url =  target_channel_name.split("@")[1]
 	target_channel_name = "%s@%s" % (target_username, domain_url)
 
@@ -18,7 +18,7 @@ def add_new_post_and_get_by_id_direct_access(api_location, username, target_chan
 
 	if username != None:
 
-		username = obtainActualName(username)
+		username = obtainActualName(session, username)
 
 		(status, response) = prepare_and_send_request('POST', "%s%s/content/posts" % (api_location,
 			target_channel_name), payload=data, authorization=username)
@@ -67,9 +67,9 @@ def add_new_post_and_get_by_id_direct_access(api_location, username, target_chan
 	return False
 
 #HTTP_API endpoint: /:channel/content/posts
-def add_new_post_and_get_by_matching_id(api_location, username, target_channel_name):
+def add_new_post_and_get_by_matching_id(session, api_location, username, target_channel_name):
 
-	target_username = obtainActualName(target_channel_name.split("@")[0])
+	target_username = obtainActualName(session, target_channel_name.split("@")[0])
 	domain_url =  target_channel_name.split("@")[1]
 	target_channel_name = "%s@%s" % (target_username, domain_url)
 
@@ -81,7 +81,7 @@ def add_new_post_and_get_by_matching_id(api_location, username, target_channel_n
 
 	if username != None:
 
-		username = obtainActualName(username)
+		username = obtainActualName(session, username)
 
 		(status, response) = prepare_and_send_request('POST', "%s%s/content/posts" % (api_location,
 			target_channel_name), payload=data, authorization=username)
@@ -135,9 +135,9 @@ def add_new_post_and_get_by_matching_id(api_location, username, target_channel_n
 	return False
 
 #HTTP_API endpoint: /:channel/content/posts
-def remove_own_post(api_location, username, target_channel_name):
+def remove_own_post(session, api_location, username, target_channel_name):
 
-	target_username = obtainActualName(target_channel_name.split("@")[0])
+	target_username = obtainActualName(session, target_channel_name.split("@")[0])
 	domain_url =  target_channel_name.split("@")[1]
 	target_channel_name = "%s@%s" % (target_username, domain_url)
 
@@ -149,7 +149,7 @@ def remove_own_post(api_location, username, target_channel_name):
 
 	if username != None:
 
-		username = obtainActualName(username)
+		username = obtainActualName(session, username)
 
 		(status, response) = prepare_and_send_request('POST', "%s%s/content/posts" % (api_location,
 			target_channel_name), payload=data, authorization=username)
@@ -188,9 +188,9 @@ def remove_own_post(api_location, username, target_channel_name):
 	return False
 
 #HTTP_API endpoint: /:channel/content/posts
-def remove_post_created_by_owner(api_location, username, target_channel_name):
+def remove_post_created_by_owner(session, api_location, username, target_channel_name):
 
-	target_username = obtainActualName(target_channel_name.split("@")[0])
+	target_username = obtainActualName(session, target_channel_name.split("@")[0])
 	domain_url =  target_channel_name.split("@")[1]
 	target_channel_name = "%s@%s" % (target_username, domain_url)
 
@@ -199,7 +199,7 @@ def remove_post_created_by_owner(api_location, username, target_channel_name):
 	else:
 		owner_username = 'test_user_channel_authorized'
 
-	owner_username = obtainActualName(owner_username)
+	owner_username = obtainActualName(session, owner_username)
 
 	content_posted = "By the way, what happened to Waaaaaalt?"
 
@@ -225,7 +225,7 @@ def remove_post_created_by_owner(api_location, username, target_channel_name):
 
 			if username != None:
 
-				username = obtainActualName(username)
+				username = obtainActualName(session, username)
 		
 				(status, response) = prepare_and_send_request('DELETE', "%s%s/content/posts/%s" % (api_location,
 					target_channel_name, post_id), authorization=username)
@@ -242,14 +242,14 @@ def remove_post_created_by_owner(api_location, username, target_channel_name):
 	return False
 
 #HTTP_API endpoint: /:channel/content/posts
-def remove_post_created_by_moderator(api_location, username, target_channel_name):
+def remove_post_created_by_moderator(session, api_location, username, target_channel_name):
 
-	target_username = obtainActualName(target_channel_name.split("@")[0])
+	target_username = obtainActualName(session, target_channel_name.split("@")[0])
 	domain_url =  target_channel_name.split("@")[1]
 	target_channel_name = "%s@%s" % (target_username, domain_url)
 
 	owner_username = 'test_user_channel_follower1'
-	owner_username = obtainActualName(owner_username)
+	owner_username = obtainActualName(session, owner_username)
 
 	content_posted = "By the way, what happened to Waaaaaalt?"
 
@@ -275,7 +275,7 @@ def remove_post_created_by_moderator(api_location, username, target_channel_name
 
 			if username != None:
 
-				username = obtainActualName(username)
+				username = obtainActualName(session, username)
 		
 				(status, response) = prepare_and_send_request('DELETE', "%s%s/content/posts/%s" % (api_location,
 					target_channel_name, post_id), authorization=username)
@@ -299,11 +299,11 @@ POSTS_MANAGEMENT_TESTS = {
 	'REMOVE_POST_CREATED_BY_MODERATOR'	   : ( remove_post_created_by_moderator, "Permission to remove posts created by a channel moderator" )	
 }
 
-def performPostsManagementTests(domain_url, api_location, username, expected_results):
+def performPostsManagementTests(session, domain_url, api_location, username, expected_results):
 
 	if username != None:
 
-		if not user_channel_exists(domain_url, api_location, username):
+		if not user_channel_exists(session, domain_url, api_location, username):
 
 			status = 1
 			message = "Posts management tests skipped because %s does not exist." % username
@@ -322,7 +322,7 @@ def performPostsManagementTests(domain_url, api_location, username, expected_res
 
 		for target_channel_name in expected_results[test].get(True, []):
 
-			if POSTS_MANAGEMENT_TESTS[test][0](api_location, username, target_channel_name):
+			if POSTS_MANAGEMENT_TESTS[test][0](session, api_location, username, target_channel_name):
 				veredict = "%s (%s)" % (target_channel_name, "could perform operation, as expected")
 				actual_results_match_expected_results[test][True].append(veredict)
 			else:
@@ -332,7 +332,7 @@ def performPostsManagementTests(domain_url, api_location, username, expected_res
 
 		for target_channel_name in expected_results[test].get(False, []):
 
-			if POSTS_MANAGEMENT_TESTS[test][0](api_location, username, target_channel_name):
+			if POSTS_MANAGEMENT_TESTS[test][0](session, api_location, username, target_channel_name):
 				veredict = "%s (%s)" % (target_channel_name, "should not have permission to perform operation")
 				actual_results_match_expected_results[test][False].append(veredict)
 				status = 1

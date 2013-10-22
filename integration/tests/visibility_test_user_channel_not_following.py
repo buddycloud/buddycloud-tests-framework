@@ -1,6 +1,6 @@
 from visibility_utils import performVisibilityTests
 
-def testFunction(domain_url):
+def testFunction(domain_url, session):
 
 	expected_results = {
 		'ALL_METADATA_ACCESS'	: {
@@ -57,7 +57,7 @@ def testFunction(domain_url):
 #		}
 	}
 
-	(status, partial_report) = performVisibilityTests(domain_url, "test_user_channel_not_following", expected_results)
+	(status, partial_report) = performVisibilityTests(session, domain_url, "test_user_channel_not_following", expected_results)
 
 	if status == 0:
 		briefing = "Visibility tests for <strong>test_user_channel_not_following@%s</strong> were successful!" % domain_url
