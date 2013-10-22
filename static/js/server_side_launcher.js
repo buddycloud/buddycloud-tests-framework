@@ -50,6 +50,7 @@ function startInspection(){
 		dataType: "json",
 		success: function(data){
 			handleStartTestsLauncher(domain_url);
+			getUpdatedResults();
 			updaterId = window.setInterval(function(){
 				getUpdatedResults();
 			}, 5000);
