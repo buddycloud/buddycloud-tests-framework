@@ -53,7 +53,7 @@ function startInspection(){
 			getUpdatedResults();
 			updaterId = window.setInterval(function(){
 				getUpdatedResults();
-			}, 5000);
+			}, 800);
 		},
 		error: function(jqXHR){
 			if ( jqXHR.status == 503 ){

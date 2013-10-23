@@ -232,12 +232,9 @@ def perform_test(test_name, domain_url, test_names, test_entries, run_variables)
 
 				logging.info("~the test "+test_name+" performed successfully~")
 
-#		response = make_response(json.dumps(response), 200)
-#		response.headers["Content-Type"] = "application/json"
-#		return response
 		return response
 
-#	except Exception as e:
+	except Exception as e:
 
 		e_type, e_value, e_trace = sys.exc_info()
 		e_type = Markup.escape(str(type(e))).__str__()
@@ -261,9 +258,6 @@ def perform_test(test_name, domain_url, test_names, test_entries, run_variables)
 				'output' : None
 		}
 
-#		response = make_response(json.dumps(response), 200)
-#		response.headers["Content-Type"] = "application/json"
-#		return response
 		return response
 
 	finally:
