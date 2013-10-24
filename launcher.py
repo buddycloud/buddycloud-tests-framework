@@ -129,8 +129,8 @@ def stop_launcher():
 
 		#add checks to actually make sure that teardown tests have run before destroying the process
 		#or issuing teardown processes only right after destroying the process
-		process_handlers[session['run_id']].terminate()
-		del runs[session['run_id']]
+		#process_handlers[session['run_id']].terminate()
+		#del runs[session['run_id']]
 		session.pop('run_id')
 
 	response = make_response("", 210)
