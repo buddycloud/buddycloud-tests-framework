@@ -8,8 +8,11 @@ function handleStartTestsLauncher(domain_url){
 // What to do in the page when a new test was issued just now
 function handleTestCreation(test_name, test_source){
 
-	$("#inspect_button").addClass("disabled");
-	$("#inspect_button").attr("onclick", "");
+	$("#inspect_button").addClass("btn-danger");
+	$("#inspect_button").removeClass("disabled");
+	$("#inspect_button").removeClass("btn-success");
+	$("#inspect_button").text("stop!");
+	$("#inspect_button").attr("onclick", "stopInspection();");
 
 	test_entry_html = "<div class='test_entry'>";
 	test_entry_html += "<div style='display:table; width:100%;'>"
@@ -31,20 +34,6 @@ function handleTestCreation(test_name, test_source){
 	test_entry_html += "</div>";
 
 	$("#tests_output_table").append(test_entry_html);
-}
-
-function handleTestRelaunch(test_name){
-
-	$("#inspect_button").addClass("disabled");
-	$("#inspect_button").attr("onclick", "");
-
-	$("#td_"+test_name).attr("class", "btn disabled test_name");
-	$("#td_"+test_name).attr("data-response", "");
-	$("#td_"+test_name).attr("onclick", "");
-	$("#ts_"+test_name).attr("class", "btn disabled test_source");
-	$("#to_"+test_name).attr("class", "test_output uneditable-input");
-	$("#to_"+test_name).html("Running this test again...");
-	$("#ti_"+test_name).attr("class", "icon-random");
 }
 
 // What to do in the page once a test finishes running
@@ -157,29 +146,16 @@ function createButtons(domain_url, test_name, situation){
 
 	var close = "<button href='#' data-dismiss='modal' class='btn btn-";
 	close += situation + "'>Close</button>";	
-	var retry = "<button id='retry_this_btn' href='#' data-dismiss='modal' class='btn btn-";
-	retry += situation + "'>Retry this</button>" + close;
-	var retryFails = "<button id='retry_all_failed_btn' href='#' data-dismiss='modal' class='btn";
-	retryFails += " btn-" + situation + "'>Retry all that failed</button>" + retry;
-	var retryAll = "<button id='retry_all_btn' href='#' data-dismiss='modal' class='btn btn-";
-	retryAll += situation + "'>Retry all</button>" + retryFails;
-	$("#message_buttons").html(retryAll);
-
-	$("#retry_this_btn").attr("onclick", "runAgain('" + test_name + "', '" + domain_url + "');");
-	$("#retry_all_failed_btn").attr("onclick", "retryTests('" + domain_url + "');");
-	$("#retry_all_btn").attr("onclick", "startInspection();");
+	$("#message_buttons").html(close);
 }
 
 
 function finishLauncher(){
 
+	$("#inspect_button").addClass("btn-success");
 	$("#inspect_button").removeClass("disabled");
-	$("#inspect_button").attr("onclick", "startInspection();");
-}
-
-function finishRunningTestAgain(domain_url, data){
-
-	$("#inspect_button").removeClass("disabled");
+	$("#inspect_button").removeClass("btn-danger");
+	$("#inspect_button").text("check!");
 	$("#inspect_button").attr("onclick", "startInspection();");
 }
 

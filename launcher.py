@@ -59,6 +59,35 @@ def perform_tests(domain_url, run):
 server = Flask(__name__)
 server.secret_key = os.urandom(24)
 
+@server.route('/get_all_runs')
+def get_all_runs():
+
+	global runs
+
+	dict_runs = {}
+
+	for session_id in runs.keys():
+		dict_runs[session_id] = dict(runs[session_id])
+
+	response = make_response(json.dumps(dict_runs), 200)
+	response.headers["Content-Type"] = "application/json"
+	return response
+
+@server.route('/is_alive/<run_id>')
+def is_alive(run_id=None):
+
+	if run_id in process_handlers:
+
+		if process_handlers[run_id].is_alive():
+
+			response = make_response(json.dumps({'veredict' : 'YAY'}), 200)
+			response.headers["Content-Type"] = "application/json"
+			return response
+
+	response = make_response(json.dumps({'veredict' : 'NOPS'}), 200)
+	response.headers["Content-Type"] = "application/json"
+	return response			
+
 @server.route('/active_session')
 def active_session_exists():
 
@@ -93,6 +122,21 @@ def get_results():
 
 	return response
 
+@server.route('/stop_launcher')
+def stop_launcher():
+
+	if 'run_id' in session:
+
+		#add checks to actually make sure that teardown tests have run before destroying the process
+		#or issuing teardown processes only right after destroying the process
+		process_handlers[session['run_id']].terminate()
+		del runs[session['run_id']]
+		session.pop('run_id')
+
+	response = make_response("", 210)
+	response.headers["Cache-Control"] = "no-cache"
+	return response
+
 @server.route('/launch/<path:domain_url>')
 def launch_tester(domain_url=None):
 
@@ -110,6 +154,9 @@ def launch_tester(domain_url=None):
 		runs[session['run_id']]['tests'] = {}
 
 		p = Process(target=perform_tests, args=(domain_url, runs[session['run_id']],))
+
+		process_handlers[session['run_id']] = p
+
 		p.daemon = True
 		p.start()
 
@@ -162,6 +209,7 @@ def perform_test(test_name, domain_url, test_names, test_entries, run_variables)
 	
 			error_msg = None
 
+			print log_stream.getContent()
 			log_stream.reset()
 			log_stream.setDelimiter("<br/>")
 
@@ -281,6 +329,7 @@ def start_tests_server(domain_url=None):
 if __name__ == "__main__":
 
 	runs = {}
+	process_handlers = {}
 
 	port = int(os.environ.get("PORT", 5000))
 

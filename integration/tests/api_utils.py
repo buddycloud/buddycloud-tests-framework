@@ -1,4 +1,5 @@
 from requests import Request, Session
+from requests.exceptions import Timeout, SSLError
 import json, base64
 from names_persistence_utils import obtainActualName
 
@@ -34,7 +35,11 @@ def prepare_and_send_request(request_method, request_url, payload=None, authoriz
 	s = Session()
 	s.mount('https://', SSLAdapter('TLSv1'))
 
-	resp = s.send(r, verify=False)
+	try:
+		resp = s.send(r, verify=False, timeout=20)
+	except Timeout, SSLError:
+		print "REQUEST TIMED OUT. RETRYING AGAIN!"
+		return prepare_and_send_request(request_method, request_url, payload, authorization)
 	return (resp.ok, resp)
 
 #HTTP_API endpoint: /:channel/metadata/:node

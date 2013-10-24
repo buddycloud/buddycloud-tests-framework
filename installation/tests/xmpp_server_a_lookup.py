@@ -119,13 +119,14 @@ def testFunction(domain_url):
 	else:
 		answers += server_srvs
 
-	status, briefing, message, client_srvs = xmppClientServiceRecordLookup(domain_url)
-	if ( status != 0 ):
-		skipped["xmpp_client_srv_lookup"] = message
-	else:
-		answers += client_srvs
+#	status, briefing, message, client_srvs = xmppClientServiceRecordLookup(domain_url)
+#	if ( status != 0 ):
+#		skipped["xmpp_client_srv_lookup"] = message
+#	else:
+#		answers += client_srvs
 
-	if ( len(skipped.keys()) == 2 ):
+#	if ( len(skipped.keys()) == 2 ):
+	if ( len(skipped.keys()) == 1 ):
 		return doSkip(skipped)
 
 
