@@ -1,54 +1,41 @@
-import dns.resolver, string
+import dns.resolver, string, re
 from dns.resolver import NoAnswer, NXDOMAIN
 
 #util_dependencies
 from domain_name_lookup import testFunction as domainNameLookup
 from dns_utils import getAuthoritativeNameserver
 
+find_version = re.compile("(\"v=.*\"){1}")
+find_host = re.compile("(\"host=.*\"){1}")
+find_protocol = re.compile("(\"protocol=.*\"){1}")
+find_path = re.compile("(\"path=.*\"){1}")
+find_port = re.compile("(\"port=.*\"){1}")
+
+check_if_is_malformed = re.compile("^( *\".*=.*\" *){5}$")
 
 def classifyTXTRecord(TXT_record):
 
-	if ( TXT_record.find("host=") == -1 ):
+	if ( find_version.search(TXT_record) == None 
+	or find_host.search(TXT_record) == None
+	or find_protocol.search(TXT_record) == None 
+	or find_path.search(TXT_record) == None
+	or find_port.search(TXT_record) == None
+	or check_if_is_malformed.match(TXT_record) == None ):
 		return {
-			'type' : 'INFO_MISSING',
-			'description' : 'HOST information missing.',
-			'record' : TXT_record
-		}
-	elif (  TXT_record.find("port=") == -1 ):
-		return {
-			'type' : 'INFO_MISSING',
-			'description' : 'PORT information missing.',
-			'record' : TXT_record
-		}
-	elif (  TXT_record.find("path=") == -1 ):
-		return {
-			'type' : 'INFO_MISSING',
-			'description' : 'PATH information missing.',
-			'record' : TXT_record
-		}
-	elif (  TXT_record.find("protocol=") == -1 ):
-		return {
-			'type' : 'INFO_MISSING',
-			'description' : 'PROTOCOL information missing.',
+			'type' : 'MALFORMED',
+			'description' : 'This TXT record is malformed.',
 			'record' : TXT_record
 		}
 
 	domain =  TXT_record[TXT_record.find("host=")+5 :  TXT_record.find("\"",  TXT_record.find("host="))]
-	port = TXT_record[TXT_record.find("port=")+5 : TXT_record.find("\"", TXT_record.find("port="))]
-	path = TXT_record[TXT_record.find("path=")+5 : TXT_record.find("\"", TXT_record.find("path="))]
+        port = TXT_record[TXT_record.find("port=")+5 : TXT_record.find("\"", TXT_record.find("port="))]
+        path = TXT_record[TXT_record.find("path=")+5 : TXT_record.find("\"", TXT_record.find("path="))]
 	protocol = TXT_record[TXT_record.find("protocol=")+9 : TXT_record.find("\"", TXT_record.find("protocol="))]
 
 	if protocol != "https":
 		return {
 			'type' : 'NOT_HTTPS',
 			'description' : 'PROTOCOL must be HTTPS.',
-			'record' : TXT_record
-		}
-
-	if ( domain == "" or port == "" or path == "" or protocol == "" ):
-		return {
-			'type' : 'MALFORMED',
-			'description' : 'Malformed TXT record.',
 			'record' : TXT_record
 		}
 
@@ -69,8 +56,10 @@ def noTXTRecord(domain_url):
 	message += "<br/>Assuming the server running buddycloud will be named: <strong><em>buddycloud."
 	message += domain_url + "</em></strong>," 
 	message += "<br/>here you are a TXT record that should work:<br/>"
-	message += "<strong>_buddycloud-api._tcp." + domain_url + "\tIN TXT \"host=buddycloud."
+	message += "<strong>_buddycloud-api._tcp." + domain_url + "\tIN TXT \"v=1.0\" \"host=buddycloud."
 	message += domain_url + "\" \"protocol=https\" \"path=/api\" \"port=433\"</strong><br/>"
+	message += "<br/>Please not that your API server TXT record won't be correct until it contains proper"
+	message += " information regarding the <em>version</em>, <em>host</em>, <em>protocol<em/>, <em>path</em> and <em>port</em>."
 	message += "<br/>Check at <a href='http://buddycloud.org/wiki/Install#buddycloud_DNS'"
 	message += "target='_blank'>http://buddycloud.org/wiki/Install#buddycloud_DNS</a>"
 	message += " for more information on how to setup the DNS for your domain."
@@ -121,7 +110,6 @@ def testFunction(domain_url):
 			classified_records[classified['type']] = []
 		classified_records[classified['type']].append(classified)
 
-
 	if ( len(classified_records.get('INFO_MISSING', [])) != 0
 	  or len(classified_records.get('MALFORMED', [])) != 0
 	  or len(classified_records.get('NOT_HTTPS', [])) != 0 ):
@@ -143,6 +131,19 @@ def testFunction(domain_url):
 
 			message += ("<strong>%s</strong><br/><em>%s</em><br/><br/>"
 					% (record['description'], record['record']))
+
+		if ( len(classified_records.get('MALFORMED', [])) != 0 ):
+
+			message += "The API server TXT record must always have a <em>version</em>, <em>host</em>,"
+			message += " <em>protocol</em>, <em>path</em> and <em>port</em>.<br/>"
+			message += "Each of these properties must be defined within double quotes and separated by spaces.<br/>"
+			message += "For example, assuming that the server running buddycloud will be named: <strong><em>buddycloud."
+			message += domain_url + "</em></strong>," 
+			message += "<br/>here you are a TXT record that should work:<br/>"
+			message += "<strong>_buddycloud-api._tcp." + domain_url + "\tIN TXT \"v=1.0\" \"host=buddycloud."
+			message += domain_url + "\" \"protocol=https\" \"path=/api\" \"port=433\"</strong><br/>"
+			message += "<br/>Please not that your API server TXT record won't be correct until it contains proper"
+			message += " information regarding the <em>version</em>, <em>host</em>, <em>protocol<em/>, <em>path</em> and <em>port</em>."
 
 		for record in classified_records.get('NOT_HTTPS', []):
 
