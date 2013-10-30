@@ -23,8 +23,8 @@ function handleTestCreation(test_name, test_source){
 	test_entry_html += "<span id='td_" + test_name + "_content'>" + test_name + "</span>";
 	test_entry_html += "</span>";
 	test_entry_html += "</div>";
-	test_entry_html += "<div style='display:table-cell; width:10%;'>";
-	test_entry_html += "<span id='ts_" + test_name + "' class='btn disabled test_source'>";
+	test_entry_html += "<div style='display:table-cell; height: 100%; width:95px;'>";
+	test_entry_html += "<span id='ts_" + test_name + "' class='btn disabled test_source' style='height: 100%;'>";
 	test_entry_html += "<a href='https://" + test_source + "' target='_blank'>View source</a></span>";
 	test_entry_html += "</div>";
 	test_entry_html += "</div>";

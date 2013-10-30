@@ -5,11 +5,11 @@ from dns.resolver import NoAnswer, NXDOMAIN
 from domain_name_lookup import testFunction as domainNameLookup
 from dns_utils import getAuthoritativeNameserver
 
-find_version = re.compile("(\"v=.*\"){1}")
-find_host = re.compile("(\"host=.*\"){1}")
-find_protocol = re.compile("(\"protocol=.*\"){1}")
-find_path = re.compile("(\"path=.*\"){1}")
-find_port = re.compile("(\"port=.*\"){1}")
+find_version = re.compile("(\"v=[0-9]+(\.{1}[0-9]+){0,1}\"){1}")
+find_host = re.compile("(\"host=[^\"\']+\"){1}")
+find_protocol = re.compile("(\"protocol=[^\"\']+\"){1}")
+find_path = re.compile("(\"path=[^\"\']*\"){1}")
+find_port = re.compile("(\"port=[0-9]+\"){1}")
 
 check_if_is_malformed = re.compile("^( *\".*=.*\" *){5}$")
 
@@ -136,7 +136,7 @@ def testFunction(domain_url):
 
 			message += "The API server TXT record must always have a <em>version</em>, <em>host</em>,"
 			message += " <em>protocol</em>, <em>path</em> and <em>port</em>.<br/>"
-			message += "Each of these properties must be defined within double quotes and separated by spaces.<br/>"
+			message += "<strong>Each of these properties must be defined within double quotes and separated by spaces only</strong>.<br/>"
 			message += "For example, assuming that the server running buddycloud will be named: <strong><em>buddycloud."
 			message += domain_url + "</em></strong>," 
 			message += "<br/>here you are a TXT record that should work:<br/>"
