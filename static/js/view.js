@@ -20,12 +20,12 @@ function handleTestCreation(test_name, test_source){
 	test_entry_html += "<div style='display:table-cell;'>";
 	test_entry_html += "<span id='td_" + test_name + "' class='btn disabled test_name'>";
 	test_entry_html += "<i id='ti_" + test_name + "' class='icon-random'></i>";
-	test_entry_html += "<span>" + test_name + "</span>";
+	test_entry_html += "<span id='td_" + test_name + "_content'>" + test_name + "</span>";
 	test_entry_html += "</span>";
 	test_entry_html += "</div>";
-	test_entry_html += "<div style='display:table-cell;'>";
+	test_entry_html += "<div style='display:table-cell; width:10%;'>";
 	test_entry_html += "<span id='ts_" + test_name + "' class='btn disabled test_source'>";
-	test_entry_html += "<a href='https://" + test_source + "' target='_blank'>source</a></span>";
+	test_entry_html += "<a href='https://" + test_source + "' target='_blank'>View source</a></span>";
 	test_entry_html += "</div>";
 	test_entry_html += "</div>";
 	test_entry_html += "</div>";	
@@ -48,6 +48,18 @@ function handleTestResponse(data){
 	$("#to_"+data.name).addClass(getExitStatusClass(data.exit_status));
 	$("#to_"+data.name).html(data.briefing);
 	$("#ti_"+data.name).attr("class", getExitStatusIcon(data.exit_status) + " icon-white");
+	$("#td_"+data.name+"_content").html(data.name + " | " + getExitStatusResolution(data.exit_status) + " <span class='test_source'><a>Click to see more information</a></span>");
+	
+/*	$("#td_"+data.name).tooltip('destroy');
+	$("#td_"+data.name).attr("data-toggle", "tooltip");
+	$("#td_"+data.name).attr("title", getExitStatusResolution(data.exit_status) + "\n Click to see more information...");
+	$("#td_"+data.name).tooltip({
+		'animation' : true,
+		'placement' : 'top',
+		'trigger' : 'hover',
+		'delay' : 10
+	});*/
+
 }
 
 function handleDomainURL(){
@@ -92,6 +104,11 @@ function handleDomainURL(){
 			'delay' : 100
 		});
 		$("#domain_url_box").tooltip('show');
+		$("#inspect_button").addClass("btn-success");
+		$("#inspect_button").removeClass("disabled");
+		$("#inspect_button").removeClass("btn-danger");
+		$("#inspect_button").text("check!");
+		$("#inspect_button").attr("onclick", "startInspection();");
 
 		return null;
 	}
@@ -118,6 +135,18 @@ function getExitStatusIcon(code){
 			return "icon-remove-sign";
 		default:
 			return "icon-warning-sign";
+	}
+}
+
+function getExitStatusResolution(code){
+
+	switch(code){
+		case 0:
+			return "This test was successful.";
+		case 1:
+			return "This test failed."
+		case 2:
+			return "Something unexpected happened."
 	}
 }
 
