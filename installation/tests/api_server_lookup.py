@@ -119,7 +119,7 @@ def testFunction(domain_url):
 		briefing += " <strong>%s</strong>." % domain_url
 		message = "We detected you set up the following incorrect API"
 		message += " server TXT records.<br/>"
-		message += "Really you must have just one correct API server SRV record.<br/>"
+		message += "You must have just one correct API server SRV record.<br/>"
 		message += "These are the SRV records we found and their problems: <br/><br/>"
 
 		for record in classified_records.get('INFO_MISSING', []):
@@ -143,7 +143,7 @@ def testFunction(domain_url):
 			message += "<strong>_buddycloud-api._tcp." + domain_url + "\tIN TXT \"v=1.0\" \"host=buddycloud."
 			message += domain_url + "\" \"protocol=https\" \"path=/api\" \"port=433\"</strong><br/>"
 			message += "<br/>Please not that your API server TXT record won't be correct until it contains proper"
-			message += " information regarding the <em>version</em>, <em>host</em>, <em>protocol<em/>, <em>path</em> and <em>port</em>."
+			message += " information regarding the <em>version</em>, <em>host</em>, <em>protocol<em/>, <em>path</em> and <em>port</em>.<br/>"
 
 		for record in classified_records.get('NOT_HTTPS', []):
 
