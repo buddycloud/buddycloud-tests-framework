@@ -48,6 +48,16 @@
 	<script language="javascript" type="text/javascript">
 	$(document).ready(function(){
 
+		$("#domain_url_box").keypress(function(e){
+			var ev = e || window.event;
+			var key = ev.keyCode;
+
+			if ( key == 13 ){
+				$("#inspect_button").click();
+				ev.preventDefault();
+			}
+		});
+
 		$.ajax({
 			url: "/active_session",
 			type: "get",
