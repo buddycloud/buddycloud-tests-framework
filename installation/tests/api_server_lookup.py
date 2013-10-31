@@ -32,7 +32,7 @@ def classifyTXTRecord(TXT_record):
         path = TXT_record[TXT_record.find("path=")+5 : TXT_record.find("\"", TXT_record.find("path="))]
 	protocol = TXT_record[TXT_record.find("protocol=")+9 : TXT_record.find("\"", TXT_record.find("protocol="))]
 
-	if protocol != "https":
+	if protocol != "https" and protocol != "HTTPS":
 		return {
 			'type' : 'NOT_HTTPS',
 			'description' : 'PROTOCOL must be HTTPS.',
