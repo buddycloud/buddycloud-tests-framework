@@ -47,6 +47,10 @@ def user_channel_exists(session, domain_url, api_location, username):
 	username = obtainActualName(session, username)
 
 	(status, response) = prepare_and_send_request('GET', '%s%s@%s/metadata/posts' % (api_location, username, domain_url))
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
 
 	try:
 		response = json.loads(response.content)
@@ -65,6 +69,10 @@ def create_user_channel(session, domain_url, api_location, username):
 		'email' : TEST_USER_EMAIL
 	}
 	(status, response) = prepare_and_send_request('POST', '%saccount' % (api_location), payload=data)
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
 	return status
 
 #HTTP_API endpoint: /account
@@ -73,6 +81,10 @@ def delete_user_channel(session, domain_url, api_location, username):
 	username = obtainActualName(session, username)
 
 	(status, response) = prepare_and_send_request('DELETE', '%saccount' % (api_location), authorization=username)
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
 	return status
 
 #HTTP_API endpoint: /:channel/metadata/:node
@@ -81,6 +93,10 @@ def topic_channel_exists(session, domain_url, api_location, channel_name):
 	channel_name = obtainActualName(session, channel_name)
 	
 	(status, response) = prepare_and_send_request('GET', '%s%s@topics.%s/metadata/posts' % (api_location, channel_name, domain_url))
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
 
 	try:
 		response = json.loads(response.content)
@@ -95,6 +111,10 @@ def create_topic_channel(session, domain_url, api_location, username, channel_na
 	channel_name = obtainActualName(session, channel_name)
 
 	(status, response) = prepare_and_send_request('POST', '%s%s@topics.%s' % (api_location, channel_name, domain_url), authorization=username)
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
 	return status
 
 #HTTP_API endpoint: /:channel
@@ -104,6 +124,10 @@ def delete_topic_channel(session, domain_url, api_location, username, channel_na
 	channel_name = obtainActualName(session, channel_name)
 
 	(status, response) = prepare_and_send_request('DELETE', '%s%s@topics.%s' % (api_location, channel_name, domain_url), authorization=username)
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
 	return status
 
 #HTTP_API endpoint /:channel/metadata/:node
@@ -112,6 +136,10 @@ def is_open_user_channel(domain_url, api_location, username):
 	username = obtainActualName(session, username)
 
 	(status, response) = prepare_and_send_request('GET', '%s%s@%s/metadata/posts' % (api_location, username, domain_url))
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
 
 	if status == True:
 
@@ -140,6 +168,10 @@ def is_authorized_user_channel(domain_url, api_location, username):
 	username = obtainActualName(session, username)
 
 	(status, response) = prepare_and_send_request('GET', '%s%s@%s/metadata/posts' % (api_location, username, domain_url))
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
 
 	if status == True:
 
@@ -172,6 +204,10 @@ def subscribe_to_user_channel(session, domain_url, api_location, username, chann
 		'%s@%s/posts' % (channel_name, domain_url) : subscription
 	}
 	(status, response) = prepare_and_send_request('POST', '%ssubscribed' % (api_location), payload=data, authorization=username)
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
 	return status
 
 #HTTP_API endpoint: /:channel/subscribers/:node/approve
@@ -181,8 +217,29 @@ def approve_user_channel_subscription_request(session, domain_url, api_location,
 	subscriber_jids = map(lambda x: obtainActualName(session, x), subscriber_jids)
 
 	data = [ {'subscription' : 'subscribed', 'jid' : jid + "@" + domain_url} for jid in subscriber_jids ]
-	return prepare_and_send_request('POST', '%s%s@%s/subscribers/posts/approve' % (api_location, username, domain_url),
+	(status, response) = prepare_and_send_request('POST', '%s%s@%s/subscribers/posts/approve' % (api_location, username, domain_url),
 			payload=data, authorization=username)
+
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
+	return status
+
+#HTTP_API endpoint: /:channel/subscribers/:node/approve
+def approve_another_user_channel_subscription_request(session, domain_url, api_location, username, authorized_username, subscriber_jids):
+
+	username = obtainActualName(session, username)
+	authorized_username = obtainActualName(session, authorized_username)
+	subscriber_jids = map(lambda x: obtainActualName(session, x), subscriber_jids)
+
+	data = [ {'subscription' : 'subscribed', 'jid' : jid + "@" + domain_url} for jid in subscriber_jids ]
+	(status, response) = prepare_and_send_request('POST', '%s%s@%s/subscribers/posts/approve' % (api_location, username, domain_url),
+			payload=data, authorization=authorized_username)
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
+	return status
 
 #HTTP_API endpoint: /subscribed
 def has_subscriber_role_in_user_channel(session, domain_url, api_location, username, channel_name, subscription):
@@ -191,6 +248,10 @@ def has_subscriber_role_in_user_channel(session, domain_url, api_location, usern
 	channel_name = obtainActualName(session, channel_name)
 
 	(status, response) = prepare_and_send_request('GET', '%ssubscribed' % (api_location), authorization=username)
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
 
 	if status == True:
 
@@ -212,8 +273,13 @@ def change_user_channel_subscriber_role(session, domain_url, api_location, usern
 	data = {
 		subscriber_username + "@" + domain_url : subscription
 	}
-	return prepare_and_send_request('POST', '%s%s@%s/subscribers/posts' % (api_location, username, domain_url),
+	(status, response) = prepare_and_send_request('POST', '%s%s@%s/subscribers/posts' % (api_location, username, domain_url),
 			payload=data, authorization=username)
+
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
+	return status
 
 #HTTP_API endpoint: /subscribed
 def subscribe_to_topic_channel(session, domain_url, api_location, username, channel_name, subscription):
@@ -225,6 +291,10 @@ def subscribe_to_topic_channel(session, domain_url, api_location, username, chan
 		'%s@topics.%s/posts' % (channel_name, domain_url) : subscription
 	}
 	(status, response) = prepare_and_send_request('POST', '%ssubscribed' % (api_location), payload=data, authorization=username)
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
 	return status
 
 #HTTP_API endpoint: /:channel/subscribers/:node/approve
@@ -235,8 +305,30 @@ def approve_topic_channel_subscription_request(session, domain_url, api_location
 	subscriber_jids = map(lambda x: obtainActualName(session, x), subscriber_jids)
 
 	data = [ {'subscription' : 'subscribed', 'jid' : jid + "@" + domain_url} for jid in subscriber_jids ]
-	return prepare_and_send_request('POST', '%s%s@topics.%s/subscribers/posts/approve' % (api_location, channel_name, domain_url),
+	(status, response) = prepare_and_send_request('POST', '%s%s@topics.%s/subscribers/posts/approve' % (api_location, channel_name, domain_url),
 			payload=data, authorization=owner_username)
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
+	return status
+
+#HTTP_API endpoint: /:channel/subscribers/:node/approve
+def approve_another_topic_channel_subscription_request(session, domain_url, api_location, channel_name, owner_username, authorized_username, subscriber_jids):
+
+	channel_name = obtainActualName(session, channel_name)
+	owner_username = obtainActualName(session, owner_username)
+	authorized_username = obtainActualName(session, authorized_username)
+	subscriber_jids = map(lambda x: obtainActualName(session, x), subscriber_jids)
+
+	data = [ {'subscription' : 'subscribed', 'jid' : jid + "@" + domain_url} for jid in subscriber_jids ]
+	(status, response) = prepare_and_send_request('POST', '%s%s@topics.%s/subscribers/posts/approve' % (api_location, channel_name, domain_url),
+			payload=data, authorization=authorized_username)
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
+	return status
 
 #HTTP_API endpoint: /subscribed
 def has_subscriber_role_in_topic_channel(session, domain_url, api_location, username, channel_name, subscription):
@@ -245,6 +337,10 @@ def has_subscriber_role_in_topic_channel(session, domain_url, api_location, user
 	channel_name = obtainActualName(session, channel_name)
 
 	(status, response) = prepare_and_send_request('GET', '%ssubscribed' % (api_location), authorization=username)
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
 
 	if status == True:
 
@@ -267,5 +363,10 @@ def change_topic_channel_subscriber_role(session, domain_url, api_location, owne
 	data = {
 		username + "@" + domain_url : subscription
 	}
-	return prepare_and_send_request('POST', '%s%s@topics.%s/subscribers/posts' % (api_location, channel_name, domain_url),
+	(status, response) = prepare_and_send_request('POST', '%s%s@topics.%s/subscribers/posts' % (api_location, channel_name, domain_url),
 			payload=data, authorization=owner_username)
+	
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
+	return status
