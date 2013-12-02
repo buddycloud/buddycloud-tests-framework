@@ -35,13 +35,13 @@ def testFunction(domain_url, session):
 				if approve_another_user_channel_subscription_request(session,
 						domain_url, api_location, channel, moderator_username, [new_follower_username]):
 					
-					if ("%s@%s" % (channel, domain_url)) in expected_results[True]:
+					if ("%s@%s" % (channel, domain_url)) in expected_results.get(True,[]):
 						classified['SUCCESS'].append("%s@%s" % (channel, domain_url))
 					else:
 						classified['FAIL'].append("%s@%s" % (channel, domain_url))
 				else:
 
-					if ("%s@%s" % (channel, domain_url)) in expected_results[False]:
+					if ("%s@%s" % (channel, domain_url)) in expected_results.get(False,[]):
 						classified['SUCCESS'].append("%s@%s" % (channel, domain_url))
 					else:
 						classified['FAIL'].append("%s@%s" % (channel, domain_url))
@@ -56,13 +56,13 @@ def testFunction(domain_url, session):
 				if approve_another_topic_channel_subscription_request(session,
 						domain_url, api_location, channel, target_user_channels[0], moderator_username, [new_follower_username]):
 
-					if ("%s@topics.%s" % (channel, domain_url)) in expected_results[True]:
+					if ("%s@topics.%s" % (channel, domain_url)) in expected_results.get(True,[]):
 						classified['SUCCESS'].append("%s@topics.%s" % (channel, domain_url))
 					else:
 						classified['FAIL'].append("%s@topics.%s" % (channel, domain_url))
 
 				else:	
-					if ("%s@topics.%s" % (channel, domain_url)) in expected_results[False]:
+					if ("%s@topics.%s" % (channel, domain_url)) in expected_results.get(False,[]):
 						classified['SUCCESS'].append("%s@topics.%s" % (channel, domain_url))
 					else:
 						classified['FAIL'].append("%s@topics.%s" % (channel, domain_url))
@@ -105,8 +105,8 @@ def testFunction(domain_url, session):
 		status = 1
 		briefing = "Problems with following channels: <strong>%s</strong>" % string.join(classified['FAIL'], " | ")
 
-		should_have_permission = sets.Set(expected_results[True])
-		should_not_have_permission = sets.Set(expected_results[False])
+		should_have_permission = sets.Set(expected_results.get(True,[]))
+		should_not_have_permission = sets.Set(expected_results.get(False,[]))
 		had_problems = sets.Set(classified['FAIL'])
 
 		should_have_permission_but_didnt = should_have_permission.intersection(had_problems)
@@ -135,8 +135,8 @@ def testFunction(domain_url, session):
 		if ( briefing == "" ):
 			briefing += "User %s has correct approve subscription permissions!" % moderator_username
 
-		should_have_permission = sets.Set(expected_results[True])
-		should_not_have_permission = sets.Set(expected_results[False])
+		should_have_permission = sets.Set(expected_results.get(True,[]))
+		should_not_have_permission = sets.Set(expected_results.get(False,[]))
 		had_no_problems = sets.Set(classified['SUCCESS'])
 
 		should_have_permission_and_did = should_have_permission.intersection(had_no_problems)
