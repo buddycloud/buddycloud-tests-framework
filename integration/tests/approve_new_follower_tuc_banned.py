@@ -9,15 +9,13 @@ def testFunction(domain_url, session):
 		return (sts, bri, mes, None)
 
 	new_follower_username = "test_user_channel_moderator_new_follower"
-	moderator_username = "test_user_channel_follower1"
+	moderator_username = "test_user_channel_follower4"
 	target_user_channels = [ "test_user_channel_open", "test_user_channel_authorized" ]
 	target_topic_channels = [ "test_topic_channel_open" ]
 
 	expected_results = {
-		True : [
-			"test_topic_channel_open@topics." + domain_url
-		],
 		False: [
+			"test_topic_channel_open@topics." + domain_url,
 			"test_user_channel_open@" + domain_url,
 			"test_user_channel_authorized@" + domain_url
 		]

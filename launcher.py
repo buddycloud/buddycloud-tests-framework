@@ -47,9 +47,6 @@ def perform_tests(domain_url, run):
 		updated_tests[index_test_entry]['test_run_status'] = 1
 		run['tests'] = updated_tests
 
-		store = open("requests_made", 'a')
-		store.write(test_entries[index_test_entry]['name'] + ":\n")
-		store.close()
 		response = perform_test(test_entries[index_test_entry]['name'], domain_url, test_names, test_entries, run_variables)
 
 		updated_tests[index_test_entry]['test_run_status'] = 2
@@ -285,7 +282,7 @@ def perform_test(test_name, domain_url, test_names, test_entries, run_variables)
 
 		return response
 
-#	except Exception as e:
+	except Exception as e:
 
 		e_type, e_value, e_trace = sys.exc_info()
 		e_type = Markup.escape(str(type(e))).__str__()
