@@ -1,18 +1,13 @@
 import string
 from api_utils import change_topic_channel_subscriber_role, has_subscriber_role_in_topic_channel, change_another_user_channel_subscriber_role, has_subscriber_role_in_user_channel
 from find_api_location import findAPILocation
-from names_persistence_utils import obtainActualName
+
 
 def change_role_permission(session, api_location, target_channel_name, tested_username, new_follower_username, subscription):
 
 	topic_channel = "topics." in target_channel_name.split("@")[1]
-	channel_name = obtainActualName(session, target_channel_name.split("@")[0])
+	channel_name = target_channel_name.split("@")[0]
 	domain = target_channel_name.split("@")[1].replace("topics.", "")
-
-	if tested_username != None:
-		tested_username = obtainActualName(session, tested_username)
-
-	new_follower_username = obtainActualName(session, new_follower_username)
 
 	if ( not topic_channel ):
 

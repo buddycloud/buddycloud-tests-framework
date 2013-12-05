@@ -1,5 +1,5 @@
 import string, sets
-from api_utils import user_channel_exists, create_user_channel, subscribe_to_user_channel, subscribe_to_topic_channel, approve_another_user_channel_subscription_request, approve_another_topic_channel_subscription_request
+from api_utils import user_channel_exists, create_user_channel, subscribe_to_user_channel, subscribe_to_topic_channel, approve_another_user_channel_subscription_request, approve_another_topic_channel_subscription_request, approve_user_channel_subscription_request, approve_topic_channel_subscription_request
 from find_api_location import findAPILocation
 
 def performApproveSubscriptionRequestsPermissionChecks(domain_url, session, tested_username, expected_results):
@@ -8,7 +8,11 @@ def performApproveSubscriptionRequestsPermissionChecks(domain_url, session, test
 	if ( sts != 0 ):
 		return (sts, bri, mes, None)
 
-	new_follower_username = tested_username + "_new_follower"
+	if ( tested_username != None ):
+		new_follower_username = tested_username + "_new_follower"
+	else:
+		new_follower_username = "test_user_channel_anonymous_new_follower"
+
 	target_user_channels = [ "test_user_channel_open", "test_user_channel_authorized" ]
 	target_topic_channels = [ "test_topic_channel_open" ]
 
@@ -35,6 +39,8 @@ def performApproveSubscriptionRequestsPermissionChecks(domain_url, session, test
 					else:
 						classified['FAIL'].append("%s@%s" % (channel, domain_url))
 
+					approve_user_channel_subscription_request(session, domain_url, api_location, channel, [new_follower_username])
+
 			else:
 				classified['PROBLEM_SUBSCRIBING'].append("%s@%s" % (channel, domain_url))
 
@@ -56,6 +62,7 @@ def performApproveSubscriptionRequestsPermissionChecks(domain_url, session, test
 					else:
 						classified['FAIL'].append("%s@topics.%s" % (channel, domain_url))
 
+					approve_topic_channel_subscription_request(session, domain_url, api_location, channel, target_user_channels[0], [new_follower_username])
 			else:
 				classified['PROBLEM_SUBSCRIBING'].append("%s@topics.%s" % (channel, domain_url))
 
@@ -63,7 +70,10 @@ def performApproveSubscriptionRequestsPermissionChecks(domain_url, session, test
 		classified['PROBLEM_CREATING'].append("%s@%s" % (new_follower_username, domain_url))
 
 
-	tested_username = "<strong>%s@%s</strong>" % (tested_username, domain_url)
+	if ( tested_username != None ):
+		tested_username = "<strong>%s@%s</strong>" % (tested_username, domain_url)
+	else:
+		tested_username = "<strong>anonymous user</strong>"
 
 	if ( len(classified.get('PROBLEM_CREATING', [])) > 0 ):
 
