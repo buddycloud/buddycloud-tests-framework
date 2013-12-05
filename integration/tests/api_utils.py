@@ -229,13 +229,18 @@ def approve_user_channel_subscription_request(session, domain_url, api_location,
 def approve_another_user_channel_subscription_request(session, domain_url, api_location, username, authorized_username, subscriber_jids):
 
 	username = obtainActualName(session, username)
-	authorized_username = obtainActualName(session, authorized_username)
 	subscriber_jids = map(lambda x: obtainActualName(session, x), subscriber_jids)
 
 	data = [ {'subscription' : 'subscribed', 'jid' : jid + "@" + domain_url} for jid in subscriber_jids ]
-	(status, response) = prepare_and_send_request('POST', '%s%s@%s/subscribers/posts/approve' % (api_location, username, domain_url),
-			payload=data, authorization=authorized_username)
 	
+	if ( authorized_username != None ):
+		authorized_username = obtainActualName(session, authorized_username)
+		(status, response) = prepare_and_send_request('POST', '%s%s@%s/subscribers/posts/approve' % (api_location, username, domain_url),
+			payload=data, authorization=authorized_username)
+	else:
+		(status, response) = prepare_and_send_request('POST', '%s%s@%s/subscribers/posts/approve' % (api_location, username, domain_url),
+			payload=data)
+
 	store = open('requests_made', 'a')
 	store.write(str(response.ok) + " " + response.content + "\n")
 	store.close()
@@ -341,13 +346,18 @@ def approve_another_topic_channel_subscription_request(session, domain_url, api_
 
 	channel_name = obtainActualName(session, channel_name)
 	owner_username = obtainActualName(session, owner_username)
-	authorized_username = obtainActualName(session, authorized_username)
 	subscriber_jids = map(lambda x: obtainActualName(session, x), subscriber_jids)
 
 	data = [ {'subscription' : 'subscribed', 'jid' : jid + "@" + domain_url} for jid in subscriber_jids ]
-	(status, response) = prepare_and_send_request('POST', '%s%s@topics.%s/subscribers/posts/approve' % (api_location, channel_name, domain_url),
-			payload=data, authorization=authorized_username)
-	
+
+	if ( authorized_username != None ):
+		authorized_username = obtainActualName(session, authorized_username)
+		(status, response) = prepare_and_send_request('POST', '%s%s@topics.%s/subscribers/posts/approve' % (api_location, channel_name, domain_url),
+				payload=data, authorization=authorized_username)
+	else:
+		(status, response) = prepare_and_send_request('POST', '%s%s@topics.%s/subscribers/posts/approve' % (api_location, channel_name, domain_url),
+				payload=data)
+
 	store = open('requests_made', 'a')
 	store.write(str(response.ok) + " " + response.content + "\n")
 	store.close()
