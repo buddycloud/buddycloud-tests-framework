@@ -1,4 +1,4 @@
-from metadata_modification_utils import performMetadataModificationTests
+from metadata_change_utils import performMetadataModificationTests
 from find_api_location import findAPILocation
 
 def testFunction(domain_url, session):
@@ -55,9 +55,9 @@ def testFunction(domain_url, session):
 	(status, partial_report) = performMetadataModificationTests(session, domain_url, api_location, "test_user_channel_follower4", expected_results)
 
 	if status == 0:
-		briefing = "Metadata modification tests for <strong>test_user_channel_follower4@%s</strong> were successful!" % domain_url
+		briefing = "Metadata change tests for <strong>test_user_channel_follower4@%s</strong> were successful!" % domain_url
 	else:
-		briefing = "Metadata modification tests for <strong>test_user_channel_follower4@%s</strong> were not entirely successful!" % domain_url
+		briefing = "Metadata change tests for <strong>test_user_channel_follower4@%s</strong> were not entirely successful!" % domain_url
 
 	message = briefing + "<br/>"
 	message += partial_report

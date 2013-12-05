@@ -281,6 +281,29 @@ def change_user_channel_subscriber_role(session, domain_url, api_location, usern
 	store.close()
 	return status
 
+#HTTP_API endpoint /:channel/subscribers/:node 
+def change_another_user_channel_subscriber_role(session, domain_url, api_location, owner_username, subscriber_username, authorized_username, subscription):
+
+	owner_username = obtainActualName(session, owner_username)
+	subscriber_username = obtainActualName(session, subscriber_username)
+
+	data = {
+		subscriber_username + "@" + domain_url : subscription
+	}
+
+	if ( authorized_username != None ):
+		authorized_username = obtainActualName(session, authorized_username)
+		(status, response) = prepare_and_send_request('POST', '%s%s@%s/subscribers/posts' % (api_location, owner_username, domain_url),
+				payload=data, authorization=authorized_username)
+	else:
+		(status, response) = prepare_and_send_request('POST', '%s%s@%s/subscribers/posts' % (api_location, owner_username, domain_url),
+				payload=data)
+
+	store = open('requests_made', 'a')
+	store.write(str(response.ok) + " " + response.content + "\n")
+	store.close()
+	return status
+
 #HTTP_API endpoint: /subscribed
 def subscribe_to_topic_channel(session, domain_url, api_location, username, channel_name, subscription):
 
@@ -354,18 +377,25 @@ def has_subscriber_role_in_topic_channel(session, domain_url, api_location, user
 	return False
 
 #HTTP_API endpoint /:channel/subscribers/:node 
-def change_topic_channel_subscriber_role(session, domain_url, api_location, owner_username, username, channel_name, subscription):
+def change_topic_channel_subscriber_role(session, domain_url, api_location, authorized_username, username, channel_name, subscription):
 
-	owner_username = obtainActualName(session, owner_username)
 	username = obtainActualName(session, username)
 	channel_name = obtainActualName(session, channel_name)
 
 	data = {
 		username + "@" + domain_url : subscription
 	}
-	(status, response) = prepare_and_send_request('POST', '%s%s@topics.%s/subscribers/posts' % (api_location, channel_name, domain_url),
-			payload=data, authorization=owner_username)
 	
+	if ( authorized_username != None ):
+		authorized_username = obtainActualName(session, authorized_username)
+		(status, response) = prepare_and_send_request('POST', '%s%s@topics.%s/subscribers/posts' % (api_location, channel_name, domain_url),
+				payload=data, authorization=authorized_username)
+
+	else:
+		
+		(status, response) = prepare_and_send_request('POST', '%s%s@topics.%s/subscribers/posts' % (api_location, channel_name, domain_url),
+				payload=data)
+
 	store = open('requests_made', 'a')
 	store.write(str(response.ok) + " " + response.content + "\n")
 	store.close()

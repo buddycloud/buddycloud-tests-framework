@@ -1,4 +1,4 @@
-from metadata_modification_utils import performMetadataModificationTests
+from metadata_change_utils import performMetadataModificationTests
 from find_api_location import findAPILocation
 
 def testFunction(domain_url, session):
@@ -55,9 +55,9 @@ def testFunction(domain_url, session):
 	(status, partial_report) = performMetadataModificationTests(session, domain_url, api_location, None, expected_results)
 
 	if status == 0:
-		briefing = "Metadata modification tests for <strong>anonymous user</strong> were successful!"
+		briefing = "Metadata change tests for <strong>anonymous user</strong> were successful!"
 	else:
-		briefing = "Metadata modification tests for <strong>anonymous user</strong> were not entirely successful!"
+		briefing = "Metadata change tests for <strong>anonymous user</strong> were not entirely successful!"
 
 	message = briefing + "<br/>"
 	message += partial_report
