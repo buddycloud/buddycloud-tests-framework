@@ -12,7 +12,7 @@ def testFunction(domain_url, session):
 		},
 		'CHANGE_TO_FOLLOWER_POST' : {
 			True: [
-			"test_topic_channel_open@topics." + domain_url
+			"test_topic_channel_open@topics." + domain_url,
 			"test_user_channel_open@" + domain_url,
 			"test_user_channel_authorized@" + domain_url
 			]
