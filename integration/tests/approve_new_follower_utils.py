@@ -102,7 +102,8 @@ def performApproveSubscriptionRequestsPermissionChecks(domain_url, session, test
 	if ( len(classified.get('FAIL', [])) > 0 ):
 
 		status = 1
-		briefing = "Problems with following channels: <strong>%s</strong>" % string.join(classified['FAIL'], " | ")
+		briefing = "Approve new followers permission tests for <strong>%s</strong> were not entirely successful!" % tested_username
+		message = briefing + "<br/>"
 
 		should_have_permission = sets.Set(expected_results.get(True,[]))
 		should_not_have_permission = sets.Set(expected_results.get(False,[]))
@@ -114,7 +115,7 @@ def performApproveSubscriptionRequestsPermissionChecks(domain_url, session, test
 		if ( len(should_have_permission_but_didnt) > 0 ):
 
 			message = "User %s could not approve subscription requests to the "
-			message += "following channels (<em>it should be able to!</em>): "
+			message += "following channels (<strong>and it should be able to!</strong>): "
 			message = message % (tested_username)
 			message += "<br/><br/><strong>%s</strong><br/>" % string.join(should_have_permission_but_didnt, "<br/>")
 
@@ -125,7 +126,7 @@ def performApproveSubscriptionRequestsPermissionChecks(domain_url, session, test
 				message += "<br/>"
 
 			message += "User %s could approve subscription requests to the "
-			message += "following channels (<em>it should not be able to!</em>): "
+			message += "following channels (<strong>and it should not be able to!</strong>): "
 			message = message % (tested_username)
 			message += "<br/><br/><strong>%s</strong><br/>" % string.join(should_not_have_permission_but_did, "<br/>")
 
@@ -140,6 +141,11 @@ def performApproveSubscriptionRequestsPermissionChecks(domain_url, session, test
 
 		should_have_permission_and_did = should_have_permission.intersection(had_no_problems)
 		should_not_have_permission_and_didnt = should_not_have_permission.intersection(had_no_problems)
+
+		if ( message != "" ):
+			message += "<br/>"
+
+		message += "<span class='muted'>The following approve new followers permission tests were successful: <br/>"
 
 		if ( len(should_have_permission_and_did) > 0 ):
 
@@ -160,5 +166,7 @@ def performApproveSubscriptionRequestsPermissionChecks(domain_url, session, test
 			message += "following channels (<em>as expected!</em>): "
 			message = message % (tested_username)
 			message += "<br/><br/><strong>%s</strong><br/>" % string.join(should_not_have_permission_and_didnt, "<br/>")
+
+		message += "</span>"
 
 	return (status, briefing, message, None)
