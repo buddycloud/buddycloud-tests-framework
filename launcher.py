@@ -73,18 +73,24 @@ def get_all_runs():
 	response.headers["Content-Type"] = "application/json"
 	return response
 
-@server.route('/is_alive/<run_id>')
-def is_alive(run_id=None):
+@server.route('/is_running/<run_id>')
+def is_running(run_id=None):
 
 	if run_id in process_handlers:
 
 		if process_handlers[run_id].is_alive():
 
-			response = make_response(json.dumps({'veredict' : 'YAY'}), 200)
+			response = make_response(json.dumps({'veredict' : ("Test suite with run_id (%s) is still running." % run_id)}), 200)
 			response.headers["Content-Type"] = "application/json"
 			return response
 
-	response = make_response(json.dumps({'veredict' : 'NOPS'}), 200)
+		else:
+
+			response = make_response(json.dumps({'veredict' : ("Test suite with run_id (%s) has finished." % run_id)}), 200)
+			response.headers["Content-Type"] = "application/json"
+			return response
+
+	response = make_response(json.dumps({'veredict' : ("Test suite with run_id (%s) has finished executing and then removed or it never existed." % run_id)}), 200)
 	response.headers["Content-Type"] = "application/json"
 	return response			
 
