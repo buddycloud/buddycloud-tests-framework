@@ -1,11 +1,11 @@
 buddycloud-tests-framework
 ===========================
 
-*A framework for issuing tests to a given buddycloud*
+*A framework for issuing tests to a given Buddycloud*
 
 
-This project is all about testing buddycloud technology,
-as well as helping one check if a given buddycloud installation
+This project is all about testing Buddycloud technology,
+as well as helping one check if a given Buddycloud installation
 is correctly setup and able to federate with the world.
 
 A test version is currently being deployed at http://protocol.buddycloud.com!
@@ -17,13 +17,13 @@ Adding a new test to a test suite
 
 First things, first. There are two test suites, each having different roles.
 
-The ```installation``` test suite is composed of a series of tests to make sure a given buddycloud installation
+The ```installation``` test suite is composed of a series of tests to make sure a given Buddycloud installation
 is correctly setup. Otherwise, it won't be able to federate and socialize with others. DNS lookups, XMPP communication checks and other
 things like that are done to ensure the installation process was successful.
 
-The ```integration``` test suite is composed, as the name suggests, of integration tests for the buddycloud technology.
-These tests are necessary because they will exercise your buddycloud installation enough
- so we can be safe that your buddycloud will be able to federate and socialize with others.
+The ```integration``` test suite is composed, as the name suggests, of integration tests for the Buddycloud technology.
+These tests are necessary because they will exercise your Buddycloud installation enough
+ so we can be safe that your Buddycloud will be able to federate and socialize with others.
 
 
 Here's how you can add a new test to one of these suites. First, determine to which suite the new test is going to be added.
@@ -37,8 +37,13 @@ Here's how you can add a new test to one of these suites. First, determine to wh
 
 > Write a python test file (e.g named ```example.py```) containing a function called ```testFunction```.  
 > 
-> As of now, this ```testFuncion``` must have only one parameter corresponding to the domain to be tested.
-> Future versions may allow something more flexible.
+> As of now, this ```testFuncion``` must have the first parameter corresponding to the domain to be tested
+and an optional session parameter which some tests populate so that, say, channels created by one test can
+be referenced in another test. This is a not-so-good design.
+Later we plan to make every test actually execute its dependency tests all over again in a setUp/tearDown fashion -- no relying
+on collateral effects of previous tests.
+
+> Also, future versions may allow a more flexible approach for the parameter passing to ```testFunction```.
 >
 > Make sure your ```testFunction``` always returns a tuple with four elements in the following format:
 >
