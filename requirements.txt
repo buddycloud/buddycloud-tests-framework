@@ -3,9 +3,5 @@ Jinja2==2.6
 Werkzeug==0.8.3
 distribute==0.6.28
 dnspython==1.10.0
-requests==1.2.0
+requests==2.1.0
 sleekxmpp==1.1.11
-pyopenssl==0.13
-ndg-httpsclient==0.3.2
-pyasn1==0.1.6
-urllib3==1.7.1
