@@ -1,6 +1,7 @@
 from requests import Request, Session, ConnectionError
 
 #try:
+import urllib3
 import urllib3.contrib.pyopenssl
 urllib3.contrib.pyopenssl.inject_into_urllib3()
 #except ImportError:
