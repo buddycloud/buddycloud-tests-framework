@@ -27,7 +27,7 @@ def testFunction(domain_url):
 		s = Session()
 #		s.mount('https://', SSLAdapter('TLSv1'))
 
-		if ( (s.send(r, verify=False)).ok ):
+		if ( (s.send(r, verify=False, timeout=1)).ok ):
 		
 			status = 0
 			briefing = "Connection successful to API server at "

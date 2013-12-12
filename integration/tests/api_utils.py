@@ -36,7 +36,7 @@ def prepare_and_send_request(request_method, request_url, payload=None, authoriz
 	s.mount('https://', SSLAdapter('TLSv1'))
 
 	try:
-		resp = s.send(r, verify=False, timeout=200)
+		resp = s.send(r, verify=False, timeout=1)
 	except Timeout, SSLError:
 		return prepare_and_send_request(request_method, request_url, payload, authorization)
 	return (resp.ok, resp)
