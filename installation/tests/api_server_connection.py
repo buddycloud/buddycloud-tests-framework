@@ -1,10 +1,10 @@
 from requests import Request, Session, ConnectionError
 
-try:
-	import urllib3.contrib.pyopenssl
-	urllib3.contrib.pyopenssl.inject_into_urllib3()
-except ImportError:
-	pass
+#try:
+import urllib3.contrib.pyopenssl
+urllib3.contrib.pyopenssl.inject_into_urllib3()
+#except ImportError:
+#	pass
 
 #util_dependencies
 from ssl_adapter import SSLAdapter
@@ -31,7 +31,7 @@ def testFunction(domain_url):
 		r = req.prepare()
 
 		s = Session()
-		s.mount('https://', SSLAdapter('TLSv1'))
+#		s.mount('https://', SSLAdapter('TLSv1'))
 
 		if ( (s.send(r, verify=False)).ok ):
 		
