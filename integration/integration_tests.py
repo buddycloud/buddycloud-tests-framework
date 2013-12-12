@@ -1,6 +1,5 @@
 from importlib import import_module
 import os, sys
-#os.chdir("integration")
 tests_path = os.path.join(os.getcwd(), "integration", "tests")
 if not tests_path in sys.path:
 	sys.path.insert(0, tests_path)
@@ -39,10 +38,6 @@ for test_name in config.xreadlines():
 	try:
 		test_reference = getattr(import_module(test_name), "testFunction")
 		test_reference = IntegrationTest(test_name, test_reference)
-	except ImportError:
-		print "Could not import test "+test_name+"!"
-		print "Test "+test_name+" does not exist. Ignoring this test..."
-		problem_loading = True
 	except Exception, e:
 		print "Problem: "+str(e)
 		print "Error: "+test_name+" could not be loaded. Ignoring this test..."
@@ -55,6 +50,5 @@ for test_name in config.xreadlines():
 
 
 config.close()
-#os.chdir("../")
 
 del config

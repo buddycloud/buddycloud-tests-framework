@@ -1,6 +1,5 @@
 from importlib import import_module
 import os, sys
-#os.chdir("installation")
 tests_path = os.path.join(os.getcwd(), "installation", "tests")
 if not tests_path in sys.path:
 	sys.path.insert(0, tests_path)
@@ -41,11 +40,6 @@ for test_name in config.xreadlines():
 	try:
 		test_reference = getattr(import_module(test_name), "testFunction")
 		test_reference = InstallationTest(test_name, test_reference)
-	except ImportError:
-		logger.info("~could not import test "+test_name+"!~")
-		logger.info("~the test "+test_name+" doesn't exist~")
-		logger.info("~ignoring this test "+test_name+"~")
-		problem_loading = True
 	except Exception as e:
 		logger.info("~could not import test "+test_name+"!~")
 		logger.info("~problem: "+str(e)+"~")
@@ -59,6 +53,5 @@ for test_name in config.xreadlines():
 
 
 config.close()
-#os.chdir("../")
 
 del config

@@ -1,10 +1,15 @@
+if __name__ == "__main__":
+
+	import sys
+	sys.path.append("../../suite_utils")
+
 from requests import Request, Session, ConnectionError
 
-try:
-	import urllib3.contrib.pyopenssl
-	urllib3.contrib.pyopenssl.inject_into_urllib3()
-except ImportError:
-	pass
+#try:
+#	import urllib3.contrib.pyopenssl
+#	urllib3.contrib.pyopenssl.inject_into_urllib3()
+#except ImportError:
+#	pass
 
 #util_dependencies
 from ssl_adapter import SSLAdapter
@@ -72,3 +77,7 @@ def testFunction(domain_url):
 		message += "<br/>But it could also be a bug in our Inspector."
 		message += " Let us know at <email> if you think so." 
 		return (status, briefing, message, None)
+
+if __name__ == "__main__":
+
+	print testFunction("buddycloud.org")

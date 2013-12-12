@@ -1,5 +1,5 @@
-import dns.resolver
-
+import dns.resolver, sys
+from flask import Markup
 
 def testFunction(domain_url):
 
@@ -22,7 +22,10 @@ def testFunction(domain_url):
 		status = 2
 		briefing = "A problem happened while attempting to locate your domain " + domain_url + "!"
 		message = "Something odd happened while we were trying to locate your domain " + domain_url + "!"
-		message += "<br/>This is the exception we got: {"+str(e)+"}"
+		e_type, e_value, e_trace = sys.exc_info()
+		e_type = Markup.escape(str(type(e))).__str__()
+#		message += "<br/>This is the exception we got: {"+str(e)+"}"
+		message += "<br/>This is the exception we got: {type:%s, value:%s}" % (e_type, e_value)
 		message += "<br/>It is probably a temporary issue with domain " + domain_url + "."
 		message += "<br/>But it could also be a bug in our Inspector. Let us know at <email> if you think so." 
 		return (status, briefing, message, None)
