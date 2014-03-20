@@ -464,7 +464,10 @@ figure.credits figcaption {
 	background-color: hsla(187,62%,46%,1);
 }
 
-
+/*.btn.active {
+	cursor: not-allowed;
+	pointer-events: none;
+}*/
 
 /* = = = = = = = = = = = = = = = = = = = = */
 /* Navigation – Code Tabs */

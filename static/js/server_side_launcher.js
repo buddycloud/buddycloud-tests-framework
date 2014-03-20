@@ -69,7 +69,9 @@ function startInspection(){
 	if ( domain_url == null ){
 		return;
 	}
-	$("#inspect_button").addClass("disabled");
+	$("#inspect_button").addClass("active");
+	$("#inspect_button").removeClass("disabled");
+	$("#inspect_button").text("Stop");
 	$("#inspect_button").attr("onclick", "");
 	$.ajax({
 		url: "/launch/" + domain_url,

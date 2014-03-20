@@ -101,6 +101,9 @@
 			error: function(jqXHR){
 			{% if domain_url %}
 				$("#domain_url_box").val("{{ domain_url }}");
+				$("#inspect_button").addClass("active");
+				$("#inspect_button").removeClass("disable");
+				$("#inspect_button").text("Stop");
 				startInspection();
 			{% else %}
 				$("#domain_url_box").val("buddycloud.org");

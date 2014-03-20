@@ -8,10 +8,9 @@ function handleStartTestsLauncher(domain_url){
 // What to do in the page when a new test was issued just now
 function handleTestCreation(test_name, test_source){
 
-	$("#inspect_button").addClass("btn-danger");
 	$("#inspect_button").removeClass("disabled");
-	$("#inspect_button").removeClass("btn-success");
-	$("#inspect_button").text("stop!");
+	$("#inspect_button").addClass("active");
+	$("#inspect_button").text("Stop");
 	$("#inspect_button").attr("onclick", "stopInspection();");
 
 	test_entry_html = "<div class='test_entry'>";
@@ -104,10 +103,9 @@ function handleDomainURL(){
 			'delay' : 100
 		});
 		$("#domain_url_box").tooltip('show');
-		$("#inspect_button").addClass("btn-success");
 		$("#inspect_button").removeClass("disabled");
-		$("#inspect_button").removeClass("btn-danger");
-		$("#inspect_button").text("check!");
+		$("#inspect_button").removeClass("active");
+		$("#inspect_button").text("Check");
 		$("#inspect_button").attr("onclick", "startInspection();");
 
 		return null;
@@ -181,10 +179,9 @@ function createButtons(domain_url, test_name, situation){
 
 function finishLauncher(){
 
-	$("#inspect_button").addClass("btn-success");
 	$("#inspect_button").removeClass("disabled");
-	$("#inspect_button").removeClass("btn-danger");
-	$("#inspect_button").text("check!");
+	$("#inspect_button").removeClass("active");
+	$("#inspect_button").text("Check");
 	$("#inspect_button").attr("onclick", "startInspection();");
 }
 
