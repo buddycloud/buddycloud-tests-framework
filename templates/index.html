@@ -1,27 +1,59 @@
 <!DOCTYPE html>
 	<head>
-		<title>buddycloud protocol test</title>
-		<meta name="viewport" 	content="width=device-width, initial-scale=1.0">
+		<title>buddycloud protocol tester</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="img/apple-touch-icon-144x144-precomposed.png" sizes="144x144" rel="apple-touch-icon-precomposed">
+		<link rel="shortcut icon" href={{url_for("static", filename="img/icons/favicon.ico")}}>
+		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300i-transtalic,400italic,600italic,700italic,300,400,600,700" rel="stylesheet" type="text/css">
+		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300i-transtalic,400italic,600italic,700italic,300,400,600,700" rel="stylesheet" type="text/css">
+		<link href="http://fonts.googleapis.com/css?family=Source+Code+Pro:400,300,700,900,600,500,200" rel="stylesheet" type="text/css">
+	
 		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/bootstrap.min.css")}}>
-		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/bootstrap-responsive.min.css")}}>
-		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/launcher.css")}}>
+		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/docs.min.css")}}>
+		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/bootstrap-glyphicons.min.css")}}>
+		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/buddycloud-style.css")}}>
+		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/perfect-scrollbar.css")}}>
+		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/highlight.css")}}>
+<!--		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/launcher.css")}}>-->
 		<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 	</head>
 
 	<body>
-		<div class='navbar navbar-fixed-top'>
-			<div class='navbar-inner' id="navbar_area">
-				<div id="nav_flex">
-					<strong id="domain_url_label" class='pull-left'>buddycloud compatibility for: </strong>
-					<div class="input-append pull-left" id="input_flex">
+		<div class='navbar navbar-inverse navbar-fixed-top' role="navigation">
+			<div class='container' href="#">
+				<div class="navbar-header" href="#">
+
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/">protocol</a>
+				</div>
+				<div class="collapse navbar-collapse" id="navbar-collapse">
+<!--					<div class="input-append pull-left" id="input_flex">
 						<input type="text" class="input-large search-query" id='domain_url_box' placeholder='enter domain here'>
 						<span id='inspect_button' class="btn btn-success disabled">check!</span>
-					</div>
+					</div>-->
+
+					<form class="navbar-form navbar-right" role="form">
+						<div class="form-group">
+							<input name="domain" type="text" placeholder="Enter domain here" class="form-control" id="domain_url_box">
+						</div>
+						<span class="btn btn-primary disabled" id="inspect_button">Check</span>
+						</form>
 				</div>
 			</div>
 		</div>
 		<div class='container' style="margin-top:80px;">
-			<p id='header_msg'>buddycloud is a protocol with implementations in many languages. These tests help you understand which services are compatible.</p>
+			<blockquote>
+				<p id='header_msg'><img src={{url_for("static", filename="img/icons/ic_launcher_icon_mdpi.png")}} alt=""> Buddycloud is a protocol with implementations in many languages. These tests help you understand which services are compatible.</p>
+			</blockquote>
 			<strong id='test_launcher_status'></strong>
 		</div>
 		<div id='tests_output_table' class='container' style="margin-top:20px; margin-bottom:60px;">
