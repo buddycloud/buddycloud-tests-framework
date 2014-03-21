@@ -36,17 +36,12 @@
 					<a class="navbar-brand" href="/">protocol</a>
 				</div>
 				<div class="collapse navbar-collapse" id="navbar-collapse">
-<!--					<div class="input-append pull-left" id="input_flex">
-						<input type="text" class="input-large search-query" id='domain_url_box' placeholder='enter domain here'>
-						<span id='inspect_button' class="btn btn-success disabled">check!</span>
-					</div>-->
-
 					<form class="navbar-form navbar-right" role="form">
-						<div class="form-group">
-							<input name="domain" type="text" placeholder="Enter domain here" class="form-control" id="domain_url_box">
-						</div>
-						<span class="btn btn-primary disabled" id="inspect_button">Check</span>
-						</form>
+					<div class="form-group">
+						<input name="domain" type="text" placeholder="Enter domain here" class="form-control" id="domain_url_box">
+					</div>
+					<span class="btn btn-primary disabled" id="inspect_button">Check</span>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -69,6 +64,14 @@
 			<div id='message_buttons' class='modal-footer'>
 			</div>
 		</div>
+		<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+			<div class="container">
+				<p class="text-muted pull-right">
+					"Made with love. "
+					<a href="https://github.com/buddycloud/buddycloud-tests-framework">Corrections welcomed</a>"."
+				</p>
+			</div>
+		</nav>
 	</body>
 
 	<script src={{url_for('static', filename="js/jquery-1.9.1.min.js")}} language="javascript" type="text/javascript"></script>
