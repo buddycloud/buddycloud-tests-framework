@@ -792,3 +792,8 @@ body {
 	padding-top: 50px;
 	padding-top: 50px;
 }
+
+#message_body_area{
+	overflow:auto;
+	height: 370px;
+}
