@@ -15,15 +15,15 @@ function handleTestCreation(test_name, test_source){
 
 	test_entry_html = "<div class='test_entry'>";
 	test_entry_html += "<div style='display:table; width:100%;'>"
-	test_entry_html += "<div style='display:table-row;'>";
-	test_entry_html += "<div style='display:table-cell;'>";
-	test_entry_html += "<span id='td_" + test_name + "' class='btn disabled test_name'>";
+	test_entry_html += "<div style='display:table-row; background-color: hsla(0, 0%, 80%, 1)'>";
+	test_entry_html += "<div style='display:table-cell; border-left-width: 3px; border-left-color: #333; border-left-style: solid;'>";
+	test_entry_html += "<span id='td_" + test_name + "' class='test_name' style='width:100%;'>";
 	test_entry_html += "<i id='ti_" + test_name + "' class='icon-random'></i>";
 	test_entry_html += "<span id='td_" + test_name + "_content'>" + test_name + "</span>";
 	test_entry_html += "</span>";
 	test_entry_html += "</div>";
 	test_entry_html += "<div style='display:table-cell; height: 100%; width:95px;'>";
-	test_entry_html += "<span id='ts_" + test_name + "' class='btn disabled test_source' style='height: 100%;'>";
+	test_entry_html += "<span id='ts_" + test_name + "' class='test_source' style='height: 100%;'>";
 	test_entry_html += "<a href='https://" + test_source + "' target='_blank'>View source</a></span>";
 	test_entry_html += "</div>";
 	test_entry_html += "</div>";
@@ -38,15 +38,15 @@ function handleTestCreation(test_name, test_source){
 // What to do in the page once a test finishes running
 function handleTestResponse(data){
 
-	$("#td_"+data.name).addClass("btn-"+getExitStatusClass(data.exit_status));
-	$("#td_"+data.name).removeClass("disabled");
+//	$("#td_"+data.name).addClass("btn-"+getExitStatusClass(data.exit_status));
+//	$("#td_"+data.name).removeClass("disabled");
 	$("#td_"+data.name).attr("data-response", JSON.stringify(data));
 	$("#td_"+data.name).attr("onclick", "focusOnTest('"+data.name+"');");
-	$("#ts_"+data.name).addClass("btn-"+getExitStatusClass(data.exit_status));
-	$("#ts_"+data.name).removeClass("disabled");
-	$("#to_"+data.name).addClass(getExitStatusClass(data.exit_status));
+//	$("#ts_"+data.name).addClass("btn-"+getExitStatusClass(data.exit_status));
+//	$("#ts_"+data.name).removeClass("disabled");
+//	$("#to_"+data.name).addClass(getExitStatusClass(data.exit_status));
 	$("#to_"+data.name).html(data.briefing);
-	$("#ti_"+data.name).attr("class", getExitStatusIcon(data.exit_status) + " icon-white");
+//	$("#ti_"+data.name).attr("class", getExitStatusIcon(data.exit_status) + " icon-white");
 	$("#td_"+data.name+"_content").html(data.name + " | " + getExitStatusResolution(data.exit_status) + " <span class='test_source'><a>Click to see more information</a></span>");
 	
 /*	$("#td_"+data.name).tooltip('destroy');
