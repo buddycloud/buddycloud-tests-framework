@@ -152,7 +152,6 @@ var show_modal = true;
 
 function showMessage(title, body, situation){
 
-	$("#message_title_wrap").attr("class", "modal-header btn btn-"+situation);
 	$("#message_title").text(title);
 	$("#message_body_area").attr("class", "modal-body "+situation);
 	$("#message_body").html(body);

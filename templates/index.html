@@ -23,6 +23,22 @@
 	</head>
 
 	<body>
+		<div id='message' class='modal fade' tabindex="-1" aria-labbeledby="message_title" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div id='message_title_wrap' class='modal-header'>
+						<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+						<h4 class="modal-title" id='message_title'></h4>
+					</div>
+					<div id='message_body_area' class='modal-body'>
+						<p id='message_body'></p>
+					</div>
+					<div id='message_buttons' class='modal-footer'>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class='navbar navbar-inverse navbar-fixed-top' role="navigation">
 			<div class='container' href="#">
 				<div class="navbar-header" href="#">
@@ -53,22 +69,11 @@
 		</div>
 		<div id='tests_output_table' class='container' style="margin-top:20px; margin-bottom:60px;">
 		</div>
-		<div id='message' class='modal hide fade'>
-			<div id='message_title_wrap' class='modal-header btn'>
-				<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-				<h3 id='message_title'></h3>
-			</div>
-			<div id='message_body_area' class='modal-body'>
-				<p id='message_body'></p>
-			</div>
-			<div id='message_buttons' class='modal-footer'>
-			</div>
-		</div>
 		<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
 			<div class="container">
 				<p class="text-muted pull-right">
-					"Made with love. "
-					<a href="https://github.com/buddycloud/buddycloud-tests-framework">Corrections welcomed</a>"."
+					Made with love. 
+					<a href="https://github.com/buddycloud/buddycloud-tests-framework">Corrections welcomed</a>.
 				</p>
 			</div>
 		</nav>
