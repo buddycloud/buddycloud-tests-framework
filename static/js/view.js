@@ -10,15 +10,15 @@ function doGetByCode(code, element){
 	data = {
 		 0: {
 			'class' : 'test_success',
-			'message' : 'This test was successful.'
+			'message' : '( This test was successful )'
 		    },
 		 1: {
 			'class' : 'test_failure',
-			'message' : 'This test failed.'
+			'message' : '( This test failed )'
 		    },
 		 2: {
 			'class' : 'test_warning',
-			'message' : 'Something unexpected happened.'
+			'message' : '( Something unexpected happened )'
 		    }
 		}
 	return data[code][element]
@@ -47,9 +47,6 @@ function handleResults(data, cancelling){
 
 	for ( index in data.tests ){
 		if (!cancelling){
-//			if ( data.tests[index].test_run_status == 0 ){
-//				$("#to_"+data.tests[index].name).html("About to run this test. Please wait.");
-//			}
 			if ( data.tests[index].test_run_status == 1 ){
 				$("#to_"+data.tests[index].name).html("Running this test...");
 			}
