@@ -1,7 +1,7 @@
 // What to do in the page when a new test suite is about to run
 function handleStartTestsLauncher(domain_url){
 
-	$("#tests_launcher_message").html("Let's find out about <span class='domain_title'>"+domain_url+"</span>");
+	$("#tests_launcher_message").html("Let's find out about <strong>"+domain_url+"</strong>");
 	$("#tests_output").html("");
 }
 
