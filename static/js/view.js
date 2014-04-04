@@ -30,9 +30,7 @@ function handleTestCompletion(data){
 	$("#td_"+data.name).attr("data-response", JSON.stringify(data));
 	$(".test_entry > div > div > div:nth-child(1):has(#td_"+data.name+")").attr("onclick", "focusOnTest('"+data.name+"');");	
 	$("#td_"+data.name).addClass(doGetByCode(data.exit_status, "class"));
-	var new_content = "Test: " + data.name + " | ";
-	new_content += doGetByCode(data.exit_status, "message");
-	$("#td_"+data.name+"_content").html(new_content);
+	$("#td_"+data.name+"_content").html(doGetByCode(data.exit_status, "message"));
 }
 
 function handleResults(data, cancelling){
@@ -49,10 +47,10 @@ function handleResults(data, cancelling){
 
 	for ( index in data.tests ){
 		if (!cancelling){
-			if ( data.tests[index].test_run_status == 0 ){
-				$("#to_"+data.tests[index].name).html("About to run this test. Please wait.");
-			}
-			else if ( data.tests[index].test_run_status == 1 ){
+//			if ( data.tests[index].test_run_status == 0 ){
+//				$("#to_"+data.tests[index].name).html("About to run this test. Please wait.");
+//			}
+			if ( data.tests[index].test_run_status == 1 ){
 				$("#to_"+data.tests[index].name).html("Running this test...");
 			}
 			else if ( data.tests[index].test_run_status == 2 ){

@@ -76,17 +76,21 @@
 				<div>
 				<div>
 					<span id='td_{{name}}' class='test_name'>
-						<span id='td_{{name}}_content'>Test: {{name}}</span>
+						Test: {{name}}{{^name}}querying from server...{{/name}}
+						<span id='td_{{name}}_content'></span> {{#result}}Click here for more information!{{/result}}
 					</span>
 				</div>
 				<div>
+					{{#source}}
 					<span id='ts_{{name}}' class='test_source'>
 						<a href='https://{{source}}' target='_blank'>source</a>
 					</span>
+					{{/source}}
 				</div>
 				</div>
 			</div>
 			<span id='to_{{name}}' class='test_output input uneditable-input'>
+			{{#result}}{{{result.briefing}}}{{/result}}
 			</span>
 			</div>
 			{{/tests}}
