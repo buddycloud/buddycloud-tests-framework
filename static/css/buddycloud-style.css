@@ -827,6 +827,6 @@ body {
 	height: 100%;
 }
 
-.inspect_button{
+#inspect_button{
 	width: 65px;
 }
