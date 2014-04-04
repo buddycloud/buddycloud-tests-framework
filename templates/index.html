@@ -67,32 +67,32 @@
 			<div id='tests_output' style='margin-top:20px; margin-bottom:60px;'></div>
 			<script id='tests_output_template' type='x-tmpl-mustache'>
 			{% autoescape false %}
-			{{"{{=<% %>=}}"}}
+			{{"{{=[[ ]]=}}"}}
 			<div id='tests_output_table' class='container' style='margin-top:20px; margin-bottom:60px;'>
-			<%#tests%>
+			[[#tests]]
 			<div class='test_entry'>
 			<div>
 				<div>
 				<div>
-					<span id='td_<%name%>' class='test_name'>
-						Test: <strong><%name%></strong><%^name%>querying from server...<%/name%>
-						<span id='td_<%name%>_content'></span> <%#result%> | Click here for more information!<%/result%>
+					<span id='td_[[name]]' class='test_name'>
+						Test: <strong>[[name]]</strong>[[^name]]querying from server...[[/name]]
+						<span id='td_[[name]]_content'></span> [[#result]] | Click here for more information![[/result]]
 					</span>
 				</div>
 				<div>
-					<%#source%>
-					<span id='ts_<%name%>' class='test_source'>
-						<a href='https://<%source%>' target='_blank'>source</a>
+					[[#source]]
+					<span id='ts_[[name]]' class='test_source'>
+						<a href='https://[[source]]' target='_blank'>source</a>
 					</span>
-					<%/source%>
+					[[/source]]
 				</div>
 				</div>
 			</div>
-			<span id='to_<%name%>' class='test_output input uneditable-input'>
-			<%#result%><%&result.briefing%><%/result%>
+			<span id='to_[[name]]' class='test_output input uneditable-input'>
+			[[#result]][[&result.briefing]][[/result]]
 			</span>
 			</div>
-			<%/tests%>
+			[[/tests]]
 			</div>
 			{%- endautoescape %}
 			</script>
