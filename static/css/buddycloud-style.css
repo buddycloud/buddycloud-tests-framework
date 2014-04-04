@@ -807,6 +807,7 @@ body {
 	display:table-row;
 	background-color: #E5E9EF;
 	color: #38434C;
+	opacity: 0.7;
 }
 
 .test_entry > div > div > div:nth-child(1){
