@@ -797,3 +797,32 @@ body {
 	overflow:auto;
 	height: 370px;
 }
+
+.test_entry > div{
+	display:table;
+	width: 100%;
+}
+
+.test_entry > div > div{
+	display:table-row;
+	background-color: #E5E9EF;
+	color: #38434C;
+}
+
+.test_entry > div > div > div:nth-child(1){
+	display:table-cell;
+	border-left-width: 3px;
+	border-left-color: #C4C8CD;
+	border-left-style: solid;
+	width: 90%;
+}
+
+.test_entry > div > div > div:nth-child(2){
+	display:table-cell;
+	text-align: center;
+}
+
+.test_entry > div > div > div > span{
+	width: 100%;
+	height: 100%;
+}

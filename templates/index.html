@@ -14,11 +14,9 @@
 	
 		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/bootstrap.min.css")}}>
 		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/docs.min.css")}}>
-		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/bootstrap-glyphicons.min.css")}}>
 		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/buddycloud-style.css")}}>
 		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/perfect-scrollbar.css")}}>
 		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/highlight.css")}}>
-<!--		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/launcher.css")}}>-->
 		<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 	</head>
 
@@ -65,9 +63,37 @@
 			<blockquote>
 				<p id='header_msg'><img src={{url_for("static", filename="img/icons/ic_launcher_icon_mdpi.png")}} alt=""> Buddycloud is a protocol with implementations in many languages. These tests help you understand which services are compatible.</p>
 			</blockquote>
-			<strong id='test_launcher_status'></strong>
-		</div>
-		<div id='tests_output_table' class='container' style="margin-top:20px; margin-bottom:60px;">
+			<span id='tests_launcher_message'></span>
+			<div id='tests_output' style='margin-top:20px; margin-bottom:60px;'></div>
+			<script id='tests_output_template' type='x-tmpl-mustache'>
+			{% autoescape false %}
+			{{"
+			<p>Suite Run Status: {{run_status}}</p>
+			<div id='tests_output_table' class='container' style='margin-top:20px; margin-bottom:60px;'>
+			{{#tests}}
+			<div class='test_entry'>
+			<div>
+				<div>
+				<div>
+					<span id='td_{{name}}' class='test_name'>
+						<span id='td_{{name}}_content'>Test: {{name}}</span>
+					</span>
+				</div>
+				<div>
+					<span id='ts_{{name}}' class='test_source'>
+						<a href='https://{{source}}' target='_blank'>source</a>
+					</span>
+				</div>
+				</div>
+			</div>
+			<span id='to_{{name}}' class='test_output input uneditable-input'>
+			</span>
+			</div>
+			{{/tests}}
+			</div>
+			"}}
+			{%- endautoescape %}
+			</script>
 		</div>
 		<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
 			<div class="container">
@@ -80,12 +106,14 @@
 	</body>
 
 	<script src={{url_for('static', filename="js/jquery-1.9.1.min.js")}} language="javascript" type="text/javascript"></script>
-	<script src={{url_for('static', filename="js/jquery-cookie.js")}} language="javascript" type="text/javascript"></script>
-	<script src={{url_for('static', filename="js/server_side_launcher.js")}} language="javascript" type="text/javascript"></script>
+<!--	<script src={{url_for('static', filename="js/jquery-cookie.js")}} language="javascript" type="text/javascript"></script>-->
+	<script src={{url_for('static', filename="js/launcher.js")}} language="javascript" type="text/javascript"></script>
+	<script src={{url_for('static', filename="js/jquery.mustache.js")}} language="javascript" type="text/javascript"></script>
 	<script src={{url_for('static', filename="js/view.js")}} language="javascript" type="text/javascript"></script>
 	<script src={{url_for('static', filename="js/bootstrap.min.js")}} language="javascript" type="text/javascript"></script>
 	<script async="" src="//www.google-analytics.com/ga.js"></script>
 	<script language="javascript" type="text/javascript">
+
 	$(document).ready(function(){
 
 		$("#domain_url_box").keypress(function(e){
@@ -122,5 +150,6 @@
 		});
 
 	});
+
 	</script>
 </html>
