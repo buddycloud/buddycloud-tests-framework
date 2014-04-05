@@ -60,41 +60,37 @@
 			</div>
 		</div>
 		<div class='container' style="margin-top:80px;">
-			<blockquote>
-				<p id='header_msg'><img src={{url_for("static", filename="img/icons/ic_launcher_icon_mdpi.png")}} alt=""> Buddycloud is a protocol with implementations in many languages. These tests help you understand which services are compatible.</p>
-			</blockquote>
+			<p id='header_msg'><img src={{url_for("static", filename="img/icons/ic_launcher_icon_mdpi.png")}} alt=""> Buddycloud is a protocol with implementations in many languages. These tests help you understand which services are compatible.</p>
 			<span id='tests_launcher_message'></span>
 			<div id='tests_output' style='margin-top:20px; margin-bottom:60px;'></div>
 			<script id='tests_output_template' type='x-tmpl-mustache'>
-			{% autoescape false %}
-			{{"{{=[[ ]]=}}"}}
-			<div id='tests_output_table' class='container' style='margin-top:20px; margin-bottom:60px;'>
-			[[#tests]]
-			<div class='test_entry'>
-			<div>
-				<div>
-				<div>
-					<span id='td_[[name]]' class='test_name'>
-						Test: <strong>[[name]]</strong>[[^name]]querying from server...[[/name]]
-						<span id='td_[[name]]_content'></span> [[#result]] | Click here for more information![[/result]]
-					</span>
-				</div>
-				<div>
-					[[#source]]
-					<span id='ts_[[name]]' class='test_source'>
-						<a href='https://[[source]]' target='_blank'>source</a>
-					</span>
-					[[/source]]
-				</div>
-				</div>
-			</div>
-			<span id='to_[[name]]' class='test_output input uneditable-input'>
-			[[#result]][[&result.briefing]][[/result]]
+{% autoescape false %}
+{{"{{=[[ ]]=}}"}}
+[[#tests]]
+<div class="test_entry [[#result]]test_finished[[/result]][[^result]]test_in_progress[[/result]]">
+	<div>
+		[[#result]]<span class="glyphicon [[result.icon]]"></span>[[/result]]
+		[[^result]]<span class="glyphicon_width_gap"></span>[[/result]]
+		<span>
+			<span class="test_heading">
+				[[^result]][[name]][[/result]]
+				[[#result]][[result.heading]][[/result]]
 			</span>
-			</div>
-			[[/tests]]
-			</div>
-			{%- endautoescape %}
+			[[#result]]<span class="glyphicon glyphicon-info-sign"></span>[[/result]]
+			<a href="https://[[source]]" target="_blank">
+				<span class="glyphicon glyphicon-list-alt"></span>
+			</a>
+		</span>
+	</div>
+	<div>
+		<span class="glyphicon_width_gap"></span>
+		<span class="[[#result.data]]test_data[[/result.data]][[^result.data]]test_no_data[[/result.data]]">
+			[[#result]]<code>[[result.data]]</code>[[/result]]
+		</span>
+	</div>
+</div>
+[[/tests]]
+{%- endautoescape %}
 			</script>
 		</div>
 		<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
