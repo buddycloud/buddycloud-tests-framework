@@ -60,12 +60,19 @@
 			</div>
 		</div>
 		<div>
+		<div id='protocol_header' class='container'>
+			<h1>
+				<img src="static/bower_components/buddycloud-styles/dist/img/icons/buddycloud_icon.svg" alt=""> protocol checker
+			</h1>
+			<h3>
+			Buddycloud is a protocol with implementations in many languages.
+			</h3>
+			<h3>
+			These tests help you understand which services are compatible.
+			</h3>
+		</div>
+		{% include 'domain_url_form.html' %}
 		<div id='tests_output' class='container'>
-			<h2>
-			Buddycloud is a protocol with implementations in many languages. These tests help you understand which services are compatible.
-			</h2>
-			<br/>
-			{% include 'domain_url_form.html' %}
 		</div>
 		<script id='tests_output_template' type='x-tmpl-mustache'>
 {% autoescape false %}
@@ -73,9 +80,11 @@
 {{"{{=[[ ]]=}}"}}
 
 [[#domain_url]]
+	<hr/>
 	<h2 class="text-center">
 		Let's find out about <code>[[domain_url]]</code>
 	</h2>
+	<hr/>
 [[/domain_url]]
 
 [[#tests]]
@@ -168,13 +177,15 @@
 			{% if domain_url %}
 				$("#domain_url_box").val("{{ domain_url }}");
 				$("#inspect_button").addClass("active");
-				$("#inspect_button").removeClass("disable");
+				$("#inspect_button").removeClass("disabled");
 				$("#inspect_button").text("Stop");
+				$("#domain_url_box").prop('disabled', true);
 				startInspection();
 			{% else %}
 				$("#domain_url_box").val("buddycloud.org");
 				$("#inspect_button").attr("onclick", "startInspection();");
 				$("#inspect_button").removeClass("disabled");
+				$("#domain_url_box").prop('disabled', false);
 			{% endif %}
 			}
 		});

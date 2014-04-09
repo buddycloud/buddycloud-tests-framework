@@ -1,11 +1,3 @@
-// What to do in the page when a new test suite is about to run
-function handleStartTestsLauncher(domain_url){
-
-/*	var message = "Let's find out about <code>" + domain_url + "</code>";
-	$("#tests_header_message").html(message);
-	$("#tests_output").html("");*/
-}
-
 function doGetByCode(code, element){
 
 	data = {
@@ -28,6 +20,7 @@ function handleResults(data, cancelling){
 	$("#inspect_button").addClass("active");
 	$("#inspect_button").text("Stop");
 	$("#inspect_button").attr("onclick", "stopInspection();");
+	$("#domain_url_box").prop('disabled', true);
 
 	var domain_url = data.run_id;
 	domain_url = domain_url.split("_")[0];
@@ -140,6 +133,7 @@ function finishLauncher(){
 	$("#inspect_button").removeClass("active");
 	$("#inspect_button").text("Check");
 	$("#inspect_button").attr("onclick", "startInspection();");
+	$("#domain_url_box").prop('disabled', false);
 }
 
 function focusOnTest(test_name){

@@ -2,6 +2,16 @@ body {
 	padding-bottom: 35px;
 }
 
+#domain_url_form{
+	height: 100%;
+	padding-left: 150px;
+	padding-right: 150px;
+}
+
+#domain_url_form > form > div{
+	width: 100%;
+	height: 100%;
+}
 #inspect_button{
 	width: 65px;
 }
@@ -16,7 +26,7 @@ body {
 	height: 370px;
 }
 
-#tests_header,
+#protocol_header,
 #tests_output{
 	padding-left: 150px;
 	padding-right: 150px;

@@ -36,12 +36,12 @@ function startInspection(){
 	$("#inspect_button").removeClass("disabled");
 	$("#inspect_button").text("Stop");
 	$("#inspect_button").attr("onclick", "");
+	$("#domain_url_box").prop('disabled', true);
 	$.ajax({
 		url: "/launch/" + domain_url,
 		type: "get",
 		dataType: "json",
 		success: function(data){
-			handleStartTestsLauncher(domain_url);
 			getUpdatedResults(false);
 			updaterId = window.setInterval(function(){
 				getUpdatedResults(false);
