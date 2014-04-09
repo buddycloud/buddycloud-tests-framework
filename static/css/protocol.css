@@ -153,3 +153,23 @@ body {
 	color: transparent !important;
 	cursor: default;
 }
+
+.test_in_progress .test_heading > h3:after{
+	content: " is running...";
+	color: #E5E9EF;
+}
+
+.test_finished.test_success .test_heading > h3:after{
+	content: " passed!";
+	color: #2DAEBF;
+}
+
+.test_finished.test_failure .test_heading > h3:after{
+	content: " failed!";
+	color: #38434C;
+}
+
+.test_finished.test_warning .test_heading > h3:after{
+	content: " failed unexpectedly!";
+	color: #C4C8CD;
+}
