@@ -2,6 +2,10 @@ var lastResults = null;
 
 function getUpdatedResults(cancelling){
 
+	if ( !cancelling && hovering_test_entry ){
+		return;
+	}
+
 	$.ajax({
 		url: "/get_results",
 		type: "get",
