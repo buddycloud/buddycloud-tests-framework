@@ -12,11 +12,9 @@
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300i-transtalic,400italic,600italic,700italic,300,400,600,700" rel="stylesheet" type="text/css">
 		<link href="http://fonts.googleapis.com/css?family=Source+Code+Pro:400,300,700,900,600,500,200" rel="stylesheet" type="text/css">
 	
-		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/bootstrap.min.css")}}>
-		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/docs.min.css")}}>
-		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/buddycloud-style.css")}}>
-		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/perfect-scrollbar.css")}}>
-		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/highlight.css")}}>
+		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="bower_components/bootstrap/dist/css/bootstrap.min.css")}}>
+		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="bower_components/buddycloud-styles/dist/css/buddycloud-styles.min.css")}}>
+		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/protocol.css")}}>
 		<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 	</head>
 
@@ -63,7 +61,6 @@
 		<div>
 		<div id='tests_output' class='container'>
 			<h2>
-			<img src={{url_for("static", filename="img/icons/ic_launcher_icon_hdpi.png")}} alt="">
 			Buddycloud is a protocol with implementations in many languages. These tests help you understand which services are compatible.
 			</h2>
 			<br/>
@@ -135,12 +132,12 @@
 		</nav>
 	</body>
 
-	<script src={{url_for('static', filename="js/jquery-1.9.1.min.js")}} language="javascript" type="text/javascript"></script>
-<!--	<script src={{url_for('static', filename="js/jquery-cookie.js")}} language="javascript" type="text/javascript"></script>-->
+	<script src={{url_for('static', filename="bower_components/jquery/dist/jquery.min.js")}} language="javascript" type="text/javascript"></script>
+	<script src={{url_for('static', filename="bower_components/bootstrap/dist/js/bootstrap.min.js")}} language="javascript" type="text/javascript"></script>
+	<script src={{url_for('static', filename="bower_components/buddycloud-styles/dist/js/buddycloud-styles.min.js")}} language="javascript" type="text/javascript"></script>
 	<script src={{url_for('static', filename="js/launcher.js")}} language="javascript" type="text/javascript"></script>
 	<script src={{url_for('static', filename="js/jquery.mustache.js")}} language="javascript" type="text/javascript"></script>
 	<script src={{url_for('static', filename="js/view.js")}} language="javascript" type="text/javascript"></script>
-	<script src={{url_for('static', filename="js/bootstrap.min.js")}} language="javascript" type="text/javascript"></script>
 	<script async="" src="//www.google-analytics.com/ga.js"></script>
 	<script language="javascript" type="text/javascript">
 
