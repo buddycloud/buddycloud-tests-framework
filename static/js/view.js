@@ -1,36 +1,25 @@
 // What to do in the page when a new test suite is about to run
 function handleStartTestsLauncher(domain_url){
 
-	$("#tests_launcher_message").html("Let's find out about <strong>"+domain_url+"</strong>");
-	$("#tests_output").html("");
+/*	var message = "Let's find out about <code>" + domain_url + "</code>";
+	$("#tests_header_message").html(message);
+	$("#tests_output").html("");*/
 }
 
 function doGetByCode(code, element){
 
 	data = {
 		 0: {
-			'class' : 'test_success',
-			'message' : '( This test was successful )'
+			'icon' : 'glyphicon-ok'
 		    },
 		 1: {
-			'class' : 'test_failure',
-			'message' : '( This test failed )'
+			'icon' : 'glyphicon-remove'
 		    },
 		 2: {
-			'class' : 'test_warning',
-			'message' : '( Something unexpected happened )'
+			'icon' : 'glyphicon-remove'
 		    }
 		}
 	return data[code][element]
-}
-
-// What to do in the page once a test finishes running
-function handleTestCompletion(data){
-
-	$("#td_"+data.name).attr("data-response", JSON.stringify(data));
-	$(".test_entry > div > div > div:nth-child(1):has(#td_"+data.name+")").attr("onclick", "focusOnTest('"+data.name+"');");	
-	$("#td_"+data.name).addClass(doGetByCode(data.exit_status, "class"));
-	$("#td_"+data.name+"_content").html(doGetByCode(data.exit_status, "message"));
 }
 
 function handleResults(data, cancelling){
@@ -40,89 +29,31 @@ function handleResults(data, cancelling){
 	$("#inspect_button").text("Stop");
 	$("#inspect_button").attr("onclick", "stopInspection();");
 
+	var domain_url = data.run_id;
+	domain_url = domain_url.split("_")[0];
+	data["domain_url"] = domain_url;
+
+	for ( index in data.tests ){
+		if ( data.tests[index].test_run_status == 2 ){
+			var exit_status = data.tests[index].result.exit_status;
+			var icon = doGetByCode(exit_status, "icon");
+			data.tests[index].result["icon"] = icon;
+
+			var briefing = data.tests[index].result.briefing;
+			data.tests[index].result["heading"] = briefing;
+
+			var message = data.tests[index].result.message;
+			data.tests[index].result["information"] = message;
+
+			data.tests[index].result["data"] = "";
+
+		}
+	}
+
 	var template = $('#tests_output_template').html();
 	Mustache.parse(template);
 	var rendered = Mustache.render(template, data);
 	$('#tests_output').html(rendered);
-
-	for ( index in data.tests ){
-		if (!cancelling){
-			if ( data.tests[index].test_run_status == 1 ){
-				$("#to_"+data.tests[index].name).html("Running this test...");
-			}
-			else if ( data.tests[index].test_run_status == 2 ){
-				handleTestCompletion(data.tests[index].result);
-			}
-		}
-		else{
-			if ( data.tests[index].test_run_status == 2 ){
-				handleTestCompletion(data.tests[index].result);
-			}
-			else{
-				$("#to_"+data.tests[index].name).html("This test was cancelled.");
-			}
-		}
-	}
-
-	$(".test_entry > div > div:has(.test_success)")
-		.css("background-color", "#F4F8FA");
-	$(".test_entry > div > div:has(.test_success)")
-		.css("color", "#5BC0DE");
-	$(".test_entry > div > div > div:nth-child(1):has(.test_success)")
-		.css("border-left-color", "#5BC0DE");
-	$(".test_entry > div > div > div:nth-child(1):has(.test_success)")
-		.hover(
-			function(){
-				$(this).css("cursor", "pointer");
-				$(this).css("background", "linear-gradient(to right, #5BC0DE, transparent)");
-				$(this).css("color", "white");
-			},
-			function(){
-				$(this).css("cursor", "default");
-				$(this).css("background", "none");
-				$(this).css("color", "#5BC0DE");
-			}
-		);
-
-	$(".test_entry > div > div:has(.test_failure)")
-		.css("background-color", "#F2DEDE");
-	$(".test_entry > div > div:has(.test_failure)")
-		.css("color", "#D9534F");
-	$(".test_entry > div > div > div:nth-child(1):has(.test_failure)")
-		.css("border-left-color", "#D9534F");
-	$(".test_entry > div > div > div:nth-child(1):has(.test_failure)")
-		.hover(
-			function(){
-				$(this).css("cursor", "pointer");
-				$(this).css("background", "linear-gradient(to right, #D9534F, transparent)");
-				$(this).css("color", "white");
-			},
-			function(){
-				$(this).css("cursor", "default");
-				$(this).css("background", "none");
-				$(this).css("color", "#D9534F");
-			}
-		);
-
-	$(".test_entry > div > div:has(.test_warning)")
-		.css("background-color", "#FCF8E3");
-	$(".test_entry > div > div:has(.test_warning)")
-		.css("color", "#F0AD4E");
-	$(".test_entry > div > div > div:nth-child(1):has(.test_warning)")
-		.css("border-left-color", "#F0AD4E");
-	$(".test_entry > div > div > div:nth-child(1):has(.test_warning)")
-		.hover(
-			function(){
-				$(this).css("cursor", "pointer");
-				$(this).css("background", "linear-gradient(to right, #F0AD4E, transparent)");
-				$(this).css("color", "white");
-			},
-			function(){
-				$(this).css("cursor", "default");
-				$(this).css("background", "none");
-				$(this).css("color", "#F0AD4E");
-			}
-		);
 
 	if ( data.run_status == 2){
 		if (updaterId != null){
@@ -185,10 +116,10 @@ function handleDomainURL(){
 
 var show_modal = true;
 
-function showMessage(title, body, situation){
+function showInformation(title, body){
 
-	$("#message_title").text(title);
-	$("#message_body_area").attr("class", "modal-body "+situation);
+	$("#message_title").text(title + " test results");
+	$("#message_body_area").attr("class", "modal-body");
 	$("#message_body").html(body);
 	if ( show_modal ){
 		window.setTimeout(function(){
@@ -203,13 +134,6 @@ function showMessage(title, body, situation){
 	});
 }
 
-function createButtons(domain_url, test_name){
-
-	var close = "<button href='#' data-dismiss='modal' class='btn'>Close</button>";	
-	$("#message_buttons").html(close);
-}
-
-
 function finishLauncher(){
 
 	$("#inspect_button").removeClass("disabled");
@@ -220,10 +144,7 @@ function finishLauncher(){
 
 function focusOnTest(test_name){
 
-	var exit_val = parseInt(JSON.parse($("#td_"+test_name).attr("data-response")).exit_status);
-	var exit_status_class = doGetByCode(exit_val, "class");
-	createButtons(domain_url, test_name);
-
-	var msg = JSON.parse($("#td_" + test_name).attr("data-response"))['message'];
-	showMessage(test_name, msg, exit_status_class);
+	var information = $("#"+test_name+" .result_information");
+	information = information.attr("data-information");
+	showInformation(test_name, information);
 }
