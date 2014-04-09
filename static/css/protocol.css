@@ -1,5 +1,6 @@
 body {
 	padding-bottom: 35px;
+	overflow-y: scroll;
 }
 
 #domain_url_form{
@@ -16,14 +17,19 @@ body {
 	width: 65px;
 }
 
-.modal-dialog{
+/*.modal-dialog{
 	padding-top: 50px;
 	padding-top: 50px;
+}*/
+
+.modal-body{
+	overflow: auto;
+	height: 350px;
 }
 
-#message_body_area{
-	overflow: auto;
-	height: 370px;
+#modal_test_name:after{
+	content: " test results";
+	color: #2DAEBF;
 }
 
 #protocol_header,

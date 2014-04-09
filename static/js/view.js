@@ -114,20 +114,28 @@ function handleDomainURL(){
 
 var show_modal = true;
 
-function showInformation(title, body){
+function showInformation(test_name, information, exit_status){
 
-	$("#message_title").text(title + " test results");
-	$("#message_body_area").attr("class", "modal-body");
-	$("#message_body").html(body);
+	var data = {
+		test_name : test_name,
+		information : information,
+		icon : doGetByCode(exit_status, "icon")
+	}
+
+	var template = $('#feedback_modal_template').html();
+	Mustache.parse(template);
+	var rendered = Mustache.render(template, data);
+	$('#feedback_modal').html(rendered);
+
 	if ( show_modal ){
 		window.setTimeout(function(){
-			$("#message").modal({'keyboard' : false, 'show' : true, 'backdrop' : true});
+			$("#feedback_modal").modal({'keyboard' : false, 'show' : true, 'backdrop' : true});
 		}, 750);
 	}
-	$("message").on("hidden", function(){
+	$("#feedback_modal").on("hidden", function(){
 		show_modal = true;
 	});
-	$("message").on("show", function(){
+	$("#feedback_modal").on("show", function(){
 		show_modal = false;
 	});
 }
@@ -144,6 +152,7 @@ function finishLauncher(){
 function focusOnTest(test_name){
 
 	var information = $("#"+test_name+" .result_information");
+	exit_status = information.attr("data-exit-status");
 	information = information.attr("data-information");
-	showInformation(test_name, information);
+	showInformation(test_name, information, exit_status);
 }

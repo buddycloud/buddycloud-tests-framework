@@ -19,22 +19,34 @@
 	</head>
 
 	<body>
-		<div id='message' class='modal fade' tabindex="-1" aria-labbeledby="message_title" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div id='message_title_wrap' class='modal-header'>
-						<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-						<h4 class="modal-title" id='message_title'></h4>
-					</div>
-					<div id='message_body_area' class='modal-body'>
-						<p id='message_body'></p>
-					</div>
-					<div id='message_buttons' class='modal-footer'>
-						<button href='#' data-dismiss='modal' class='btn'>Close</button>
-					</div>
-				</div>
-			</div>
+		<div id='feedback_modal' class='modal fade' tabindex="-1" aria-labbeledby="modal_test_name" aria-hidden="true"></div>
+		<script id='feedback_modal_template' type='x-tmpl-mustache'>
+
+{% autoescape false %}
+
+{{"{{=[[ ]]=}}"}}
+
+<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div  class='modal-header'>
+			<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>	
+			<h3 class="modal-title" id='modal_test_name'>
+				<span class="glyphicon [[icon]]"></span>
+				[[test_name]]
+			</h3>
 		</div>
+		<div class='modal-body'>
+			[[&information]]
+		</div>
+		<div class='modal-footer'>
+			<span data-dismiss='modal' class='btn'>Close</span>
+		</div>
+	</div>
+</div>
+
+{{"[[={{ }}=]]"}}
+{%- endautoescape %}
+		</script>
 
 		<div class='navbar navbar-inverse navbar-fixed-top' role="navigation">
 			<div class='container' href="#">
@@ -106,9 +118,9 @@
 			<span class="test_options">
 				<h3>
 				[[#result]]
-				<a href="#" onclick="focusOnTest('[[name]]');">
+				<span onclick="focusOnTest('[[name]]');">
 					<span class="glyphicon glyphicon-info-sign"></span>
-				</a>
+				</span>
 				[[/result]]
 				[[^result]]
 				<a href="#" onclick="">
@@ -151,6 +163,8 @@
 </div>
 [[/name]]
 [[/tests]]
+
+{{"[[={{ }}=]]"}}
 {%- endautoescape %}
 		</script>
 		</div>
