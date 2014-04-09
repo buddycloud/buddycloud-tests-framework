@@ -2,13 +2,16 @@ function doGetByCode(code, element){
 
 	data = {
 		 0: {
-			'icon' : 'glyphicon-ok'
+			'icon' : 'glyphicon-ok',
+			'result_class' : 'test_success'
 		    },
 		 1: {
-			'icon' : 'glyphicon-remove'
+			'icon' : 'glyphicon-remove',
+			'result_class' : 'test_failure'
 		    },
 		 2: {
-			'icon' : 'glyphicon-remove'
+			'icon' : 'glyphicon-remove',
+			'result_class' : 'test_warning'
 		    }
 		}
 	return data[code][element]
@@ -38,8 +41,10 @@ function handleResults(data, cancelling){
 			var message = data.tests[index].result.message;
 			data.tests[index].result["information"] = message;
 
-			data.tests[index].result["data"] = "";
+			data.tests[index].result["quick_data"] = briefing;
 
+			var result_class = doGetByCode(exit_status, "result_class");
+			data.tests[index].result["result_class"] = result_class;
 		}
 	}
 

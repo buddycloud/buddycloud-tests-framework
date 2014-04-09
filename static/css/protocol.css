@@ -30,11 +30,10 @@ body {
 #tests_output{
 	padding-left: 150px;
 	padding-right: 150px;
-	text-align: center;
 }
 
-#tests_header{
-	margin-top: 20px;
+#protocol_header{
+	text-align: center;
 }
 
 #tests_output{
@@ -42,39 +41,44 @@ body {
 }
 
 .test_entry{
-	display: table;
+/*	display: table;*/
 	width: 100%;
 	padding-bottom: 60px;
 }
 
 .test_entry > div{
-	display: table-row;
+/*	display: table-row;*/
 }
 
 .test_entry > div > span{
-	display: table-cell;
+/*	display: table-cell;*/
 }
 
-.test_entry > div > span:nth-child(1){
+.test_entry > div:nth-child(1) > span > div > div > span:nth-child(1){
 	width: 2%;
 	padding-right: 10px;
 }
 
-.test_entry > div:nth-child(1) > span:nth-child(2) > div{
+.test_entry > div:nth-child(1) > span > div{
 	width: 100%;
 	display: table;
 }
 
-.test_entry > div:nth-child(1) > span:nth-child(2) > div > div{
+.test_entry > div:nth-child(1) > span > div > div{
 	width: 100%;
 	display: table-row;
 }
 
-.test_entry > div:nth-child(1) > span:nth-child(2) > div > div > span{
+.test_entry > div:nth-child(1) > span > div > div > span{
 	display: table-cell;
 }
 
-.test_entry > div:nth-child(1) > span:nth-child(2) > div > div > span:nth-child(2){
+.test_entry > div:nth-child(1) > span > div > div > span:nth-child(1){
+	width: 2%;
+	padding-right: 10px;
+}
+
+.test_entry > div:nth-child(1) > span > div > div > span:nth-child(3){
 	width: 6%;
 }
 
@@ -85,10 +89,6 @@ body {
 
 .test_options{
 	padding-left: 15px;
-}
-
-.test_entry > div:nth-child(2) > span:nth-child(2){
-	height: 32px;
 }
 
 .glyphicon-ok{
@@ -106,14 +106,50 @@ body {
 	padding-left: 2.5px;
 }
 
+/*
 .test_in_progress .test_no_quick_data{
 	background-color: #C4C8CD;
+	height: 32px !important;
+	width: 100% !important;
 }
 
-.test_finished .test_no_quick_data{
+.test_finished.test_success .test_no_quick_data{
 	background-color: #2DAEBF;
 }
 
-.test_quick_data{
-	background-color: transparent;
+.test_finished.test_failure .test_no_quick_data{
+	background-color: #38434C;
+}
+
+.test_finished.test_warning .test_no_quick_data{
+	background-color: #E5E9EF;
+}
+*/
+
+.test_finished.test_success .test_quick_data code{
+	color: #2DAEBF;
+}
+
+.test_in_progress .test_no_quick_data code,
+.test_finished.test_failure .test_quick_data code,
+.test_finished.test_warning .test_quick_data code{
+	color: #E5E9EF;
+}
+
+.test_no_quick_data .highlight,
+.test_quick_data .highlight{
+	margin-left: 20px;
+	width: inherit;
+}
+
+.test_no_quick_data pre,
+.test_no_quick_data code,
+.test_quick_data pre,
+.test_quick_data code{
+	width: inherit;
+}
+
+.glyphicon_hidden{
+	color: transparent !important;
+	cursor: default;
 }

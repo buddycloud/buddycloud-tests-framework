@@ -89,15 +89,19 @@
 
 [[#tests]]
 [[#name]]
-<div class="test_entry [[#result]]test_finished[[/result]][[^result]]test_in_progress[[/result]]" id="[[name]]">
-	<div>
-		[[#result]]<span class="glyphicon [[result.icon]]"></span>[[/result]]
-		[[^result]]<span class="glyphicon_width_gap"></span>[[/result]]
+<div class="test_entry [[#result]]test_finished[[/result]][[^result]]test_in_progress[[/result]] [[result.result_class]]" id="[[name]]">
+	<div class="row">
 		<span><div><div>
+			[[#result]]
+			<span class="glyphicon [[result.icon]]"></span>
+			[[/result]]
+			[[^result]]
+			<span class="glyphicon glyphicon-ok glyphicon_hidden"></span>
+			[[/result]]
 			<span class="test_heading">
 				<h3>
 				[[^result]][[&name]][[/result]]
-				[[#result]][[&result.heading]][[/result]]
+				[[#result]][[&name]][[/result]]
 				</h3>
 			</span>
 			<span class="test_options">
@@ -105,6 +109,11 @@
 				[[#result]]
 				<a href="#" onclick="focusOnTest('[[name]]');">
 					<span class="glyphicon glyphicon-info-sign"></span>
+				</a>
+				[[/result]]
+				[[^result]]
+				<a href="#" onclick="">
+					<span class="glyphicon glyphicon-info-sign glyphicon_hidden"></span>
 				</a>
 				[[/result]]
 				[[#source]]
@@ -116,10 +125,22 @@
 			</span>
 		</div></div></span>
 	</div>
-	<div>
-		<span class="glyphicon_width_gap"></span>
+	<div class="row">
 		<span class="[[#result.quick_data]]test_quick_data[[/result.quick_data]][[^result.quick_data]]test_no_quick_data[[/result.quick_data]]">
-			[[#result.quick_data]]<code>[[result.quick_data]]</code>[[/result.quick_data]]
+			[[#result.quick_data]]
+			<div class="highlight">
+				<pre>
+					<code>[[&result.quick_data]]</code>
+				</pre>
+			</div>
+			[[/result.quick_data]]
+			[[^result.quick_data]]
+			<div class="highlight">
+				<pre>
+					<code>Please wait...</code>
+				</pre>
+			</div>
+			[[/result.quick_data]]
 		</span>
 		[[#result]]
 		<span class="result_information"
