@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 	<head>
-		<title>buddycloud protocol tester</title>
+		<title>buddycloud protocol checker</title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
@@ -46,15 +46,16 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="/">protocol</a>
+					<a class="navbar-brand" href="/">buddycloud</a>
 				</div>
 				<div class="collapse navbar-collapse" id="navbar-collapse">
-					<form class="navbar-form navbar-right" role="form">
-					<div class="form-group">
-						<input name="domain" type="text" placeholder="Enter domain here" class="form-control" id="domain_url_box">
-					</div>
-					<span class="btn btn-primary disabled" id="inspect_button">Check</span>
-					</form>
+					<ul class="nav navbar-nav">
+						<li><a href="http://buddycloud.com/api"> API </a></li>
+						<li><a href="http://buddycloud.com/features"> Features </a></li>
+						<li><a href="http://buddycloud.com/get-started"> Get Started </a></li>
+						<li><a href="http://buddycloud.com/how-buddycloud-works"> How it works </a></li>
+						<li><a href="http://buddycloud.com/contact"> Contact </a></li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -64,9 +65,13 @@
 			Buddycloud is a protocol with implementations in many languages. These tests help you understand which services are compatible.
 			</h2>
 			<br/>
+			{% include 'domain_url_form.html' %}
 		</div>
 		<script id='tests_output_template' type='x-tmpl-mustache'>
 {% autoescape false %}
+
+{% include 'domain_url_form.html' %}
+
 {{"{{=[[ ]]=}}"}}
 
 [[#domain_url]]
