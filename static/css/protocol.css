@@ -32,6 +32,10 @@ body {
 	color: #2DAEBF;
 }
 
+.test_failure #modal_test_name:after{
+	color: #D9534F;
+}
+
 #protocol_header,
 #tests_output{
 	padding-left: 150px;
@@ -101,9 +105,17 @@ body {
 	color: #2DAEBF;
 }
 
+.test_failure .glyphicon-remove{
+	color: #D9534F;
+}
+
 .test_options .glyphicon{
 	color: #C4C8CD;
 	cursor: pointer;
+}
+
+.test_options .glyphicon.glyphicon_hidden{
+	cursor: default;
 }
 
 .test_options > a{
@@ -172,7 +184,7 @@ body {
 
 .test_finished.test_failure .test_heading > h3:after{
 	content: " failed!";
-	color: #38434C;
+	color: #D9534F;
 }
 
 .test_finished.test_warning .test_heading > h3:after{

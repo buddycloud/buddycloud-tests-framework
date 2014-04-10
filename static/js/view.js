@@ -131,7 +131,8 @@ function showInformation(test_name, information, exit_status){
 	var data = {
 		test_name : test_name,
 		information : information,
-		icon : doGetByCode(exit_status, "icon")
+		icon : doGetByCode(exit_status, "icon"),
+		result_class : doGetByCode(exit_status, "result_class")
 	}
 
 	var template = $('#feedback_modal_template').html();
