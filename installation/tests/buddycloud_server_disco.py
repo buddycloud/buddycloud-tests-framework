@@ -12,12 +12,12 @@ from xmpp_server_srv_lookup import testFunction as xmppServerServiceRecordLookup
 
 def xmpp_connection_problem_template():
 
-    briefing_template = "Could not establish a XMPP connection"
-    briefing_template += " to " + bold("{{xmpp_server}}") + "."
-    message_template = briefing_template + breakline()
-    message_template += "Beware it is NOT a problem with domain "
-    message_template += bold("{{domain_url}}") + " nor the XMPP server"
-    message_template += " at " + bold("{{xmpp_server}}") + "."
+    briefing_template = "Could not establish a XMPP connection to "
+    briefing_template += bold("{{xmpp_server}}") + "."
+    message_template = briefing_template + breakline() + "Beware it is NOT a"
+    message_template += " problem with domain " + bold("{{domain_url}}")
+    message_template += " nor the XMPP server at " + bold("{{xmpp_server}}")
+    message_template += "."
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
     return briefing_template, message_template
@@ -26,30 +26,30 @@ def xmpp_disco_query_send_error_template():
 
     briefing_template = "Could not send " + code("{{disco_type}}") + " query"
     briefing_template += " to " + bold("{{xmpp_server}}") + "."
-    message_template = briefing_template + breakline()
-    message_template += "Beware it may not be a problem with domain "
-    message_template += bold("{{domain_url}}") + " or the XMPP server"
-    message_template += " at " + bold("{{xmpp_server}}") + "."
-    message_template += breakline() + "{{#error}}Problem: {{error}}{{/error}}"
+    message_template = briefing_template + breakline() + "Beware it may not "
+    message_template += "be a problem with domain " + bold("{{domain_url}}")
+    message_template += " or the XMPP server at " + bold("{{xmpp_server}}")
+    message_template += "." + breakline() + "{{#error}}Problem: {{error}}{{/"
+    message_template += "error}}"
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
     return briefing_template, message_template
 
 def xmpp_server_error_template():
 
-    briefing_template = "The {{disco_type}} query got an error response"
-    briefing_template += " from " + bold("{{xmpp_server}}") + "."
-    message_template = briefing_template + breakline()
-    message_template += "The XMPP server at " + bold("{{xmpp_server}}")
-    message_template += " returned the following error: " + code("{{&error}}")
+    briefing_template = "The {{disco_type}} query got an error response from"
+    briefing_template += " " + bold("{{xmpp_server}}") + "."
+    message_template = briefing_template + breakline() + "The XMPP server at"
+    message_template += " " + bold("{{xmpp_server}}") + " returned the follo"
+    message_template += "wing error: " + code("{{&error}}")
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
     return briefing_template, message_template
 
 def not_buddycloud_enabled_template():
 
-    briefing_template = bold("{{domain_url}}")
-    briefing_template += " is not " + italic("buddycloud enabled") + "."
+    briefing_template = bold("{{domain_url}}") + " is not "
+    briefing_template += italic("buddycloud enabled") + "."
     message_template = "Congratulations! " + briefing_template
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
@@ -57,8 +57,8 @@ def not_buddycloud_enabled_template():
 
 def warning_template():
 
-    briefing_template = bold("Precondition problem:")
-    briefing_template += " " + code("{{warning}}")
+    briefing_template = bold("Precondition problem:") + " "
+    briefing_template += code("{{warning}}")
     message_template = "This test did not even run. " + briefing_template
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
@@ -68,29 +68,30 @@ def multiple_problems_template():
 
     briefing_template = "No xmpp server found is "
     briefing_template += italic("buddycloud enabled") + "."
-    message_template = briefing_template + breakline()
-    message_template += "Several problems with XMPP servers found: "
-    message_template += breakline() + breakline()
-    message_template += "{{#xmpp_servers}}" + bold("{{name}}:")
-    message_template += breakline() + "{{&error}}"
-    message_template += breakline() + breakline()
-    message_template += "{{/xmpp_servers}}"
+    message_template = briefing_template + breakline() + "Several problems w"
+    message_template += "ith XMPP servers found: " + breakline() + breakline()
+    message_template += "{{#xmpp_servers}}" + bold("{{name}}:") + breakline()
+    message_template += "{{&error}}" + breakline() + breakline() + "{{/xmpp_"
+    message_template += "servers}}"
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
     return briefing_template, message_template
 
 def is_buddycloud_enabled_template():
 
-    briefing_template = bold("{{domain_url}}") + " is " italic("buddycloud " \
-    + "enabled") + "."
-    message_template = "Congratulations! " + briefing_template + breakline() \
-    + "{{#discovery}}Using " + code("Service Discovery") + ", we found your "\
-    + "channel server at " + bold("{{channel_server}}") + "!" + breakline()  \
-    + "{{#ptr_record}}We also found your channel server " +code("PTR record")\
-    + ".{{/ptr_record}}{{/discovery}}{{#ptr_record}}Using " + code("PTR rec" \
-    + "ord") + ", we found your channel server at " + bold("{{channel_serve" \
-    + "r}}") + "!" + breakline() + "But we could not find it through "       \
-    + code("Service Discovery") + ".{{/ptr_record}}"
+    briefing_template = bold("{{domain_url}}") + " is "
+    briefing_template += italic("buddycloud enabled") + "."
+    message_template = "Congratulations! " + briefing_template + breakline()
+    message_template += "{{#discovery}}Using " + code("Service Discovery")
+    message_template += ", we found your channel server at "
+    message_template += bold("{{channel_server}}") + "!" + breakline()
+    message_template += "{{#ptr_record}}We also found your channel server "
+    message_template += code("PTR record") + ".{{/ptr_record}}{{/discovery}}"
+    message_template += "{{#ptr_record}}Using " + code("PTR record") + ", we"
+    message_template += " found your channel server at "
+    message_template += bold("{{channel_server}}") + "!" + breakline() + "Bu"
+    message_template += "t we could not find it through "
+    message_template += code("Service Discovery") + ".{{/ptr_record}}"
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
     return briefing_template, message_template
