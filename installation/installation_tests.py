@@ -1,5 +1,5 @@
 from importlib import import_module
-import os, sys
+import os, sys, traceback
 tests_path = os.path.join(os.getcwd(), "installation", "tests")
 if not tests_path in sys.path:
 	sys.path.insert(0, tests_path)
@@ -43,6 +43,8 @@ for test_name in config.xreadlines():
 	except Exception as e:
 		logger.info("~could not import test "+test_name+"!~")
 		logger.info("~problem: "+str(e)+"~")
+                logger.info("~traceback:")
+                logger.info(str(traceback.format_exc(3)))
 		logger.info("~ignoring this test "+test_name+"~")
 		problem_loading = True
 

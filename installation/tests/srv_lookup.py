@@ -55,7 +55,7 @@ def performSRVLookup(domain_url, srv_name, srv_description, srv_port):
 		message += "<br/>This is the exception we got: {"+str(e)+"}"
 		message += "<br/>It is probably a temporary issue with domain " + domain_url + "."
 		message += "<br/>But it could also be a bug in our Inspector."
-		message += " Let us know at <email> if you think so." 
+		message += " Let us know at <a href='https://github.com/buddycloud/buddycloud-tests-framework/issues'>our issue tracker</a> if you think so." 
 		return (status, briefing, message, None)
 
 	for answer in query_for_SRV_record:

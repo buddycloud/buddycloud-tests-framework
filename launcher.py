@@ -4,7 +4,7 @@ from multiprocessing import Process, Manager
 
 sys.path.append(os.path.join(os.getcwd(), "suite_utils"))
 
-import logging
+import logging, traceback
 from log_utils import LogStream
 
 
@@ -290,16 +290,7 @@ def perform_test(test_name, domain_url, test_names, test_entries, run_variables)
 
 	except Exception as e:
 
-		e_type, e_value, e_trace = sys.exc_info()
-		e_type = Markup.escape(str(type(e))).__str__()
-		filename = e_trace.tb_frame.f_code.co_filename
-		line_no = e_trace.tb_lineno
-		line_content = linecache.getline(filename, line_no)
-		exception_info = "<strong>%s<br/>\"%s\"</strong><br/>" % (e_type, e_value)
-		#at <em>%s</em>:<em>%d</em>: <small>\"%s\"</small>" % (e_type, e_value, filename, line_no, line_content)
-		
-		#TODO get correct filename, file_no and file_content, maybe have it propagate all the way through the framework layers"
-
+                exception_info = traceback.format_exc(3)
 		logging.info("~the test "+test_name+" failed unexpectedly: "+exception_info+"~")
 
 		message = "This test failed pretty badly.<br/>It raised an unexpected exception:<br/><br/>"+exception_info+"<br/>"

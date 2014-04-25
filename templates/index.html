@@ -59,7 +59,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="/">buddycloud</a>
+					<a class="navbar-brand" href="http://buddycloud.com">buddycloud</a>
 				</div>
 				<div class="collapse navbar-collapse" id="navbar-collapse">
 					<ul class="nav navbar-nav">
@@ -84,7 +84,18 @@
 			These tests help you understand which services are compatible.
 			</h3>
 		</div>
-		{% include 'domain_url_form.html' %}
+		<div id="domain_url_form" class="container">
+			<div class="row">
+				<div class="col-lg-4 col-lg-offset-4">
+					<form class="form-inline" role="form">
+						<div class="form-group center-block">
+							<input class="form-control" name="domain" type="text" placeholder="Enter domain here" id="domain_url_box">
+							<span class="form-control btn btn-primary disabled" id="inspect_button">Check</span>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 		<div id='tests_output' class='container'>
 		</div>
 		<script id='tests_output_template' type='x-tmpl-mustache'>
