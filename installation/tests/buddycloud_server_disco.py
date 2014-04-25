@@ -56,7 +56,7 @@ def not_buddycloud_enabled_template():
 def warning_template():
 
     briefing_template = bold("Precondition problem:")
-    briefing_template += " " + code("{{warning}}") + "."
+    briefing_template += " " + code("{{warning}}")
     message_template = "This test did not even run. " + briefing_template
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)

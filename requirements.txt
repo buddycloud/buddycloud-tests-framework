@@ -5,3 +5,4 @@ distribute==0.6.28
 dnspython==1.10.0
 requests==2.1.0
 sleekxmpp==1.1.11
+pystache==0.5.3
