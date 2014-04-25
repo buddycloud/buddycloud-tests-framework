@@ -62,6 +62,21 @@ def warning_template():
     message_template = parse(message_template)
     return briefing_template, message_template
 
+def multiple_problems_template():
+
+    briefing_template = "No xmpp server found is "
+    briefing_template += italic("buddycloud enabled") + "."
+    message_template = briefing_template + breakline()
+    message_template += "Several problems with XMPP servers found: "
+    message_template += breakline() + breakline()
+    message_template += "{{#xmpp_servers}}" + bold("{{name}}:")
+    message_template += breakline() + "{{&error}}"
+    message_template += breakline() + breakline()
+    message_template += "{{/xmpp_servers}}"
+    briefing_template = parse(briefing_template)
+    message_template = parse(message_template)
+    return briefing_template, message_template
+
 def is_buddycloud_enabled_template():
 
     briefing_template = bold("{{domain_url}}")
@@ -86,8 +101,15 @@ def not_buddycloud_enabled(view):
 def warning(view):
     return build_output(view, 2, warning_template, None)
 
+def multiple_problems(view):
+    return build_output(view, view["status"], multiple_problems_template, None)
+
 def is_buddycloud_enabled(view):
     return build_output(view, 0, is_buddycloud_enabled_template, None)
+
+def make_output_builder(view, builder):
+    final_view = view.copy()
+    return lambda: builder(final_view)
 
 def testFunction(domain_url):
 
@@ -103,61 +125,99 @@ def testFunction(domain_url):
         return warning(view)
 
     xmpp = sleekxmpp.ClientXMPP("inspect@buddycloud.org", "ei3tseq")
-    conn_address = answers[0]["domain"], answers[0]["port"]
-    view["xmpp_server"] = conn_address[0]
 
-    if ( not xmpp.connect(conn_address, reattempt=False, use_ssl=False, use_tls=False) ):
-        return xmpp_connection_problem(view)
+    situation = {}
 
-    xmpp.process(block=False)
+    for answer in answers:
 
-    try:
-	DISCO_ITEMS_NS = 'http://jabber.org/protocol/disco#items'
-        iq = xmpp.make_iq_get(queryxmlns=DISCO_ITEMS_NS,
-            ito=domain_url, ifrom=xmpp.boundjid)
+        conn_address = answer["domain"], answer["port"]
+        view["xmpp_server"] = conn_address[0]
+
+        if ( not xmpp.connect(conn_address, reattempt=False, use_ssl=False, use_tls=False) ):
+             situation[conn_address] = make_output_builder(view,
+                 xmpp_connection_problem)
+             continue
+
+        xmpp.process(block=False)
 
         try:
-            view["disco_type"] = "disco#items"
-            response = iq.send(block=True, timeout=5)
-        except Exception as e:
-            if ( str(e) != "" ):
-                view["error"] = str(e)
-            return xmpp_disco_query_send_error(view)
-
-        if ( len(response.xml.findall("iq[@type='error']")) != 0 ):
-            view["error"] = response.xml.findall("iq[@type='error']")[0]
-            return xmpp_server_error(view)
-
-        its = response.xml.findall(
-            "{%s}query/{%s}item" % ((DISCO_ITEMS_NS,)*2))
-        for item in its:
-            item_jid = item.attrib['jid']
-
-            DISCO_INFO_NS = 'http://jabber.org/protocol/disco#info'
-            iq = xmpp.make_iq_get(queryxmlns=DISCO_INFO_NS,
-                ito=item_jid, ifrom=xmpp.boundjid)
+            DISCO_ITEMS_NS = 'http://jabber.org/protocol/disco#items'
+            iq = xmpp.make_iq_get(queryxmlns=DISCO_ITEMS_NS,
+                ito=domain_url, ifrom=xmpp.boundjid)
 
             try:
-                view["disco_type"] = "disco#info"
+                view["disco_type"] = "disco#items"
                 response = iq.send(block=True, timeout=5)
             except Exception as e:
-                return xmpp_disco_query_send_error(view)
+                if ( str(e) != "" ):
+                    view["error"] = str(e)
+                situation[conn_address] = make_output_builder(view,
+                    xmpp_disco_query_send_error)
+                continue
 
             if ( len(response.xml.findall("iq[@type='error']")) != 0 ):
                 view["error"] = response.xml.findall("iq[@type='error']")[0]
-                return xmpp_server_error(view)
+                situation[conn_address] = make_output_builder(view,
+                    xmpp_server_error)
+                continue
 
-            ids = response.xml.findall(
-                "{%s}query/{%s}identity" % ((DISCO_INFO_NS,)*2))
-            for identity in ids:
-                identity_category = identity.attrib['category']
-                identity_type = identity.attrib['type']
+            its = response.xml.findall(
+                "{%s}query/{%s}item" % ((DISCO_ITEMS_NS,)*2))
+            for item in its:
+                item_jid = item.attrib['jid']
 
-                if ( identity_category == 'pubsub'
-                    and identity_type == 'channels' ):
-                    return is_buddycloud_enabled(view)
+                DISCO_INFO_NS = 'http://jabber.org/protocol/disco#info'
+                iq = xmpp.make_iq_get(queryxmlns=DISCO_INFO_NS,
+                    ito=item_jid, ifrom=xmpp.boundjid)
 
-        return not_buddycloud_enabled(view)
+                try:
+                    view["disco_type"] = "disco#info"
+                    response = iq.send(block=True, timeout=5)
+                except Exception as e:
+                    if ( str(e) != "" ):
+                        view["error"] = str(e)
+                    situation[conn_address] = make_output_builder(view,
+                        xmpp_disco_query_send_error)
+                    continue
 
-    finally:
-        xmpp.disconnect()
+                if ( len(response.xml.findall("iq[@type='error']")) != 0 ):
+                    view["error"] = response.xml.findall("iq[@type='error']")[0]
+                    situation[conn_address] = make_output_builder(view,
+                        xmpp_server_error)
+                    continue
+
+                ids = response.xml.findall(
+                    "{%s}query/{%s}identity" % ((DISCO_INFO_NS,)*2))
+                for identity in ids:
+                    identity_category = identity.attrib['category']
+                    identity_type = identity.attrib['type']
+
+                    if ( identity_category == 'pubsub'
+                        and identity_type == 'channels' ):
+                        return is_buddycloud_enabled(view)
+
+            if not conn_address in situation:
+                situation[conn_address] = make_output_builder(view,
+                    not_buddycloud_enabled)
+
+        finally:
+            xmpp.disconnect()
+
+    if ( len(situation) == 1 ):
+       return situation[situation.keys()[0]]() 
+
+    view["xmpp_servers"] = []
+
+    status = 2
+    for xmpp_server in situation:
+        output = situation[xmpp_server]()
+        if ( output[0] == 1 ):
+            status = 1
+        view["xmpp_servers"].append({
+            "name" : "%s through port %s" %(xmpp_server),
+            "error" : output[2]
+        })
+
+    view["status"] = status
+
+    return multiple_problems(view)
