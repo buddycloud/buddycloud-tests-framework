@@ -1,9 +1,11 @@
-import string, sleekxmpp
+import string, sleekxmpp, dns.resolver
+from dns.resolver import NXDOMAIN, NoAnswer, Timeout
 
 #util_dependencies
 from template_utils import bold, italic, code, breakline, parse,\
 render, build_output
 from domain_name_lookup import testFunction as domainNameLookup
+from dns_utils import getAuthoritativeNameserver
 
 #installation_suite_dependencies
 from xmpp_server_srv_lookup import testFunction as xmppServerServiceRecordLookup
@@ -79,9 +81,16 @@ def multiple_problems_template():
 
 def is_buddycloud_enabled_template():
 
-    briefing_template = bold("{{domain_url}}")
-    briefing_template += " is " + italic("buddycloud enabled") + "."
-    message_template = "Congratulations! " + briefing_template
+    briefing_template = bold("{{domain_url}}") + " is " italic("buddycloud " \
+    + "enabled") + "."
+    message_template = "Congratulations! " + briefing_template + breakline() \
+    + "{{#discovery}}Using " + code("Service Discovery") + ", we found your "\
+    + "channel server at " + bold("{{channel_server}}") + "!" + breakline()  \
+    + "{{#ptr_record}}We also found your channel server " +code("PTR record")\
+    + ".{{/ptr_record}}{{/discovery}}{{#ptr_record}}Using " + code("PTR rec" \
+    + "ord") + ", we found your channel server at " + bold("{{channel_serve" \
+    + "r}}") + "!" + breakline() + "But we could not find it through "       \
+    + code("Service Discovery") + ".{{/ptr_record}}"
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
     return briefing_template, message_template
@@ -192,8 +201,24 @@ def testFunction(domain_url):
                     identity_category = identity.attrib['category']
                     identity_type = identity.attrib['type']
 
+                    view["discovery"] = True
+                    view["channel_server"] = item_jid
                     if ( identity_category == 'pubsub'
                         and identity_type == 'channels' ):
+
+                        try:
+                            resolver = dns.resolver.Resolver()
+                            nameserver = getAuthoritativeNameserver(domain_url)
+                            resolver.nameservers = [nameserver]
+                            resolver.lifetime = 5
+                            PTR_name = "_buddycloud-server._tcp." + domain_url
+                            answer = resolver.query(PTR_name, dns.rdatatype.PTR)
+                        except Exception:
+                            pass
+                        else:
+                            #TODO check if PTR record and DISCO are pointing
+                            # to the same place -- they must!
+                            view["ptr_record"] = True
                         return is_buddycloud_enabled(view)
 
             if not conn_address in situation:
@@ -202,6 +227,22 @@ def testFunction(domain_url):
 
         finally:
             xmpp.disconnect()
+
+    try:
+        resolver = dns.resolver.Resolver()
+        nameserver = getAuthoritativeNameserver(domain_url)
+        resolver.nameservers = [nameserver]
+        resolver.lifetime = 5
+        PTR_name = "_buddycloud-server._tcp." + domain_url
+        answer = resolver.query(PTR_name, dns.rdatatype.PTR)
+    except (NXDOMAIN, NoAnswer, Timeout):
+        pass
+    except Exception:
+        pass
+    else:
+        view["ptr_record"] = True
+        #view["channel_server"] = answer
+        return is_buddycloud_enabled(view)
 
     if ( len(situation) == 1 ):
        return situation[situation.keys()[0]]() 
