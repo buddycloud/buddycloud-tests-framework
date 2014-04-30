@@ -4,11 +4,12 @@ import pystache
 bold_template = pystache.parse(unicode("<strong>{{string}}</strong>"))
 italic_template = pystache.parse(unicode("<em>{{string}}</em>"))
 code_template = pystache.parse(unicode("<code>{{string}}</code>"))
-code_block_template = "<div class='highlight'>%s</div>"
+code_block_template = "<div class='highlight test_log'>%s</div>"
 code_block_template = code_block_template % ("<pre>%s</pre>")
 code_block_template = code_block_template % ("<code>%s</code>")
-code_block_template = code_block_template % ("{{string}}")
+code_block_template = code_block_template % ("{{&string}}")
 code_block_template = pystache.parse(unicode(code_block_template))
+link_template = pystache.parse(unicode("<a href='{{href}}' target='_blank'>{{text}}</a>"))
 
 def bold(string):
     return pystache.render(bold_template, {'string':string})
@@ -21,6 +22,9 @@ def code(string):
 
 def code_block(string):
     return pystache.render(code_block_template, {'string':string})
+
+def link(text, href):
+    return pystache.render(link_template, {'text':text, 'href':href})
 
 def breakline():
     return "<br/>"
