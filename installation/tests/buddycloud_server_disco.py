@@ -142,6 +142,8 @@ def testFunction(domain_url):
     xmpp = create_xmpp_client()
     conn_address = 'crater.buddycloud.org', 5222
 
+    disco_situation = None
+
     if ( not xmpp.connect(conn_address) ):
         disco_situation = make_output_builder(view, xmpp_connection_problem)
 
@@ -227,7 +229,7 @@ def testFunction(domain_url):
 
                         return is_buddycloud_enabled(view)
 
-            if not disco_situation:
+            if disco_situation == None:
                 disco_situation = make_output_builder(view,
                     not_buddycloud_enabled)
 
