@@ -14,10 +14,13 @@ logging.basicConfig(level=logging.DEBUG, stream=log_stream)
 def perform_tests(domain_url, run):
 
 	sys.path.append(os.path.join(os.getcwd(), "suite_utils"))
+
 	sys.path.append(os.path.join(os.getcwd(), "installation"))
 	from installation_tests import test_entries as installation_test_entries
+
 	sys.path.append(os.path.join(os.getcwd(), "integration"))
 	from integration_tests import test_entries as integration_test_entries
+
 	test_entries = installation_test_entries + integration_test_entries
 
 	test_names = {}
@@ -280,7 +283,7 @@ def perform_test(test_name, domain_url, test_names, test_entries, run_variables)
 					message += "<br/><br><strong>Test Log:</strong><br/>"
 					logged_content = map(lambda x: Markup.escape(x).__str__(),
 							log_stream.getContent().split("<br/>"))
-					message += "<small>%s</small>" % string.join(logged_content, "<br/>")
+					message += "<div class='highlight test_log'><pre><code>%s</code></pre></div>" % string.join(logged_content, "<br/>")
 
 				response['message'] = message
 

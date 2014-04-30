@@ -191,3 +191,7 @@ body {
 	content: " failed unexpectedly!";
 	color: #C4C8CD;
 }
+
+.highlight.test_log code{
+	color: #E5E9EF;
+}

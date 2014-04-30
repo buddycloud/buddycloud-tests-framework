@@ -1,5 +1,4 @@
 import string, sleekxmpp, dns.resolver
-from dns.resolver import NXDOMAIN, NoAnswer, Timeout
 
 #util_dependencies
 from template_utils import bold, italic, code, breakline, parse,\
@@ -7,30 +6,26 @@ render, build_output
 from domain_name_lookup import testFunction as domainNameLookup
 from dns_utils import getAuthoritativeNameserver
 
-#installation_suite_dependencies
-from xmpp_server_srv_lookup import testFunction as xmppServerServiceRecordLookup
 
 def xmpp_connection_problem_template():
 
-    briefing_template = "Could not establish a XMPP connection to "
-    briefing_template += bold("{{xmpp_server}}") + "."
+    briefing_template = "Could not establish a client XMPP connection."
     message_template = briefing_template + breakline() + "Beware it is NOT a"
-    message_template += " problem with domain " + bold("{{domain_url}}")
-    message_template += " nor the XMPP server at " + bold("{{xmpp_server}}")
-    message_template += "."
+    message_template += " problem with domain " + bold("{{domain_url}}")+ "."
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
     return briefing_template, message_template
 
 def xmpp_disco_query_send_error_template():
 
-    briefing_template = "Could not send " + code("{{disco_type}}") + " query"
-    briefing_template += " to " + bold("{{xmpp_server}}") + "."
-    message_template = briefing_template + breakline() + "Beware it may not "
-    message_template += "be a problem with domain " + bold("{{domain_url}}")
-    message_template += " or the XMPP server at " + bold("{{xmpp_server}}")
-    message_template += "." + breakline() + "{{#error}}Problem: {{error}}{{/"
-    message_template += "error}}"
+    briefing_template = "Could not send "+code("{{disco_type}}")+" query to"
+    briefing_template += "{{^xmpp_server}}" + bold("{{domain_url}}")
+    briefing_template += "{{/xmpp_server}}"
+    briefing_template += "{{#xmpp_server}}" + bold("{{xmpp_server}}")
+    briefing_template += "{{/xmpp_server}}."
+    message_template = briefing_template
+    message_template += "{{#error}}" + breakline()
+    message_template += "Error response: " + code("{{&error}}") +"{{/error}}"
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
     return briefing_template, message_template
@@ -38,10 +33,13 @@ def xmpp_disco_query_send_error_template():
 def xmpp_server_error_template():
 
     briefing_template = "The {{disco_type}} query got an error response from"
-    briefing_template += " " + bold("{{xmpp_server}}") + "."
-    message_template = briefing_template + breakline() + "The XMPP server at"
-    message_template += " " + bold("{{xmpp_server}}") + " returned the follo"
-    message_template += "wing error: " + code("{{&error}}")
+    briefing_template += "{{^xmpp_server}}" + bold("{{domain_url}}")
+    briefing_template += "{{/xmpp_server}}"
+    briefing_template += "{{#xmpp_server}}" + bold("{{xmpp_server}}")
+    briefing_template += "{{/xmpp_server}}."
+    message_template = briefing_template
+    message_template += "{{#error}}" + breakline()
+    message_template += "Error response: " + code("{{&error}}") +"{{/error}}"
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
     return briefing_template, message_template
@@ -64,15 +62,20 @@ def warning_template():
     message_template = parse(message_template)
     return briefing_template, message_template
 
-def multiple_problems_template():
+def buddycloud_enabled_conflict_template():
 
-    briefing_template = "No xmpp server found is "
-    briefing_template += italic("buddycloud enabled") + "."
-    message_template = briefing_template + breakline() + "Several problems w"
-    message_template += "ith XMPP servers found: " + breakline() + breakline()
-    message_template += "{{#xmpp_servers}}" + bold("{{name}}:") + breakline()
-    message_template += "{{&error}}" + breakline() + breakline() + "{{/xmpp_"
-    message_template += "servers}}"
+    briefing_template = bold("{{domain_url}}") + " is "
+    briefing_template += italic("buddycloud enabled") + ","
+    briefing_template += " but we detected a conflict problem."
+    message_template = briefing_template + breakline()
+    message_template += "Using " + code("Service Discovery")
+    message_template += ", we found your channel server at "
+    message_template += bold("{{channel_server}}") + "!" + breakline()
+    message_template += "But we also found a channel server through "
+    message_template += code("PTR record lookup") + ", which is different: "
+    message_template += bold("{{channel_server2}}") + "!" + breakline()
+    message_template += "The channel server addresses found through "
+    message_template += code("Service Discovery") + " and " + code("PTR record lookup") + " must match!"
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
     return briefing_template, message_template
@@ -85,10 +88,10 @@ def is_buddycloud_enabled_template():
     message_template += "{{#discovery}}Using " + code("Service Discovery")
     message_template += ", we found your channel server at "
     message_template += bold("{{channel_server}}") + "!" + breakline()
-    message_template += "{{#ptr_record}}We also found your channel server "
-    message_template += code("PTR record") + ".{{/ptr_record}}{{/discovery}}"
-    message_template += "{{#ptr_record}}Using " + code("PTR record") + ", we"
-    message_template += " found your channel server at "
+    message_template += "{{#ptr_record}}We also found your channel server through "
+    message_template += code("PTR record lookup") + ".{{/ptr_record}}{{/discovery}}"
+    message_template += "{{#ptr_record}}Using " + code("PTR record lookup")
+    message_template += ", we found your channel server at "
     message_template += bold("{{channel_server}}") + "!" + breakline() + "Bu"
     message_template += "t we could not find it through "
     message_template += code("Service Discovery") + ".{{/ptr_record}}"
@@ -97,7 +100,7 @@ def is_buddycloud_enabled_template():
     return briefing_template, message_template
 
 def xmpp_connection_problem(view):
-    return build_output(view, 1, xmpp_connection_problem_template, None)
+    return build_output(view, 2, xmpp_connection_problem_template, None)
 
 def xmpp_disco_query_send_error(view):
     return build_output(view, 1, xmpp_disco_query_send_error_template, None)
@@ -111,8 +114,8 @@ def not_buddycloud_enabled(view):
 def warning(view):
     return build_output(view, 2, warning_template, None)
 
-def multiple_problems(view):
-    return build_output(view, view["status"], multiple_problems_template, None)
+def buddycloud_enabled_with_conflict(view):
+    return build_output(view, 1, buddycloud_enabled_conflict_template, None)
 
 def is_buddycloud_enabled(view):
     return build_output(view, 0, is_buddycloud_enabled_template, None)
@@ -120,6 +123,13 @@ def is_buddycloud_enabled(view):
 def make_output_builder(view, builder):
     final_view = view.copy()
     return lambda: builder(final_view)
+
+def create_xmpp_client():
+    client = sleekxmpp.ClientXMPP("inspect@buddycloud.org", "ei3tseq",
+        sasl_mech='PLAIN')
+    client.register_plugin('xep_0030')
+    client['feature_mechanisms'].unencrypted_plain = True
+    return client
 
 def testFunction(domain_url):
 
@@ -129,25 +139,13 @@ def testFunction(domain_url):
         view["warning"] = "%s not found!" % (domain_url)
         return warning(view)
 
-    (status, b, m, answers) = xmppServerServiceRecordLookup(domain_url)
-    if ( status != 0 ):
-        wiew["warning"] = "XMPP Server of domain %s not found!" % (domain_url)
-        return warning(view)
+    xmpp = create_xmpp_client()
+    conn_address = 'crater.buddycloud.org', 5222
 
-    xmpp = sleekxmpp.ClientXMPP("inspect@buddycloud.org", "ei3tseq")
+    if ( not xmpp.connect(conn_address) ):
+        disco_situation = make_output_builder(view, xmpp_connection_problem)
 
-    situation = {}
-
-    for answer in answers:
-
-        conn_address = answer["domain"], answer["port"]
-        view["xmpp_server"] = conn_address[0]
-
-        if ( not xmpp.connect(conn_address, reattempt=False, use_ssl=False, use_tls=False) ):
-             situation[conn_address] = make_output_builder(view,
-                 xmpp_connection_problem)
-             continue
-
+    else:
         xmpp.process(block=False)
 
         try:
@@ -155,21 +153,24 @@ def testFunction(domain_url):
             iq = xmpp.make_iq_get(queryxmlns=DISCO_ITEMS_NS,
                 ito=domain_url, ifrom=xmpp.boundjid)
 
+            class DiscoItemsFailedException(Exception):
+                pass
+
             try:
                 view["disco_type"] = "disco#items"
                 response = iq.send(block=True, timeout=5)
             except Exception as e:
                 if ( str(e) != "" ):
                     view["error"] = str(e)
-                situation[conn_address] = make_output_builder(view,
+                disco_situation = make_output_builder(view,
                     xmpp_disco_query_send_error)
-                continue
+                raise DiscoItemsFailedException()
 
             if ( len(response.xml.findall("iq[@type='error']")) != 0 ):
                 view["error"] = response.xml.findall("iq[@type='error']")[0]
-                situation[conn_address] = make_output_builder(view,
+                disco_situation = make_output_builder(view,
                     xmpp_server_error)
-                continue
+                raise DiscoItemsFailedException()
 
             its = response.xml.findall(
                 "{%s}query/{%s}item" % ((DISCO_ITEMS_NS,)*2))
@@ -182,17 +183,18 @@ def testFunction(domain_url):
 
                 try:
                     view["disco_type"] = "disco#info"
+                    view["xmpp_server"] = item_jid
                     response = iq.send(block=True, timeout=5)
                 except Exception as e:
                     if ( str(e) != "" ):
                         view["error"] = str(e)
-                    situation[conn_address] = make_output_builder(view,
+                    disco_situation = make_output_builder(view,
                         xmpp_disco_query_send_error)
                     continue
 
                 if ( len(response.xml.findall("iq[@type='error']")) != 0 ):
                     view["error"] = response.xml.findall("iq[@type='error']")[0]
-                    situation[conn_address] = make_output_builder(view,
+                    disco_situation = make_output_builder(view,
                         xmpp_server_error)
                     continue
 
@@ -217,15 +219,20 @@ def testFunction(domain_url):
                         except Exception:
                             pass
                         else:
-                            #TODO check if PTR record and DISCO are pointing
-                            # to the same place -- they must!
                             view["ptr_record"] = True
+                            ptr_answer = answer[0].target.to_text()[:-1]
+                            if ( item_jid != ptr_answer ):
+                                view["channel_server2"] = ptr_answer
+                                return buddycloud_enabled_with_conflict(view)
+
                         return is_buddycloud_enabled(view)
 
-            if not conn_address in situation:
-                situation[conn_address] = make_output_builder(view,
+            if not disco_situation:
+                disco_situation = make_output_builder(view,
                     not_buddycloud_enabled)
 
+        except DiscoItemsFailedException:
+            pass
         finally:
             xmpp.disconnect()
 
@@ -236,30 +243,10 @@ def testFunction(domain_url):
         resolver.lifetime = 5
         PTR_name = "_buddycloud-server._tcp." + domain_url
         answer = resolver.query(PTR_name, dns.rdatatype.PTR)
-    except (NXDOMAIN, NoAnswer, Timeout):
-        pass
     except Exception:
-        pass
+        return disco_situation() 
     else:
         view["ptr_record"] = True
-        #view["channel_server"] = answer
+        ptr_answer = answer[0].target.to_text()[:-1]
+        view["channel_server"] = ptr_answer
         return is_buddycloud_enabled(view)
-
-    if ( len(situation) == 1 ):
-       return situation[situation.keys()[0]]() 
-
-    view["xmpp_servers"] = []
-
-    status = 2
-    for xmpp_server in situation:
-        output = situation[xmpp_server]()
-        if ( output[0] == 1 ):
-            status = 1
-        view["xmpp_servers"].append({
-            "name" : "%s through port %s" %(xmpp_server),
-            "error" : output[2]
-        })
-
-    view["status"] = status
-
-    return multiple_problems(view)
