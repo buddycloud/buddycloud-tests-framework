@@ -64,8 +64,8 @@ def no_record(view):
 def record_error(view):
     return build_output(view, 1, record_error_template, None)
 
-def record_correct(view):
-    return build_output(view, 0, record_correct_template, None)
+def record_correct(view, output):
+    return build_output(view, 0, record_correct_template, output)
 
 def _build_checker(checks):
     def checker(TXT_record):
@@ -217,4 +217,10 @@ def testFunction(domain_url):
                 attribute must have value set to " + code("https") + "!"
             return record_error(view)
 
-        return record_correct(view)
+        output = {
+            'protocol' : protocol,
+            'domain' : domain,
+            'port' : port,
+            'path' : path
+        }
+        return record_correct(view, output)
