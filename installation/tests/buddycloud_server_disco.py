@@ -18,7 +18,7 @@ def xmpp_connection_problem_template():
 
 def xmpp_disco_query_send_error_template():
 
-    briefing_template = "Could not send "+code("{{disco_type}}")+" query to"
+    briefing_template = "Could not send "+code("{{disco_type}}")+" query to "
     briefing_template += "{{^xmpp_server}}" + bold("{{domain_url}}")
     briefing_template += "{{/xmpp_server}}"
     briefing_template += "{{#xmpp_server}}" + bold("{{xmpp_server}}")
