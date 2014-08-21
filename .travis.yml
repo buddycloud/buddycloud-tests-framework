@@ -1,0 +1,10 @@
+language: python
+python:
+- '2.7'
+install: pip install -r requirements.txt --use-mirrors
+script:  ( sleep 10s && python stop.py ) & python launcher.py
+deploy:
+  provider: heroku
+  app: buddycloud-inspection
+  api_key:
+    secure: YEOCHXB5rRe/xQ9W1V1Vo873G2l3dq3CxBrdcgyYFovrgf/26SI/4y9GamTxDKWvdVhmdRLazq6CG+pPeUjl3/l9N9V6f+ZfClJO6UL3myzGuUAkjtJseH5ZnH/Amgnm9nx0X/tFqsLaFEU2kuKhdzpWfBb4/Li5u9OgCX3cdpU=

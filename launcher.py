@@ -1,4 +1,4 @@
-import os, sys, json, string, linecache, re, random
+import os, sys, json, string, re, random
 from flask import Flask, render_template, redirect, url_for, request, make_response, Markup, session
 from multiprocessing import Process, Manager
 
@@ -312,6 +312,15 @@ def perform_test(test_name, domain_url, test_names, test_entries, run_variables)
 		
 		logging.info("~leaving execution context~")
 		os.chdir(current_dir)
+
+@server.route('/shutdown', methods=['POST', 'GET'])
+def shutdown():
+
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server.')
+    func()
+    return 'Server shutting down...'
 
 @server.route('/')
 def index():
