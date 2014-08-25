@@ -6,3 +6,6 @@ dnspython==1.10.0
 requests==2.1.0
 sleekxmpp==1.1.11
 pystache==0.5.3
+pyasn1==0.1.7
+pyasn1-modules==0.0.5
+
