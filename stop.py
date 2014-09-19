@@ -15,3 +15,4 @@ def prepare_and_send_request(method, endpoint, client):
 if __name__ == "__main__": 
 
     prepare_and_send_request('POST', '/shutdown', client='username')
+    exit(0)
