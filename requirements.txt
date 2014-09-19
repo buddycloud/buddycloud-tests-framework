@@ -1,7 +1,6 @@
 Flask==0.9
 Jinja2==2.6
 Werkzeug==0.8.3
-distribute==0.6.28
 dnspython==1.10.0
 requests==2.1.0
 sleekxmpp==1.1.11
