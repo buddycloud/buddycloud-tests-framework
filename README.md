@@ -1,7 +1,7 @@
 buddycloud-tests-framework
 ===========================
 
-[![Build Status](http://travis-ci.org/buddycloud/buddycloud-tests-framework.svg?branch=master)](http://travis-ci.org/buddycloud/buddycloud-tests-framework)
+Build status: [![Build Status](http://travis-ci.org/buddycloud/buddycloud-tests-framework.svg?branch=master)](http://travis-ci.org/buddycloud/buddycloud-tests-framework)
 
 *A framework for issuing tests to a given Buddycloud*
 
