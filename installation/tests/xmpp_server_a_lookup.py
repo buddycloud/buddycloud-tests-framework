@@ -9,12 +9,13 @@ from dns_utils import getAuthoritativeNameserver
 from xmpp_server_srv_lookup import testFunction as xmppServerServiceRecordLookup
 from xmpp_client_srv_lookup import testFunction as xmppClientServiceRecordLookup
 
+
 def classifyDomainByRecord(domain):
 
 		resolver = dns.resolver.Resolver()
 		resolver.lifetime = 5
 		try:
-			resolver.nameservers = [ getAuthoritativeNameserver(domain) ]
+#			resolver.nameservers = [ getAuthoritativeNameserver(domain) ]
 			addresses = resolver.query(domain, dns.rdatatype.CNAME)
 			return { 'type' : 'CNAME',
 				 'domain' : domain, 

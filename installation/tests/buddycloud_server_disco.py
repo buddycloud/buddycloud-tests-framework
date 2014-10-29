@@ -6,6 +6,7 @@ render, build_output
 from domain_name_lookup import testFunction as domainNameLookup
 from dns_utils import getAuthoritativeNameserver
 
+import config
 
 def xmpp_connection_problem_template():
 
@@ -160,7 +161,7 @@ def testFunction(domain_url):
 
             try:
                 view["disco_type"] = "disco#items"
-                response = iq.send(block=True, timeout=5)
+                response = iq.send(block=True, timeout=config.IQ_TIMEOUT)
             except Exception as e:
                 if ( str(e) != "" ):
                     view["error"] = str(e)
@@ -186,7 +187,7 @@ def testFunction(domain_url):
                 try:
                     view["disco_type"] = "disco#info"
                     view["xmpp_server"] = item_jid
-                    response = iq.send(block=True, timeout=5)
+                    response = iq.send(block=True, timeout=config.IQ_TIMEOUT)
                 except Exception as e:
                     if ( str(e) != "" ):
                         view["error"] = str(e)
@@ -213,9 +214,9 @@ def testFunction(domain_url):
 
                         try:
                             resolver = dns.resolver.Resolver()
-                            nameserver = getAuthoritativeNameserver(domain_url)
-                            resolver.nameservers = [nameserver]
-                            resolver.lifetime = 5
+#                            nameserver = getAuthoritativeNameserver(domain_url)
+#                            resolver.nameservers = [nameserver]
+#                            resolver.lifetime = config.DNS_TIMEOUT
                             PTR_name = "_buddycloud-server._tcp." + domain_url
                             answer = resolver.query(PTR_name, dns.rdatatype.PTR)
                         except Exception:
@@ -240,9 +241,9 @@ def testFunction(domain_url):
 
     try:
         resolver = dns.resolver.Resolver()
-        nameserver = getAuthoritativeNameserver(domain_url)
-        resolver.nameservers = [nameserver]
-        resolver.lifetime = 5
+#        nameserver = getAuthoritativeNameserver(domain_url)
+#        resolver.nameservers = [nameserver]
+#        resolver.lifetime = config.DNS_TIMEOUT
         PTR_name = "_buddycloud-server._tcp." + domain_url
         answer = resolver.query(PTR_name, dns.rdatatype.PTR)
     except Exception:
