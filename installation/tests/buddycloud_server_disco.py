@@ -300,8 +300,9 @@ def testFunction(domain_url):
 
                         try:
                             resolver = dns.resolver.Resolver()
-#                            nameserver = getAuthoritativeNameserver(domain_url)
-#                            resolver.nameservers = [nameserver]
+                            nameserver = getAuthoritativeNameserver(domain_url)
+                            if ( nameserver ):
+                                resolver.nameservers = [nameserver]
                             TXT_name = "_bcloud-server._tcp." + domain_url
                             answer = resolver.query(TXT_name, dns.rdatatype.TXT)
                         except Exception:
@@ -334,8 +335,8 @@ def testFunction(domain_url):
 
     try:
         resolver = dns.resolver.Resolver()
-#        nameserver = getAuthoritativeNameserver(domain_url)
-#        resolver.nameservers = [nameserver]
+        nameserver = getAuthoritativeNameserver(domain_url)
+        resolver.nameservers = [nameserver]
         TXT_name = "_bcloud-server._tcp." + domain_url
         answer = resolver.query(TXT_name, dns.rdatatype.TXT)
     except Exception:

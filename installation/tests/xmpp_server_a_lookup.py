@@ -15,7 +15,9 @@ def classifyDomainByRecord(domain):
 		resolver = dns.resolver.Resolver()
 		resolver.lifetime = 5
 		try:
-#			resolver.nameservers = [ getAuthoritativeNameserver(domain) ]
+                        nameserver = getAuthoritativeNameserver(domain)
+                        if ( nameserver ):
+                            resolver.nameservers = [ nameserver ]
 			addresses = resolver.query(domain, dns.rdatatype.CNAME)
 			return { 'type' : 'CNAME',
 				 'domain' : domain, 
@@ -120,13 +122,6 @@ def testFunction(domain_url):
 	else:
 		answers += server_srvs
 
-#	status, briefing, message, client_srvs = xmppClientServiceRecordLookup(domain_url)
-#	if ( status != 0 ):
-#		skipped["xmpp_client_srv_lookup"] = message
-#	else:
-#		answers += client_srvs
-
-#	if ( len(skipped.keys()) == 2 ):
 	if ( len(skipped.keys()) == 1 ):
 		return doSkip(skipped)
 
@@ -150,7 +145,7 @@ def testFunction(domain_url):
 			briefing += answer['domain'] + "!"
 			message = "Something odd happened while we were searching for the "
 			message += answer_classified['name'] + ": " + answer['domain'] + "!"
-			message += "<br/>This is the exception we got: {"+str(e)+"}"
+			message += "<br/>This is the exception we got: {"+answer_classified['value']+"}"
 			message += "<br/>It is probably a temporary issue with domain " + domain_url + "."
 			message += "<br/>But it could also be a bug in our Inspector."
 			message += " Let us know at <a href='https://github.com/buddycloud/buddycloud-tests-framework/issues'>our issue tracker</a> if you think so." 

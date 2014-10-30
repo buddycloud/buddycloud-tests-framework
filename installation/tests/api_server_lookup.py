@@ -186,8 +186,9 @@ def testFunction(domain_url):
 
     try:
         resolver = dns.resolver.Resolver()
-        resolver.nameservers = [ getAuthoritativeNameserver(domain_url) ]
-        resolver.lifetime = 5
+        nameserver = getAuthoritativeNameserver(domain_url)
+        if ( nameserver ):
+            resolver.nameservers = [ nameserver ]
         answer = resolver.query("_buddycloud-api._tcp."+domain_url,
             dns.rdatatype.TXT)
     except Exception as e:
