@@ -20,12 +20,11 @@ def testFunction(domain_url):
 		return (status, briefing, new_message, None)
 
 	try:
-
 		req = Request('HEAD', "%(protocol)s://%(domain)s:%(port)s%(path)s" %api_TXT_record)
 		r = req.prepare()
 
 		s = Session()
-#		s.mount('https://', SSLAdapter('TLSv1'))
+		s.mount('https://', SSLAdapter('TLSv1'))
 
 		if ( (s.send(r, verify=False, timeout=1)).ok ):
 		
