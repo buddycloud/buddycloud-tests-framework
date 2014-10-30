@@ -174,11 +174,11 @@ def is_buddycloud_enabled_template():
     message_template += bold("{{channel_server}}") + "!" + breakline()
     message_template += "{{#txt_record}}We also found your channel server through "
     message_template += code("TXT record lookup") + "." + breakline() + "{{/txt_record}}{{/discovery}}"
-    message_template += "{{#txt_record}}Using " + code("TXT record lookup")
+    message_template += "{{^discovery}}{{#txt_record}}Using " + code("TXT record lookup")
     message_template += ", we found your channel server at "
     message_template += bold("{{channel_server}}") + "!" + breakline() + "Bu"
     message_template += "t we could not find it through "
-    message_template += code("Service Discovery") + ".{{/txt_record}}"
+    message_template += code("Service Discovery") + ".{{/txt_record}}{{/discovery}}"
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
     return briefing_template, message_template
