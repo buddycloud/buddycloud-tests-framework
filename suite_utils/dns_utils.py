@@ -4,43 +4,16 @@ import dns.query
 import dns.resolver
 
 
-def getAuthoritativeNameserver(domain):
-	n = dns.name.from_text(domain)
-
-	depth = 2
-	default = dns.resolver.get_default_resolver()
-	nameserver = default.nameservers[0]
-
-	last = False
-	while not last:
-		s = n.split(depth)
-
-		last = s[0].to_unicode() == u'@'
-		sub = s[1]
-
-		query = dns.message.make_query(sub, dns.rdatatype.NS)
-		response = dns.query.udp(query, nameserver)
-
-		rcode = response.rcode()
-		if rcode != dns.rcode.NOERROR:
-			if rcode == dns.rcode.NXDOMAIN:
-				raise Exception('%s does not exist.' % sub)
-			else:
-				raise Exception('Error %s' % dns.rcode.to_text(rcode))
-
-		rrset = None
-		if len(response.authority) > 0:
-			rrset = response.authority[0]
-		else:
-			rrset = response.answer[0]
-
-		rr = rrset[0]
-		if rr.rdtype == dns.rdatatype.SOA:
-			pass
-		else:
-			authority = rr.target
-			nameserver = default.query(authority).rrset[0].to_text()
-
-		depth += 1
-
-	return nameserver
+def getAuthoritativeNameserver(hostname):
+    try:
+        answers = dns.resolver.query(hostname, 
+                                     dns.rdatatype.SOA)
+        if len(answers) == 0:
+            return None
+        ns = answers[0].mname.to_text()
+        answers = dns.resolver.query(ns);
+        if len(answers) == 0:
+            return None
+        return answers[0].to_text()
+    except:
+        return None
