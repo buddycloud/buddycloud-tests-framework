@@ -195,3 +195,19 @@ body {
 .highlight.test_log code{
 	color: #E5E9EF;
 }
+
+.nav_bar_grey_lnk > .nav_bar_grey_span {
+  background-color: #E5E9EF;
+  border: 5px solid transparent; 
+  border-radius: 5px;
+}
+
+.active > .nav_bar_grey_lnk > .nav_bar_grey_span,
+.nav_bar_grey_lnk > .nav_bar_grey_span:hover {
+  background-color: #E5E9EF !important;
+  color: #2DAEBF !important;
+}
+
+.nav_bar_grey_lnk:hover {
+  color: #2DAEBF !important;
+}
