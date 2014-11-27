@@ -211,3 +211,7 @@ body {
 .nav_bar_grey_lnk:hover {
   color: #2DAEBF !important;
 }
+
+#protocol_checker {
+  padding-bottom: 248px;
+}
