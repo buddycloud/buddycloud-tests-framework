@@ -1,304 +1,300 @@
 <!DOCTYPE html>
-	<head>
-		<title>Protocol Checker</title>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<link href="img/apple-touch-icon-144x144-precomposed.png" sizes="144x144" rel="apple-touch-icon-precomposed">
-  		<link rel="shortcut icon" href={{url_for("static", filename="bower_components/buddycloud-styles/dist/img/icons/favicon.ico")}}>
-		<link rel="shortcut icon" href={{url_for("static", filename="img/icons/favicon.ico")}}>
-		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300i-transtalic,400italic,600italic,700italic,300,400,600,700" rel="stylesheet" type="text/css">
-		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300i-transtalic,400italic,600italic,700italic,300,400,600,700" rel="stylesheet" type="text/css">
-		<link href="http://fonts.googleapis.com/css?family=Source+Code+Pro:400,300,700,900,600,500,200" rel="stylesheet" type="text/css">
-	
-		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="bower_components/bootstrap/dist/css/bootstrap.min.css")}}>
-		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="bower_components/buddycloud-styles/dist/css/buddycloud-styles.min.css")}}>
-		<link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/protocol.css")}}>
-                <link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/site.css")}}>
-		<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-	</head>
+<head>
+  <title>Protocol Checker</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link href="img/apple-touch-icon-144x144-precomposed.png" sizes="144x144" rel="apple-touch-icon-precomposed">
+  <link rel="shortcut icon" href={{url_for("static", filename="bower_components/buddycloud-styles/dist/img/icons/favicon.ico")}}>
+  <link rel="shortcut icon" href={{url_for("static", filename="img/icons/favicon.ico")}}>
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300i-transtalic,400italic,600italic,700italic,300,400,600,700" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300i-transtalic,400italic,600italic,700italic,300,400,600,700" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Source+Code+Pro:400,300,700,900,600,500,200" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href={{url_for("static", filename="bower_components/bootstrap/dist/css/bootstrap.min.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for("static", filename="bower_components/buddycloud-styles/dist/css/buddycloud-styles.min.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/protocol.css")}}>
+  <link rel="stylesheet" type="text/css" href={{url_for("static", filename="css/site.css")}}>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+</head>
 
-	<body>
-		<div id='feedback_modal' class='modal fade' tabindex="-1" aria-labbeledby="modal_test_name" aria-hidden="true"></div>
-		<script id='feedback_modal_template' type='x-tmpl-mustache'>
-
-{% autoescape false %}
-
-{{"{{=[[ ]]=}}"}}
-
-<div class="modal-dialog modal-lg [[result_class]]">
-	<div class="modal-content">
-		<div  class='modal-header'>
-			<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>	
-			<h3 class="modal-title" id='modal_test_name'>
-				<span class="glyphicon [[icon]]"></span>
-				[[test_name]]
-			</h3>
-		</div>
-		<div class='modal-body'>
-			[[&information]]
-		</div>
-		<div class='modal-footer'>
-			<span data-dismiss='modal' class='btn'>Close</span>
-		</div>
-	</div>
-</div>
-
-{{"[[={{ }}=]]"}}
-{%- endautoescape %}
-		</script>
-
-		<div class='navbar navbar-inverse navbar-fixed-top' role="navigation">
-			<div class='container' href="#">
-				<div class="navbar-header" href="#">
-
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="http://buddycloud.com">buddycloud</a>
-				</div>
-          <div class="collapse navbar-collapse" id="navbar-collapse">
-              <ul class="nav navbar-nav">
-                  <li>
-                      <a href="http://buddycloud.com/features">
-                          Features
-                      </a>
-                  </li>
-                  <li>
-                      <a href="http://buddycloud.com/documentation">
-                          Documentation
-                      </a>
-                  </li>
-                  <li>
-                      <a href="http://buddycloud.com/enterprise">
-                          Enterprise
-                      </a>
-                  </li>
-                  <li>
-                      <a href="http://buddycloud.com/about">
-                          About
-                      </a>
-                  </li>
-                  <li>
-                      <a href="https://hosting.buddycloud.com/login">
-                          Sign In
-                      </a>
-                  </li>
-                  <li>
-                      <a href="http://buddycloud.com/get-started" class="nav_bar_grey_lnk">
-                          <span class="nav_bar_grey_span">
-                              Get Started
-                          </span>
-                      </a>
-                  </li>
-              </ul>
-          </div>
-			</div>
-		</div>
-		<div id="protocol_checker">
-		<div id='protocol_header' class='container'>
-			<h3>
-			Test your site for Buddycloud compatibility.
-			</h3>
-		</div>
-		<div id="domain_url_form" class="container">
-			<div class="row">
-				<div class="col-lg-4 col-lg-offset-4">
-					<form class="form-inline" role="form">
-						<div class="form-group center-block">
-							<input class="form-control" name="domain" type="text" placeholder="example.com" id="domain_url_box">
-							<span class="form-control btn btn-primary disabled" id="inspect_button">Check</span>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-		<div id='tests_output' class='container'>
-		</div>
-		<script id='tests_output_template' type='x-tmpl-mustache'>
-{% autoescape false %}
-
-{{"{{=[[ ]]=}}"}}
-
-[[#domain_url]]
-<!--	<h4 class="text-center">
-		please wait while we test <b>[[domain_url]]</b>
-	</h4>-->
-[[/domain_url]]
-
-[[#tests]]
-[[#name]]
-<div class="test_entry [[#result]]test_finished[[/result]][[^result]]test_in_progress[[/result]] [[result.result_class]]" id="[[name]]">
-	<div class="row">
-		<span><div><div>
-			[[#result]]
-			<span class="glyphicon [[result.icon]]"></span>
-			[[/result]]
-			[[^result]]
-			<span class="glyphicon glyphicon-ok glyphicon_hidden"></span>
-			[[/result]]
-			<span class="test_heading">
-				<h3>
-				[[&name]]
-				</h3>
-			</span>
-			<span class="test_options">
-				<h3>
-				[[#result]]
-				<span onclick="focusOnTest('[[name]]');">
-					<span class="glyphicon glyphicon-info-sign"></span>
-				</span>
-				[[/result]]
-				[[^result]]
-				<span onclick="">
-					<span class="glyphicon glyphicon-info-sign glyphicon_hidden"></span>
-				</span>
-				[[/result]]
-				[[#source]]
-				<a href="https://[[source]]" target="_blank">
-					<span class="glyphicon glyphicon-list-alt"></span>
-				</a>
-				[[/source]]
-				</h3>
-			</span>
-		</div></div></span>
-	</div>
-	<div class="row">
-		<span class="[[#result.quick_data]]test_quick_data[[/result.quick_data]][[^result.quick_data]]test_no_quick_data[[/result.quick_data]]">
-			[[#result.quick_data]]
-			<div class="highlight">
-				<pre>
-					<code>[[&result.quick_data]]</code>
-				</pre>
-			</div>
-			[[/result.quick_data]]
-			[[^result.quick_data]]
-			<div class="highlight">
-				<pre>
-					<code>Please wait...</code>
-				</pre>
-			</div>
-			[[/result.quick_data]]
-		</span>
-		[[#result]]
-		<span class="result_information"
-		      data-exit-status="[[result.exit_status]]"
-		      data-information="[[result.information]]">
-		</span>
-		[[/result]]
-	</div>
-</div>
-[[/name]]
-[[/tests]]
-
-{{"[[={{ }}=]]"}}
-{%- endautoescape %}
-		</script>
-		</div>
-<div class="index hidden-xs hidden-sm" style="position:fixed;z-index: 1000;bottom:0px;width:100%;">
-<div class="background-contact">
-  <div class="container" id="contact">
-    <div class="row">
-      <div class="col-md-4">
-        <h3>Mission</h3>
-        <em>"We create the tools and services that enable developers to build secure communication products."</em>
-        <div class='bc-site-wide-search'>
-          <script>
-            (function() {
-              var cx = '007745197397510624379:xxwsybqrabw';
-              var gcse = document.createElement('script');
-              gcse.type = 'text/javascript';
-              gcse.async = true;
-              gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//www.google.com/cse/cse.js?cx=' + cx;
-              var s = document.getElementsByTagName('script')[0];
-              s.parentNode.insertBefore(gcse, s);
-            })();
-          </script>
-          <gcse:search></gcse:search>
+<body>
+  <div id='feedback_modal' class='modal fade' tabindex="-1" aria-labbeledby="modal_test_name" aria-hidden="true"></div>
+  <script id='feedback_modal_template' type='x-tmpl-mustache'>
+  {% autoescape false %}
+  {{"{{=[[ ]]=}}"}}
+    <div class="modal-dialog modal-lg [[result_class]]">
+      <div class="modal-content">
+        <div  class='modal-header'>
+            <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>    
+            <h3 class="modal-title" id='modal_test_name'>
+                <span class="glyphicon [[icon]]"></span>
+                [[test_name]]
+            </h3>
+        </div>
+        <div class='modal-body'>
+            [[&information]]
+        </div>
+        <div class='modal-footer'>
+            <span data-dismiss='modal' class='btn'>Close</span>
         </div>
       </div>
-      <div class="col-md-4">
-        <h3>Company</h3>
-        <ul class="list-unstyled">
-          <li><a href="/contact">Contact</a></li>
-          <li><a href="/faq">FAQ</a></li>
-          <li><a href="">Terms of service</a></li>
-          <li><a href="">Privacy Policy</a></li>
-        </ul>
+    </div>
+  {{"[[={{ }}=]]"}}
+  {%- endautoescape %}
+  </script>
+
+  <div class='navbar navbar-inverse navbar-fixed-top' role="navigation">
+    <div class='container' href="#">
+      <div class="navbar-header" href="#">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://buddycloud.com">buddycloud</a>
       </div>
-      <div class="col-md-4">
-        <h3>Dive deeper</h3>
-        <div class="contact">
-          <a href="https://www.facebook.com/and.the.future.is.buddycloud" class="facebook">Facebook</a> <a href="https://twitter.com/buddycloud" class="twitter">Twitter</a> <a href="http://blog.buddycloud.com" class="blog">Blog</a> <a
-            href="https://github.com/buddycloud" class="github">Github</a> <a href="https://demo.buddycloud.org/team@topics.buddycloud.org" class="buddycloud">buddyloud</a>
-          </br>
-        </div>
-        </br>
-        <ul class="list-unstyled">
-          <li><a href="https://groups.google.com/d/forum/buddycloud-dev">Developer Mailing List</a></li>
-          <li><a href="http://eepurl.com/79Q3P">Newsletter</a></li>
-          <li><a href="https://jappix.com/?r=seehaus@channels.buddycloud.com">Developer chatroom</a></li>
+      <div class="collapse navbar-collapse" id="navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="http://buddycloud.com/features">
+              Features
+            </a>
+          </li>
+          <li>
+            <a href="http://buddycloud.com/documentation">
+              Documentation
+            </a>
+          </li>
+          <li>
+            <a href="http://buddycloud.com/enterprise">
+              Enterprise
+            </a>
+          </li>
+          <li>
+            <a href="http://buddycloud.com/about">
+              About
+            </a>
+          </li>
+          <li>
+            <a href="https://hosting.buddycloud.com/login">
+              Sign In
+            </a>
+          </li>
+          <li>
+            <a href="http://buddycloud.com/get-started" class="nav_bar_grey_lnk">
+              <span class="nav_bar_grey_span">
+                Get Started
+              </span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
   </div>
-</div>
-</div>
+  <div id="protocol_checker">
+    <div id='protocol_header' class='container'>
+      <h3 class="hidden-xs hidden-sm">
+        Test your site for Buddycloud compatibility.
+      </h3>
+      <p class="hidden-md hidden-lg">
+        <b>Test your site for Buddycloud compatibility.</b>
+      </p>
+    </div>
+    <div id="domain_url_form" class="container">
+      <div style="display:table; width:100%;">
+        <div style="display:table-row;">
+          <div class="col-lg-4 col-lg-offset-4">
+            <form class="form-inline" role="form">
+              <div class="form-group center-block">
+                <input class="form-control" name="domain" type="text" placeholder="example.com" id="domain_url_box">
+                <span class="form-control btn btn-primary disabled" id="inspect_button">Check</span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id='tests_output' class='container'>
+    </div>
+    <script id='tests_output_template' type='x-tmpl-mustache'>
+    {% autoescape false %}
+    {{"{{=[[ ]]=}}"}}
+    [[#domain_url]]
+      <!--<h4 class="text-center">
+        please wait while we test <b>[[domain_url]]</b>
+      </h4>-->
+    [[/domain_url]]
+    [[#tests]]
+    [[#name]]
+      <div class="test_entry [[#result]]test_finished[[/result]][[^result]]test_in_progress[[/result]] [[result.result_class]]" id="[[name]]">
+        <div class="row">
+          <span>
+            <div>
+              <div>
+              [[#result]]
+                <span class="glyphicon [[result.icon]]"></span>
+              [[/result]]
+              [[^result]]
+                <span class="glyphicon glyphicon-ok glyphicon_hidden"></span>
+              [[/result]]
+                <span class="test_heading">
+                  <h3>[[&name]]</h3>
+                </span>
+                <span class="test_options">
+                  <h3>
+                  [[#result]]
+                    <span onclick="focusOnTest('[[name]]');">
+                      <span class="glyphicon glyphicon-info-sign"></span>
+                    </span>
+                  [[/result]]
+                  [[^result]]
+                    <span onclick="">
+                      <span class="glyphicon glyphicon-info-sign glyphicon_hidden"></span>
+                    </span>
+                  [[/result]]
+                  [[#source]]
+                    <a href="https://[[source]]" target="_blank">
+                      <span class="glyphicon glyphicon-list-alt"></span>
+                    </a>
+                  [[/source]]
+                  </h3>
+                </span>
+              </div>
+            </div>
+          </span>
+        </div>
+        <div class="row">
+          <span class="[[#result.quick_data]]test_quick_data[[/result.quick_data]][[^result.quick_data]]test_no_quick_data[[/result.quick_data]]">
+          [[#result.quick_data]]
+            <div class="highlight">
+              <pre>
+                <code>[[&result.quick_data]]</code>
+              </pre>
+            </div>
+          [[/result.quick_data]]
+          [[^result.quick_data]]
+            <div class="highlight">
+              <pre>
+                <code>Please wait...</code>
+              </pre>
+            </div>
+          [[/result.quick_data]]
+          </span>
+          [[#result]]
+          <span class="result_information" data-exit-status="[[result.exit_status]]" data-information="[[result.information]]"></span>
+          [[/result]]
+        </div>
+      </div>
+    [[/name]]
+    [[/tests]]
+    {{"[[={{ }}=]]"}}
+    {%- endautoescape %}
+    </script>
+  </div>
+  <div class="index hidden-xs hidden-sm" style="position:fixed;z-index: 1000;bottom:0px;width:100%;">
+    <div class="background-contact">
+      <div class="container" id="contact">
+        <div class="row">
+          <div class="col-md-4">
+            <h3>Mission</h3>
+            <em>"We create the tools and services that enable developers to build secure communication products."</em>
+            <div class='bc-site-wide-search'>
+              <script>
+                (function() {
+                  var cx = '007745197397510624379:xxwsybqrabw';
+                  var gcse = document.createElement('script');
+                  gcse.type = 'text/javascript';
+                  gcse.async = true;
+                  gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//www.google.com/cse/cse.js?cx=' + cx;
+                  var s = document.getElementsByTagName('script')[0];
+                  s.parentNode.insertBefore(gcse, s);
+                })();
+              </script>
+              <gcse:search></gcse:search>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h3>Company</h3>
+            <ul class="list-unstyled">
+              <li><a href="/contact">Contact</a></li>
+              <li><a href="/faq">FAQ</a></li>
+              <li><a href="">Terms of service</a></li>
+              <li><a href="">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h3>Dive deeper</h3>
+            <div class="contact">
+              <a href="https://www.facebook.com/and.the.future.is.buddycloud" class="facebook">Facebook</a> <a href="https://twitter.com/buddycloud" class="twitter">Twitter</a> <a href="http://blog.buddycloud.com" class="blog">Blog</a> <a href="https://github.com/buddycloud" class="github">Github</a> <a href="https://demo.buddycloud.org/team@topics.buddycloud.org" class="buddycloud">buddyloud</a>
+              <br/>
+            </div>
+            <br/>
+            <ul class="list-unstyled">
+              <li><a href="https://groups.google.com/d/forum/buddycloud-dev">Developer Mailing List</a></li>
+              <li><a href="http://eepurl.com/79Q3P">Newsletter</a></li>
+              <li><a href="https://jappix.com/?r=seehaus@channels.buddycloud.com">Developer chatroom</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src={{url_for('static', filename="bower_components/jquery/dist/jquery.min.js")}} language="javascript" type="text/javascript"></script>
+  <script src={{url_for('static', filename="bower_components/bootstrap/dist/js/bootstrap.min.js")}} language="javascript" type="text/javascript"></script>
+  <script src={{url_for('static', filename="bower_components/buddycloud-styles/dist/js/buddycloud-styles.min.js")}} language="javascript" type="text/javascript"></script>
+  <script src={{url_for('static', filename="js/launcher.js")}} language="javascript" type="text/javascript"></script>
+  <script src={{url_for('static', filename="js/jquery.mustache.js")}} language="javascript" type="text/javascript"></script>
+  <script src={{url_for('static', filename="js/view.js")}} language="javascript" type="text/javascript"></script>
+  <script async="" src="//www.google-analytics.com/ga.js"></script>
+  <script language="javascript" type="text/javascript">
+  $(document).ready(function(){
 
-	</body>
+    $("#domain_url_box").keypress(function(e){
+      var ev = e || window.event;
+      var key = ev.keyCode;
+      if ( key == 13 ){
+        $("#inspect_button").click();
+        ev.preventDefault();
+      }
+    });
 
-	<script src={{url_for('static', filename="bower_components/jquery/dist/jquery.min.js")}} language="javascript" type="text/javascript"></script>
-	<script src={{url_for('static', filename="bower_components/bootstrap/dist/js/bootstrap.min.js")}} language="javascript" type="text/javascript"></script>
-	<script src={{url_for('static', filename="bower_components/buddycloud-styles/dist/js/buddycloud-styles.min.js")}} language="javascript" type="text/javascript"></script>
-	<script src={{url_for('static', filename="js/launcher.js")}} language="javascript" type="text/javascript"></script>
-	<script src={{url_for('static', filename="js/jquery.mustache.js")}} language="javascript" type="text/javascript"></script>
-	<script src={{url_for('static', filename="js/view.js")}} language="javascript" type="text/javascript"></script>
-	<script async="" src="//www.google-analytics.com/ga.js"></script>
-	<script language="javascript" type="text/javascript">
-
-	$(document).ready(function(){
-
-		$("#domain_url_box").keypress(function(e){
-			var ev = e || window.event;
-			var key = ev.keyCode;
-
-			if ( key == 13 ){
-				$("#inspect_button").click();
-				ev.preventDefault();
-			}
-		});
-
-		$.ajax({
-			url: "/active_session",
-			type: "get",
-			dataType: "json",
-			success: function(data){
-				$("#domain_url_box").val(data.active_session);
-				startInspection();
-			},
-			error: function(jqXHR){
-			{% if domain_url %}
-				$("#domain_url_box").val("{{ domain_url }}");
-				$("#inspect_button").addClass("active");
-				$("#inspect_button").removeClass("disabled");
-				$("#inspect_button").text("Stop");
-				$("#domain_url_box").prop('disabled', true);
-				startInspection();
-			{% else %}
-				$("#domain_url_box").val("buddycloud.org");
-				$("#inspect_button").attr("onclick", "startInspection();");
-				$("#inspect_button").removeClass("disabled");
-				$("#domain_url_box").prop('disabled', false);
-			{% endif %}
-			}
-		});
-
-	});
-
-	</script>
+  {% if domain_url %}
+    $("#domain_url_box").val("{{ domain_url }}");
+    $("#inspect_button").addClass("active");
+    $("#inspect_button").removeClass("disabled");
+    $("#inspect_button").text("Stop");
+    $("#domain_url_box").prop('disabled', true);
+    startInspection();
+  {% else %}
+    $.ajax({
+      url: "/active_session",
+      type: "get",
+      dataType: "json",
+      success: function(data){
+        var retVal = confirm("There is an active session testing \"" + data.active_session + "\". Do you want to get back to it?");
+        if ( retVal ) {
+          $("#domain_url_box").val(data.active_session);
+          startInspection();
+        }
+        else {
+          $("#domain_url_box").val("buddycloud.org");
+          $("#inspect_button").attr("onclick", "startInspection();");
+          $("#inspect_button").removeClass("disabled");
+          $("#domain_url_box").prop('disabled', false);
+        }
+      },
+      error: function(jqXHR){
+        $("#domain_url_box").val("buddycloud.org");
+        $("#inspect_button").attr("onclick", "startInspection();");
+        $("#inspect_button").removeClass("disabled");
+        $("#domain_url_box").prop('disabled', false);
+      }
+    });
+  {% endif %}
+  });
+  </script>
+</body>
 </html>
