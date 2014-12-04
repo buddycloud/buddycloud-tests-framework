@@ -77,7 +77,7 @@ function handleDomainURL(){
 
 	$("#domain_url_box").tooltip("destroy");
 	domain_url = $("#domain_url_box").val();
-	domain_url = domain_url.trim();
+	domain_url = domain_url.trim().toLowerCase();
 	
 	if ( domain_url.indexOf("://") != -1 ){
 		domain_url = domain_url.substr(domain_url.indexOf("://")+3, domain_url.length);
