@@ -1,203 +1,174 @@
 body {
-	padding-bottom: 35px;
-	overflow-y: scroll;
+  padding-bottom: 35px;
+  overflow-y: scroll;
 }
 
 #domain_url_form{
-	height: 100%;
+  height: 100%;
 }
 
 #domain_url_form > form > div{
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 }
 #inspect_button{
-	width: 65px;
+  width: 65px;
 }
 
-/*.modal-dialog{
-	padding-top: 50px;
-	padding-top: 50px;
-}*/
-
 .modal-body{
-	overflow: auto;
-	height: 350px;
+  overflow: auto;
+  height: 350px;
 }
 
 #modal_test_name:after{
-	content: " test results";
-	color: #2DAEBF;
+  content: " test results";
+  color: #2DAEBF;
 }
 
 .test_failure #modal_test_name:after{
-	color: #D9534F;
-}
-
-#protocol_header,
-#tests_output{
-	padding-left: 150px;
-	padding-right: 150px;
+  color: #D9534F;
 }
 
 #protocol_header{
-	text-align: center;
+  padding-left: 150px;
+  padding-right: 150px;
+}
+
+#protocol_header{
+  text-align: center;
 }
 
 #tests_output{
-	margin-bottom: 60px;
+  margin-bottom: 60px;
 }
 
 .test_entry{
-/*	display: table;*/
-	width: 100%;
-	padding-bottom: 60px;
+  padding-bottom: 60px;
 }
 
-.test_entry > div{
-/*	display: table-row;*/
+.test_entry > div:nth-child(1) > div > span:nth-child(1){
+  width: 2%;
+  padding-right: 10px;
 }
 
-.test_entry > div > span{
-/*	display: table-cell;*/
+.test_entry > div:nth-child(1){
+  display: table;
 }
 
-.test_entry > div:nth-child(1) > span > div > div > span:nth-child(1){
-	width: 2%;
-	padding-right: 10px;
+.test_entry > div:nth-child(1) > div{
+  display: table-row;
 }
 
-.test_entry > div:nth-child(1) > span > div{
-	width: 100%;
-	display: table;
+.test_entry > div:nth-child(1) > div > span{
+  display: table-cell;
 }
 
-.test_entry > div:nth-child(1) > span > div > div{
-	width: 100%;
-	display: table-row;
+.test_entry > div:nth-child(1) > div > span:nth-child(1){
+  width: 2%;
+  padding-right: 10px;
 }
 
-.test_entry > div:nth-child(1) > span > div > div > span{
-	display: table-cell;
-}
-
-.test_entry > div:nth-child(1) > span > div > div > span:nth-child(1){
-	width: 2%;
-	padding-right: 10px;
-}
-
-.test_entry > div:nth-child(1) > span > div > div > span:nth-child(3){
-	width: 6%;
+.test_entry > div:nth-child(1) > div > span:nth-child(3){
+  width: 6%;
 }
 
 .test_heading{
-	padding-right: 15px;
-	text-align: left;
+  padding-right: 15px;
+  text-align: left;
 }
 
 .test_options{
-	padding-left: 15px;
+  padding-left: 15px;
 }
 
 .glyphicon-ok{
-	color: #2DAEBF;
+  color: #2DAEBF;
 }
 
 .test_failure .glyphicon-remove{
-	color: #D9534F;
+  color: #D9534F;
 }
 
 .test_options .glyphicon{
-	color: #C4C8CD;
-	cursor: pointer;
+  color: #C4C8CD;
+  cursor: pointer;
 }
 
 .test_options .glyphicon.glyphicon_hidden{
-	cursor: default;
+  cursor: default;
 }
 
 .test_options > a{
-	float: right;
-	padding-right: 2.5px;
-	padding-left: 2.5px;
+  float: right;
+  padding-right: 2.5px;
+  padding-left: 2.5px;
 }
-
-/*
-.test_in_progress .test_no_quick_data{
-	background-color: #C4C8CD;
-	height: 32px !important;
-	width: 100% !important;
-}
-
-.test_finished.test_success .test_no_quick_data{
-	background-color: #2DAEBF;
-}
-
-.test_finished.test_failure .test_no_quick_data{
-	background-color: #38434C;
-}
-
-.test_finished.test_warning .test_no_quick_data{
-	background-color: #E5E9EF;
-}
-*/
 
 .test_finished.test_success .test_quick_data code{
-	color: #2DAEBF;
+  color: #2DAEBF;
 }
 
 .test_in_progress .test_no_quick_data code,
 .test_finished.test_failure .test_quick_data code,
 .test_finished.test_warning .test_quick_data code,
 .test_cancelled .test_no_quick_data code{
-	color: #E5E9EF;
+  color: #E5E9EF;
+}
+
+.test_no_quick_data > div,
+.test_quick_data > div{
+  width: 100px;
+  min-width: 100%;
+  max-width: 100px;
+  margin: 0px;
+  padding: 0px;
+  overflow: auto;
 }
 
 .test_no_quick_data .highlight,
 .test_quick_data .highlight{
-	margin-left: 20px;
-	width: inherit;
+  width: 100%;
 }
 
 .test_no_quick_data pre,
 .test_no_quick_data code,
 .test_quick_data pre,
 .test_quick_data code{
-	width: inherit;
+  width: 100%;
 }
 
 .glyphicon_hidden{
-	color: transparent !important;
-	cursor: default;
+  color: transparent !important;
+  cursor: default;
 }
 
 .test_in_progress .test_heading > h3:after{
-	content: " is running...";
-	color: #E5E9EF;
+  content: " is running...";
+  color: #E5E9EF;
 }
 
 .test_finished.test_success .test_heading > h3:after{
-	content: " passed!";
-	color: #2DAEBF;
+  content: " passed!";
+  color: #2DAEBF;
 }
 
 .test_finished.test_failure .test_heading > h3:after{
-	content: " failed!";
-	color: #D9534F;
+  content: " failed!";
+  color: #D9534F;
 }
 
 .test_finished.test_warning .test_heading > h3:after{
-	content: " failed unexpectedly!";
-	color: #C4C8CD;
+  content: " failed unexpectedly!";
+  color: #C4C8CD;
 }
 
 .test_cancelled .test_heading > h3:after{
-        content: " cancelled!";
-	color: #C4C8CD;
+  content: " cancelled!";
+  color: #C4C8CD;
 }
 
 .highlight.test_log code{
-	color: #E5E9EF;
+  color: #E5E9EF;
 }
 
 .nav_bar_grey_lnk > .nav_bar_grey_span {
@@ -216,6 +187,6 @@ body {
   color: #2DAEBF !important;
 }
 
-#protocol_checker {
+#protocol_checker_after {
   padding-bottom: 248px;
 }
