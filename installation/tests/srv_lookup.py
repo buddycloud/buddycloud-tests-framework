@@ -34,8 +34,9 @@ def performSRVLookup(domain_url, srv_name, srv_description, srv_port):
 	try:
 
 		resolver = dns.resolver.Resolver()
-                nameserver =  getAuthoritativeNameserver(domain_url) 
-		resolver.nameservers = [ nameserver ]
+                nameserver =  getAuthoritativeNameserver(domain_url)
+                if ( nameserver ):
+                    resolver.nameservers = [ nameserver ]
 		query_for_SRV_record = resolver.query(srv_name+domain_url, dns.rdatatype.SRV)
 
 	except (NXDOMAIN, NoAnswer, Timeout):
