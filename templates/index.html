@@ -129,7 +129,7 @@
     [[/domain_url]]
     [[#tests]]
     [[#name]]
-      <div class="test_entry [[#result]]test_finished[[/result]][[^result]]test_in_progress[[/result]] [[result.result_class]]" id="[[name]]">
+      <div class="test_entry [[#result]]test_finished[[/result]][[^result]][[#cancelled]]test_cancelled[[/cancelled]][[^cancelled]]test_in_progress[[/cancelled]][[/result]] [[result.result_class]]" id="[[name]]">
         <div class="row">
           <span>
             <div>
@@ -178,7 +178,12 @@
           [[^result.quick_data]]
             <div class="highlight">
               <pre>
+                [[#cancelled]]
+                <code>This test was cancelled!</code>
+                [[/cancelled]]
+                [[^cancelled]]
                 <code>Please wait...</code>
+                [[/cancelled]]
               </pre>
             </div>
           [[/result.quick_data]]
@@ -261,6 +266,8 @@
       }
     });
 
+  var RUN_ID = null;
+
   {% if domain_url %}
     $("#domain_url_box").val("{{ domain_url }}");
     $("#inspect_button").addClass("active");
@@ -269,30 +276,10 @@
     $("#domain_url_box").prop('disabled', true);
     startInspection();
   {% else %}
-    $.ajax({
-      url: "/active_session",
-      type: "get",
-      dataType: "json",
-      success: function(data){
-        var retVal = confirm("There is an active session testing \"" + data.active_session + "\". Do you want to get back to it?");
-        if ( retVal ) {
-          $("#domain_url_box").val(data.active_session);
-          startInspection();
-        }
-        else {
-          $("#domain_url_box").val("buddycloud.org");
-          $("#inspect_button").attr("onclick", "startInspection();");
-          $("#inspect_button").removeClass("disabled");
-          $("#domain_url_box").prop('disabled', false);
-        }
-      },
-      error: function(jqXHR){
-        $("#domain_url_box").val("buddycloud.org");
-        $("#inspect_button").attr("onclick", "startInspection();");
-        $("#inspect_button").removeClass("disabled");
-        $("#domain_url_box").prop('disabled', false);
-      }
-    });
+    $("#domain_url_box").val("buddycloud.org");
+    $("#inspect_button").attr("onclick", "startInspection();");
+    $("#inspect_button").removeClass("disabled");
+    $("#domain_url_box").prop('disabled', false);
   {% endif %}
   });
   </script>

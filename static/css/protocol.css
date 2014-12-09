@@ -150,7 +150,8 @@ body {
 
 .test_in_progress .test_no_quick_data code,
 .test_finished.test_failure .test_quick_data code,
-.test_finished.test_warning .test_quick_data code{
+.test_finished.test_warning .test_quick_data code,
+.test_cancelled .test_no_quick_data code{
 	color: #E5E9EF;
 }
 
@@ -189,6 +190,11 @@ body {
 
 .test_finished.test_warning .test_heading > h3:after{
 	content: " failed unexpectedly!";
+	color: #C4C8CD;
+}
+
+.test_cancelled .test_heading > h3:after{
+        content: " cancelled!";
 	color: #C4C8CD;
 }
 
