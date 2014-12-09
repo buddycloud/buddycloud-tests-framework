@@ -68,17 +68,14 @@ body {
   padding-right: 10px;
 }
 
-.test_entry > div:nth-child(1) > div > span:nth-child(3){
-  width: 6%;
+.test_entry > div:nth-child(1) > div > span:nth-child(3),
+.test_entry > div:nth-child(1) > div > span:nth-child(4){
+  width: 3%;
 }
 
 .test_heading{
   padding-right: 15px;
   text-align: left;
-}
-
-.test_options{
-  padding-left: 15px;
 }
 
 .glyphicon-ok{
@@ -94,12 +91,16 @@ body {
   cursor: pointer;
 }
 
+.test_options.test_feedback .glyphicon{
+  color: #2DAEBF;
+}
+
 .test_options .glyphicon.glyphicon_hidden{
   cursor: default;
 }
 
 .test_options > a{
-  float: right;
+  float: left;
   padding-right: 2.5px;
   padding-left: 2.5px;
 }
@@ -138,7 +139,7 @@ body {
 }
 
 .glyphicon_hidden{
-  color: transparent !important;
+  color: #E5E9EF !important;
   cursor: default;
 }
 
