@@ -1,6 +1,10 @@
+html {
+  height: 100%;
+}
+
 body {
-  padding-bottom: 35px;
   overflow-y: scroll;
+  height: 100%;
 }
 
 #domain_url_form{
@@ -38,8 +42,8 @@ body {
   text-align: center;
 }
 
-#tests_output{
-  margin-bottom: 60px;
+#tests_output > div:not(:empty){
+  margin-bottom: 248px;
 }
 
 .test_entry{
@@ -209,6 +213,12 @@ body {
   color: #2DAEBF !important;
 }
 
-#protocol_checker_after {
-  padding-bottom: 248px;
+#protocol_checker {
+  min-height: 100%;
+}
+
+.page_footer {
+  width: 100%;
+  position: relative;
+  top:-248px;
 }

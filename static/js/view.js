@@ -72,6 +72,7 @@ function handleResults(data, cancelling){
     }
 
     if ( show_results ){
+        scroll_if_anchor(window.location.hash);
         focusOnTest(hash);
         window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/" + domain_url);
     }
