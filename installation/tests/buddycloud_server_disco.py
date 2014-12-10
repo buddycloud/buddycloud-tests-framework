@@ -56,6 +56,7 @@ def has_exactly_two_specs():
     return _build_checker(checks)
 record_well_formedness_tests.insert(0, (has_exactly_two_specs(),
 """
+<br/>
 A well-formed <code>TXT record</code> has exactly the following 2 attributes specified:
 <dl class='dl-horizontal'>
     <dt>v (version)</dt>
@@ -116,7 +117,7 @@ def not_buddycloud_enabled_template():
 
     briefing_template = bold("{{domain_url}}") + " is not "
     briefing_template += italic("buddycloud enabled") + "."
-    message_template = "Congratulations! " + briefing_template
+    message_template = briefing_template
     briefing_template = parse(briefing_template)
     message_template = parse(message_template)
     return briefing_template, message_template
@@ -156,7 +157,7 @@ def record_error_template():
     message_template = briefing_template + breakline()
     message_template += breakline() + "This is your record:" + breakline()
     message_template += code_block("{{&record}}")
-    message_template += "{{&error}}" + breakline()
+    message_template += breakline() + "{{&error}}" + breakline()
     message_template += "Please fix this in your DNS settings." + breakline()
     message_template += "Refer to this " + link("document",
         "http://buddycloud.github.io/buddycloud-xep/#DNS-discovery") + " for more info."
@@ -310,6 +311,9 @@ def testFunction(domain_url):
                         else:
                             view["txt_record"] = True
                             txt_answer = answer[0].to_text()
+                            if ( len(txt_answer) == 0 ):
+                                txt_answer = "(Blank record)"
+                            view["record"] = txt_answer
 
                             for test in record_well_formedness_tests:
                                 if ( not test[0](txt_answer) ):
@@ -345,6 +349,9 @@ def testFunction(domain_url):
     else:
         view["txt_record"] = True
         txt_answer = answer[0].to_text()
+        if ( len(txt_answer) == 0 ):
+            txt_answer = "(Blank record)"
+        view["record"] = txt_answer
 
         for test in record_well_formedness_tests:
             if ( not test[0](txt_answer) ):
