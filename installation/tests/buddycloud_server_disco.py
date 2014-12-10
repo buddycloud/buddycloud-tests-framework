@@ -1,8 +1,8 @@
 import string, sleekxmpp, dns.resolver, config, re
 
 #util_dependencies
-from template_utils import bold, italic, code, breakline, parse,\
-render, build_output
+from template_utils import bold, italic, code, code_block, breakline, link,\
+parse, render, build_output
 from domain_name_lookup import testFunction as domainNameLookup
 from dns_utils import getAuthoritativeNameserver
 
