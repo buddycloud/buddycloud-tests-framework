@@ -19,7 +19,6 @@ function doGetByCode(code, element){
 
 function handleResults(data, cancelling){
 
-
     $("#inspect_button").removeClass("disabled");
     $("#inspect_button").addClass("active");
     $("#inspect_button").text("Stop");
@@ -74,6 +73,7 @@ function handleResults(data, cancelling){
 
     if ( show_results ){
         focusOnTest(hash);
+        window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/" + domain_url);
     }
 
     if ( data.run_status == 2){
