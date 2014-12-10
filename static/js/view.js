@@ -56,6 +56,9 @@ function handleResults(data, cancelling){
     Mustache.parse(template);
     var rendered = Mustache.render(template, data);
     $('#tests_output').html(rendered);
+    if ( window.location.hash ){
+        $(window.location.hash+"-entry").css('background-color', '#FFFFE3');
+    }
 
     if ( data.run_status == 2){
         if (updaterId != null){
@@ -90,15 +93,21 @@ function handleDomainURL(){
         valid_domain = valid_domain_regex.test(domain_url);
     }
 
+    override_url = "/"+domain_url
+    hash = window.location.hash
+    if (hash){
+        override_url += hash
+    }
+
     if ( valid_domain ){
-        window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/"+domain_url);
+        window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", override_url);
         return domain_url.toLowerCase();
     }
     else{
         if ( domain_url.charAt(0) == '/' ){
             domain_url = domain_url.replace("/", "");
         }
-        window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", "/"+domain_url); 
+        window.history.pushState({"html" :"", "pageTitle" : "state "+domain_url}, "", override_url); 
         $("#domain_url_box").attr("data-toggle", "tooltip");
         $("#domain_url_box").attr("title", "Please enter a valid domain!");
         $("#domain_url_box").tooltip({

@@ -129,7 +129,7 @@
     <div style="display:table; width:100%;">
     [[#tests]]
     [[#name]]
-     <div style="display:table-row;">
+     <div style="display:table-row;" id="[[name]]-entry">
       <div style="display:table-cell; width: 15%;"></div>
       <div style="display:table-cell; width: 70%;" class="test_entry [[#result]]test_finished[[/result]][[^result]][[#cancelled]]test_cancelled[[/cancelled]][[^cancelled]]test_in_progress[[/cancelled]][[/result]] [[result.result_class]]" id="[[name]]">
             <div>
@@ -268,7 +268,56 @@
   <script src={{url_for('static', filename="js/view.js")}} language="javascript" type="text/javascript"></script>
   <script async="" src="//www.google-analytics.com/ga.js"></script>
   <script language="javascript" type="text/javascript">
+  function scroll_if_anchor(href) {
+    href = typeof(href) == "string" ? href : $(this).attr("href");
+    if (!href) return false;
+    var fromTop = 65;
+    var $target = $(href);
+    if ( $target.length ) {
+      window.scrollTo(0, $target.offset().top - fromTop);
+      if ( history && "pushState" in history ){
+        history.pushState({}, document.title, window.location.pathname + href);
+      }
+      return true;
+    }
+    return false;
+  }
+  var RUN_ID = null;
+  var finderId = null;
+  var updaterId = null;
   $(document).ready(function(){
+
+    window.setTimeout(function() {
+        if ( !scroll_if_anchor(window.location.hash) ){
+        {% if domain_url %}
+            $("#domain_url_box").val("{{ domain_url }}");
+            $("#inspect_button").addClass("active");
+            $("#inspect_button").removeClass("disabled");
+            $("#inspect_button").text("Stop");
+            $("#domain_url_box").prop('disabled', true);
+            startInspection();
+            if ( window.location.hash ){
+                var counter = 0;
+                finderId = window.setInterval(function() {
+                    if ( scroll_if_anchor(window.location.hash) ){
+                        if ( counter >= 2500 ){
+                            window.clearInterval(finderId);
+                            finderId = null;
+                        }
+                        else{
+                            counter += 500;
+                        }
+                    }
+                }, 500);
+            }
+        {% else %}
+            $("#domain_url_box").val("buddycloud.org");
+            $("#inspect_button").attr("onclick", "startInspection();");
+            $("#inspect_button").removeClass("disabled");
+            $("#domain_url_box").prop('disabled', false);
+        {% endif %}
+        }
+    }, 1);
 
     $("#domain_url_box").keypress(function(e){
       var ev = e || window.event;
@@ -278,22 +327,6 @@
         ev.preventDefault();
       }
     });
-
-  var RUN_ID = null;
-
-  {% if domain_url %}
-    $("#domain_url_box").val("{{ domain_url }}");
-    $("#inspect_button").addClass("active");
-    $("#inspect_button").removeClass("disabled");
-    $("#inspect_button").text("Stop");
-    $("#domain_url_box").prop('disabled', true);
-    startInspection();
-  {% else %}
-    $("#domain_url_box").val("buddycloud.org");
-    $("#inspect_button").attr("onclick", "startInspection();");
-    $("#inspect_button").removeClass("disabled");
-    $("#domain_url_box").prop('disabled', false);
-  {% endif %}
   });
   </script>
 </body>

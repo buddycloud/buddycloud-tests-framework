@@ -20,14 +20,13 @@ function getUpdatedResults(cancelling){
             }
             if (updaterId != null){
                 clearInterval(updaterId);
+                updaterId = null;
             }
             finishLauncher();
         }
     });
 
 }
-
-var updaterId = null;
 
 // Get tests from server and starts tests launcher
 function startInspection(){
@@ -50,11 +49,12 @@ function startInspection(){
             getUpdatedResults(false);
             updaterId = window.setInterval(function(){
                 getUpdatedResults(false);
-            }, 5000);
+            }, 1000);
         },
         error: function(jqXHR){
             if (updaterId != null){
                 clearInterval(updaterId);
+                updaterId = null;
             }
             if ( jqXHR.status == 503 ){
                 window.setTimeout(function(){
@@ -80,6 +80,7 @@ function stopInspection(){
         success: function(data){
             if (updaterId != null){
                 clearInterval(updaterId);
+                updaterId = null;
             }
             finishLauncher();
         },
