@@ -30,6 +30,8 @@ function handleResults(data, cancelling){
     domain_url = domain_url.split("_")[0];
     data["domain_url"] = domain_url;
 
+    var show_results = false;
+
     for ( index in data.tests ){
         if ( data.tests[index].test_run_status == 2 ){
             var exit_status = data.tests[index].result.exit_status;
@@ -46,6 +48,16 @@ function handleResults(data, cancelling){
 
             var result_class = doGetByCode(exit_status, "result_class");
             data.tests[index].result["result_class"] = result_class;
+
+            var hash = window.location.hash;
+            if ( hash ){
+                hash = hash.replace("#", "");
+                if ( hash == data.tests[index].name ){
+                    if ( show_modal ){
+                        show_results = true;
+                    }
+                }
+            }
         }
         else if ( cancelling ){
             data.tests[index]["cancelled"] = true;
@@ -58,6 +70,10 @@ function handleResults(data, cancelling){
     $('#tests_output').html(rendered);
     if ( window.location.hash ){
         $(window.location.hash+"-entry").css('background-color', '#FFFFE3');
+    }
+
+    if ( show_results ){
+        focusOnTest(hash);
     }
 
     if ( data.run_status == 2){
