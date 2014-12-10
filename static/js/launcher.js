@@ -2,9 +2,6 @@ var lastResults = null;
 
 function getUpdatedResults(cancelling){
 
-    if ( !cancelling && hovering_test_entry ){
-        return;
-    }
     if ( !RUN_ID ){
         return;
     }

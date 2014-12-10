@@ -17,9 +17,6 @@ function doGetByCode(code, element){
     return data[code][element]
 }
 
-var hovering_test_entry = false;
-var hoverId = null;
-
 function handleResults(data, cancelling){
 
 
@@ -67,13 +64,6 @@ function handleResults(data, cancelling){
         finishLauncher();
     }
 
-    $(".test_entry").hover(function(){
-        hovering_test_entry = true;
-    }, function(){
-        hoverId = window.setTimeout(function() {
-            hovering_test_entry = false;
-        }, 250);
-    });
 }
 
 function handleDomainURL(){

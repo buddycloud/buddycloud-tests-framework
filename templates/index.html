@@ -141,7 +141,9 @@
                 <span class="glyphicon glyphicon-ok glyphicon_hidden"></span>
               [[/result]]
                 <span class="test_heading">
-                  <h3>[[&name]]</h3>
+                  <h3 [[#result]]onclick="focusOnTest('[[name]]');"[[/result]]>
+                    [[&name]]
+                  </h3>
                 </span>
                 <span class="test_options test_feedback">
                   <h3>
