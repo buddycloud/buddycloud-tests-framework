@@ -41,7 +41,7 @@ def testFunction(domain_url):
 	
 		status = 1
 
-		error = "Could not retrieve the websocket interface for realtime connections, which should be located at <strong>%(domain)s:%(port)s%(path)s</strong>!" % api_TXT_record
+		error = "Could not retrieve the websocket interface for realtime connections, which should be located at <strong>%(domain)s:%(port)s%(path)s/scripts/buddycloud.js</strong>!" % api_TXT_record
 		briefing = error
 		message = briefing
 
@@ -55,7 +55,7 @@ def testFunction(domain_url):
 
 		status = 2
 		briefing = "Something odd happened while trying to retrieve the websocket interface for realtime connections, which should be located at "
-		briefing += "<strong>%(domain)s:%(port)s%(path)s</strong>!" % api_TXT_record
+		briefing += "<strong>%(domain)s:%(port)s%(path)s/scripts/buddycloud.js</strong>!" % api_TXT_record
 		message = briefing
 		message += "<br/>This is the exception we got: {%s}" % str(e)
 		message += "<br/>It is probably a temporary issue with domain " + domain_url + "."
