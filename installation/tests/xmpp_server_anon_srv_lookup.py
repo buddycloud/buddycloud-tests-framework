@@ -6,7 +6,6 @@ from srv_lookup import performSRVLookup
 
 #util_dependencies
 from domain_name_lookup import testFunction as domainNameLookup
-from dns_utils import getAuthoritativeNameserver
 
 
 def testFunction(domain_url):
