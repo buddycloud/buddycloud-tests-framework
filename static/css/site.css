@@ -548,6 +548,14 @@ dd {
   background: linear-gradient(to right, rgba(255, 255, 255, 0), #e5e9ef 50%, #e5e9ef);
 }
 
+.navbar-right-padding {
+  margin-left: 80px;
+}
+
+.nav_bar_grey_li {
+  background-color: #E5E9EF;
+}
+
 .nav_bar_grey_lnk > .nav_bar_grey_span {
   background-color: #E5E9EF;
   border: 5px solid transparent; 
@@ -609,4 +617,8 @@ dd {
 .gsc-control-cse {
   padding-left: 0px !important;
   padding-right: 0px !important;
+}
+
+.navbar {
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.5);
 }
