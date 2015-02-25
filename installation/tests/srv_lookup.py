@@ -43,7 +43,7 @@ def performSRVLookup(domain_url, srv_name, srv_description, srv_port):
 
 		return no_SRV_record(domain_url, srv_name, srv_description, srv_port)
 
-	except Exception, e:
+	except Exception as e:
 
 		if ( str(e) == "" or str(e) == ("%s. does not exist." % domain_url) ):
 			return no_SRV_record(domain_url, srv_name, srv_description, srv_port)

@@ -10,7 +10,7 @@ def testFunction(domain_url):
 		message = briefing
 		return (status, briefing, message, None)
 
-	except dns.resolver.NXDOMAIN:
+	except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
 	
 		status = 1
 		briefing = "Could not locate " + domain_url + "!"
