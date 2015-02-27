@@ -22,7 +22,7 @@ def componentDiscoInfo(to_this, xmpp):
 			      ito=to_this, ifrom=xmpp.boundjid)	
 
 	try:
-		response = iq.send(block=True, timeout=5)
+		response = iq.send(block=True, timeout=config.IQ_TIMEOUT)
 	except:
 		return "QUERY_SEND_PROBLEM"
 
@@ -48,7 +48,7 @@ def xmppServerDiscoItems(to_this, xmpp):
 			      ito=to_this, ifrom=xmpp.boundjid)
 
 	try:
-		response = iq.send(block=True, timeout=5)
+		response = iq.send(block=True, timeout=config.IQ_TIMEOUT)
 	except Exception as e:
 		xmpp.disconnect()
 		
@@ -69,11 +69,14 @@ def xmppServerDiscoItems(to_this, xmpp):
 
 def checkMediaServerPresence(domain_url):
 
-	xmpp = sleekxmpp.ClientXMPP("inspect@buddycloud.org", "ei3tseq")
+	xmpp = sleekxmpp.ClientXMPP("inspect@buddycloud.org", "ei3tseq",
+            sasl_mech='PLAIN')
+        xmpp.register_plugin('xep_0030')
+        xmpp['feature_mechanisms'].unencrypted_plain = True
 
 	conn_address = 'crater.buddycloud.org', 5222
 
-	if ( not xmpp.connect(conn_address, reattempt=False, use_ssl=False, use_tls=False) ):
+	if ( not xmpp.connect(conn_address) ):
 		return "XMPP_CONNECTION_PROBLEM"
 
 	xmpp.process(block=False)
@@ -82,7 +85,6 @@ def checkMediaServerPresence(domain_url):
 		return xmppServerDiscoItems(domain_url, xmpp)
 	finally:
 		xmpp.disconnect()
-
 def testFunction(domain_url):
 
 	(status, briefing, message, output) = domainNameLookup(domain_url)
