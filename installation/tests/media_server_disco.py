@@ -1,4 +1,4 @@
-import string, sleekxmpp
+import string, sleekxmpp, config
 
 #util_dependencies
 from domain_name_lookup import testFunction as domainNameLookup
