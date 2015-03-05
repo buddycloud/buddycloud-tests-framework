@@ -294,10 +294,11 @@ def testFunction(domain_url):
                     identity_category = identity.attrib['category']
                     identity_type = identity.attrib['type']
 
-                    view["discovery"] = True
-                    view["channel_server"] = item_jid
                     if ( identity_category == 'pubsub'
                         and identity_type == 'channels' ):
+
+                        view["discovery"] = True
+                        view["channel_server"] = item_jid
 
                         try:
                             resolver = dns.resolver.Resolver()
@@ -307,7 +308,6 @@ def testFunction(domain_url):
                             TXT_name = "_bcloud-server._tcp." + domain_url
                             answer = resolver.query(TXT_name, dns.rdatatype.TXT)
                         except Exception:
-                            view["discovery"] = False
                             pass
                         else:
                             view["txt_record"] = True
