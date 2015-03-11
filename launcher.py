@@ -251,7 +251,7 @@ def perform_test(test_name, domain_url, test_names, test_entries, run_variables)
                     message += "<br/><br><strong>Test Log:</strong><br/>"
                     logged_content = map(lambda x: Markup.escape(x).__str__(),
                             log_stream.getContent().split("<br/>"))
-                    message += "<small><code>%s</code></small>" % string.join(logged_content, "<br/>")
+                    message += "<small><div class=\"highlight\"><pre class=\"pre-scrollable\" style=\"height:250px;\"><code style=\"color:#2DAEBF;\">%s</code></pre></div></small>" % string.join(logged_content, "<br/>")
 
                 response['message'] = message
 
